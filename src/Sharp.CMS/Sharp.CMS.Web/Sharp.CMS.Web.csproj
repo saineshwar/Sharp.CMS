@@ -6,14 +6,141 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DNTCaptcha.Core" Version="4.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.17" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.17" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.0" />
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sharp.CMS.Common\Sharp.CMS.Common.csproj" />
     <ProjectReference Include="..\Sharp.CMS.Data\Sharp.CMS.Data.csproj" />
+    <ProjectReference Include="..\Sharp.CMS.Extensions\Sharp.CMS.Extensions.csproj" />
     <ProjectReference Include="..\Sharp.CMS.Models\Sharp.CMS.Models.csproj" />
     <ProjectReference Include="..\Sharp.CMS.ViewModels\Sharp.CMS.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Administration\Controllers\" />
+    <Folder Include="Areas\Administration\Data\" />
+    <Folder Include="Areas\Administration\Models\" />
+    <Folder Include="Areas\Administration\Views\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+    <None Include="wwwroot\scripts\Barcode.js" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\build.sh" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\DOCS.md" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\flash\com\adobe\images\BitString.as" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\flash\com\adobe\images\JPGEncoder.as" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\flash\com\adobe\images\PNGEncoder.as" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\flash\mx\utils\Base64Encoder.as" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\flash\Webcam.as" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\flash\Webcam.fla" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\LICENSE" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\README.md" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\webcam.js" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\webcam.min.js" />
+    <None Include="wwwroot\scripts\CamScript\webcamjs\webcam.swf" />
+    <None Include="wwwroot\scripts\cry.js" />
+    <None Include="wwwroot\scripts\custom\AgeNationalityDomicile\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Alpabhudharak\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\ArmLicense\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\BhoomiheenCertificate\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonBuddhism.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonCentralOBC.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonCentralSC.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonCentralST.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonGOI.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonMaratha.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonMigrant.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonObc.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonSbc.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonSBCA.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonSc.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonSEBC.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonSt.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Caste\commonVjnt.scripts.js" />
+    <None Include="wwwroot\scripts\custom\CertifiedCopy\common.script.js" />
+    <None Include="wwwroot\scripts\custom\common.capture.upload.js" />
+    <None Include="wwwroot\scripts\custom\common.documents.js" />
+    <None Include="wwwroot\scripts\custom\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\common.scrutinydocuments.js" />
+    <None Include="wwwroot\scripts\custom\commonkiosk.capture.upload.js" />
+    <None Include="wwwroot\scripts\custom\commononboarding.scripts.js" />
+    <None Include="wwwroot\scripts\custom\commonoperator.capture.upload.js" />
+    <None Include="wwwroot\scripts\custom\commonval.script.js" />
+    <None Include="wwwroot\scripts\custom\customonboarding.validate.file.js" />
+    <None Include="wwwroot\scripts\custom\DongariCertificate\common.script.js" />
+    <None Include="wwwroot\scripts\custom\EWSCentralGovt\common.script.js" />
+    <None Include="wwwroot\scripts\custom\EWSMaharastraGov\CommanEWSStateGov.js" />
+    <None Include="wwwroot\scripts\custom\EWSSelfDeclaration - Copy\common.script.js" />
+    <None Include="wwwroot\scripts\custom\EWSSelfDeclaration\common.script.js" />
+    <None Include="wwwroot\scripts\custom\FarmerCertificate\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\GenealogicalAffidavit\common.script.js" />
+    <None Include="wwwroot\scripts\custom\GeneralAffidavit\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\IncomeCertificate\common.script.js" />
+    <None Include="wwwroot\scripts\custom\KutumbArthSahayaCertificate\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\Menus\MenuFormScripts\Category.js" />
+    <None Include="wwwroot\scripts\custom\Menus\ServiceFormScripts\Service.js" />
+    <None Include="wwwroot\scripts\custom\Menus\SubServiceFormScripts\SubService.js" />
+    <None Include="wwwroot\scripts\custom\NCLIncomeCertificate\Common.Script.js" />
+    <None Include="wwwroot\scripts\custom\NomineeCertificate\common.script.js" />
+    <None Include="wwwroot\scripts\custom\NonAgriculturalPermission\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\NonCreamyLayerRenewal\common.script.js" />
+    <None Include="wwwroot\scripts\custom\NonCreamyLayer\common.script.js" />
+    <None Include="wwwroot\scripts\custom\ProjectAffected\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\QuarryLease\common.script.js" />
+    <None Include="wwwroot\scripts\custom\QuarryLicense\Common.Script.js" />
+    <None Include="wwwroot\scripts\custom\RationCardAddition\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\RationCardModify\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\RationCardRenewal\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\RationCard\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\ResidenceCertificate\common.script.js" />
+    <None Include="wwwroot\scripts\custom\RTI\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\SocialProgrammingCertificate\Common.Script.js" />
+    <None Include="wwwroot\scripts\custom\SolvencyCertificate\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\SpecialAssistanceScheme\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\StoneCrusher\common.scripts.js" />
+    <None Include="wwwroot\scripts\custom\validate.file.js" />
+    <None Include="wwwroot\scripts\custom\WomenReservation\common.scripts.js" />
+    <None Include="wwwroot\scripts\facedetection\jquery.facedetection.js" />
+    <None Include="wwwroot\scripts\facedetection\jquery.facedetection.min.js" />
+    <None Include="wwwroot\scripts\facedetection\jquery.facedetection.min.js.map" />
+    <None Include="wwwroot\scripts\jquery-barcode.min.js" />
+    <None Include="wwwroot\scripts\Print\printThis.js" />
+    <None Include="wwwroot\scripts\sha512.min.js" />
   </ItemGroup>
 
 </Project>
