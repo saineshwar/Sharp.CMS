@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="LoginViewModel\" />
+    <Folder Include="UserMaster\" />
   </ItemGroup>
 
 </Project>
