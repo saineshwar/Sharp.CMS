@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sharp.CMS.Common\Sharp.CMS.Common.csproj" />
     <ProjectReference Include="..\Sharp.CMS.Models\Sharp.CMS.Models.csproj" />
     <ProjectReference Include="..\Sharp.CMS.ViewModels\Sharp.CMS.ViewModels.csproj" />
   </ItemGroup>

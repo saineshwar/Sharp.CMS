@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Sharp.CMS.Common;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Extensions;
+using Sharp.CMS.Web.Notification;
 
 namespace Sharp.CMS.Web
 {
@@ -37,6 +38,7 @@ namespace Sharp.CMS.Web
             services.AddDbContext<SharpContext>(options => options.UseSqlServer(connection));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddControllersWithViews();
 
             #region Elmah
@@ -129,9 +131,11 @@ namespace Sharp.CMS.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Portal}/{action=Login}/{id?}");
             });
         }
     }
