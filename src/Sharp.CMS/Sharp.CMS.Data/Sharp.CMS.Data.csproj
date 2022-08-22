@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Sharp.CMS.ViewModels\Sharp.CMS.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MenuOrdering\Command\" />
+  </ItemGroup>
+
 </Project>

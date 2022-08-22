@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 using DNTCaptcha.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Sharp.CMS.Common;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Extensions;
@@ -40,6 +42,9 @@ namespace Sharp.CMS.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddControllersWithViews();
+
+            services.AddAutoMapper(typeof(Startup).Assembly);
+
 
             #region Elmah
 
@@ -73,6 +78,18 @@ namespace Sharp.CMS.Web
 
             });
 
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    options.SerializerSettings.ContractResolver =
+                        new Newtonsoft.Json.Serialization.DefaultContractResolver();
+                })
+                .AddSessionStateTempDataProvider();
+
+
             //  Cookie
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -86,6 +103,9 @@ namespace Sharp.CMS.Web
                     context.IssueCookie = true;
                 };
             });
+
+
+            services.AddControllersWithViews(options => { }).AddRazorRuntimeCompilation();
 
             // using Memory Cache 
             services.AddMemoryCache();
