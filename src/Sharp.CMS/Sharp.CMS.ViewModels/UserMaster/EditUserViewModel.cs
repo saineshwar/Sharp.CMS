@@ -4,21 +4,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Sharp.CMS.ViewModels.UserMaster
 {
-    public class CreateUserViewModel
+    public class EditUserViewModel
     {
+        public int UserId { get; set; }
+
+        [Display(Name = "UserName")]
         [StringLength(30, MinimumLength = 6, ErrorMessage = "Maximum 30 characters and Minimum 6")]
         [Required(ErrorMessage = "Username Required")]
-        [Display(Name = "UserName")]
         public string UserName { get; set; }
 
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Maximum 50 characters and Minimum 2")]
-        [Required(ErrorMessage = "Enter FirstName")]
         [Display(Name = "FirstName")]
+        [Required(ErrorMessage = "Enter FirstName")]
         public string FirstName { get; set; }
 
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Maximum 50 characters and Minimum 2")]
-        [Required(ErrorMessage = "Enter LastName")]
         [Display(Name = "LastName")]
+        [Required(ErrorMessage = "Enter LastName")]
         public string LastName { get; set; }
 
         [Display(Name = "EmailId")]
@@ -38,20 +40,10 @@ namespace Sharp.CMS.ViewModels.UserMaster
         [Display(Name = "Status")]
         public bool? Status { get; set; }
 
-        [Display(Name = "Password")]
-        [MinLength(7, ErrorMessage = "Minimum Password must be 7 in characters")]
-        [Required(ErrorMessage = "Password Required")]
-        public string Password { get; set; }
-
-        [Display(Name = "ConfirmPassword")]
-        [Required(ErrorMessage = "Confirm Password Required")]
-        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Enter Valid Password")]
-        public string ConfirmPassword { get; set; }
-
         [Display(Name = "Role")]
         [Required(ErrorMessage = "Choose Role")]
-        public short RoleId { get; set; }
-        public List<SelectListItem> ListofRoles { get; set; }
+        public int RoleId { get; set; }
+        public List<SelectListItem> ListRole { get; set; }
 
     }
 }

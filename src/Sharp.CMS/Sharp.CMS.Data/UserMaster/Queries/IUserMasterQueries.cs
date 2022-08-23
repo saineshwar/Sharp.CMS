@@ -17,5 +17,7 @@ namespace Sharp.CMS.Data.UserMaster.Queries
         UserMasterModel GetUserdetailsbyEmailId(string emailid);
         CommonUserDetailsViewModel GetCommonUserDetailsbyUserName(string username);
         IQueryable<UserMasterGrid> ShowAllUsers(string sortColumn, string sortColumnDir, string search);
+        EditUserViewModel GetUserForEditByUserId(long? userId);
+        UserMasterModel GetUserDetailsbyUserId(long? userId);
     }
 }

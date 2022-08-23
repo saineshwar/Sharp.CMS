@@ -219,5 +219,35 @@ namespace Sharp.CMS.Data.UserMaster.Queries
                 throw;
             }
         }
+
+        public EditUserViewModel GetUserForEditByUserId(long? userId)
+        {
+            var role = (from tempuser in _sharpContext.UserMasters
+                join assignedRole in _sharpContext.AssignedRoles on tempuser.UserId equals assignedRole.UserId
+                join roles in _sharpContext.RoleMasters on assignedRole.RoleId equals roles.RoleId
+                where tempuser.UserId == userId
+                select new EditUserViewModel()
+                {
+                    FirstName = tempuser.FirstName,
+                    EmailId = tempuser.EmailId,
+                    LastName = tempuser.LastName,
+                    MobileNo = tempuser.MobileNo,
+                    Gender = tempuser.Gender,
+                    RoleId = roles.RoleId,
+                    Status = roles.Status,
+                    UserName = tempuser.UserName,
+                    UserId = tempuser.UserId
+                }).FirstOrDefault();
+            return role;
+        }
+
+        public UserMasterModel GetUserDetailsbyUserId(long? userId)
+        {
+            var userdata = (from tempuser in _sharpContext.UserMasters
+                where tempuser.UserId == userId
+                select tempuser).FirstOrDefault();
+
+            return userdata;
+        }
     }
 }
