@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,8 @@ using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.UserMaster;
 using Sharp.CMS.ViewModels.UserMaster;
 using System.Linq.Dynamic.Core;
+using Dapper;
+using Microsoft.Data.SqlClient;
 
 namespace Sharp.CMS.Data.UserMaster.Queries
 {
@@ -248,6 +251,22 @@ namespace Sharp.CMS.Data.UserMaster.Queries
                 select tempuser).FirstOrDefault();
 
             return userdata;
+        }
+
+        public UserProfileViewModel UserProfile(int? userId)
+        {
+            try
+            {
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+                param.Add("@UserId", userId);
+                var userProfile = con.Query<UserProfileViewModel>("Usp_GetUserDetailforProfilebyUserId", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+                return userProfile;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

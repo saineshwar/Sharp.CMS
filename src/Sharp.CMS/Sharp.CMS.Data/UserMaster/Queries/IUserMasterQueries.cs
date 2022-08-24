@@ -19,5 +19,6 @@ namespace Sharp.CMS.Data.UserMaster.Queries
         IQueryable<UserMasterGrid> ShowAllUsers(string sortColumn, string sortColumnDir, string search);
         EditUserViewModel GetUserForEditByUserId(long? userId);
         UserMasterModel GetUserDetailsbyUserId(long? userId);
+        UserProfileViewModel UserProfile(int? userId);
     }
 }

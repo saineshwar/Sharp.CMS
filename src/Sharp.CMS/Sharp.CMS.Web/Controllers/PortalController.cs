@@ -136,27 +136,9 @@ namespace Sharp.CMS.Web.Controllers
                             case 1:
                                 return RedirectToAction("Dashboard", "Dashboard", new { Area = "Administration" });
                             case 2:
-                                return RedirectToAction("Dashboard", "Dashboard", new { Area = "Administration" });
+                                return RedirectToAction("Index", "MyDashboard", new { Area = "Administration" });
                             case 3:
                                 return RedirectToAction("Dashboard", "Manager", new { Area = "" });
-                            case 4:
-                                return RedirectToAction("Show", "MyBugList", new { Area = "" });
-                            case 5:
-                                return RedirectToAction("Show", "BugList", new { Area = "" });
-                            case 6:
-                                return RedirectToAction("AllReportedBugs", "MyBugList", new { Area = "" });
-                            case 7:
-                                return RedirectToAction("AllReportedBugs", "BugList", new { Area = "" });
-                            case 8:
-                                return RedirectToAction("Show", "BugList", new { Area = "" });
-                            case 9:
-                                return RedirectToAction("Show", "BugList", new { Area = "" });
-                            case 10:
-                                return RedirectToAction("AllReportedBugs", "BugList", new { Area = "" });
-                            case 11:
-                                return RedirectToAction("Show", "BugList", new { Area = "" });
-                            case 12:
-                                return RedirectToAction("AllReportedBugs", "BugList", new { Area = "" });
                         }
 
                     }

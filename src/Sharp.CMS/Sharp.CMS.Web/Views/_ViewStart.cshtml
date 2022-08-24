@@ -1,3 +1,8 @@
-﻿@{
-    Layout = "_Layout";
+﻿@using Microsoft.AspNetCore.Http
+@using Sharp.CMS.Common
+
+
+@if (Context.Session.GetInt32("Portal.RoleId") == Convert.ToInt32(RolesHelper.Roles.CmsUser))
+{
+    Layout = "_LayoutUser";
 }
