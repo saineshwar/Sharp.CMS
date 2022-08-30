@@ -1,0 +1,154 @@
+﻿@model Sharp.CMS.ViewModels.Page.PageViewModel
+@{
+    ViewBag.PageName = "Menu";
+}
+
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"> Parent Add</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="NewPage" autocomplete="off" asp-antiforgery="true" asp-action="Create" method="post">
+
+            <div class="card-body register-card-body">
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="IsParent" class="form-check-input" />
+                            <label class="form-check-label" asp-for="IsParent">IsParent</label>
+                            <span class="text-danger" asp-validation-for="IsParent"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="mandatory" asp-for="Permalink"></label>
+                        <input asp-for="Permalink" placeholder="Keep Blank To Auto Generate" class="form-control" />
+                        <span class="text-danger" asp-validation-for="Permalink"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="mandatory" asp-for="PageTitleEn"></label>
+                        <input asp-for="PageTitleEn" placeholder="Enter Page Title" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageTitleEn"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="mandatory" asp-for="PageTitleLl"></label>
+                        <input asp-for="PageTitleLl" placeholder="Enter Page Title" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageTitleLl"></span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="mandatory" asp-for="MenuNameEn"></label>
+                        <input asp-for="MenuNameEn" placeholder="Enter Menu Name" class="form-control" />
+                        <span class="text-danger" asp-validation-for="MenuNameEn"></span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="mandatory" asp-for="MenuNameLl"></label>
+                        <input asp-for="MenuNameLl" placeholder="Enter Menu Name" class="form-control" />
+                        <span class="text-danger" asp-validation-for="MenuNameLl"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="Status" class="form-check-input" />
+                            <label class="form-check-label" asp-for="Status">Active</label>
+                            <span class="text-danger" asp-validation-for="Status"></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="OpenInNewTab" class="form-check-input" />
+                            <label class="form-check-label" asp-for="OpenInNewTab">OpenInNewTab</label>
+                            <span class="text-danger" asp-validation-for="OpenInNewTab"></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="IsNew" class="form-check-input" />
+                            <label class="form-check-label" asp-for="IsNew">IsNew</label>
+                            <span class="text-danger" asp-validation-for="IsNew"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-success">Save</button>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPage" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPage" asp-action="Index">List</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#divpp").hide();
+
+        $("#IsParent").change(function () {
+
+            if ($('#IsParent').prop('checked')) {
+                $("#divpp").show();
+
+            } else {
+                $("#divpp").hide();
+            }
+
+        });
+
+
+
+    });
+
+    function BindParentPages() {
+        $.ajax({
+            type: "POST",
+            url: "/Administration/MenuMaster/GetCategory",
+            data: { roleId: $("#RoleId").val() },
+            dataType: "json",
+            success: function (data, textStatus, xhr) {
+                $("#MenuCategoryId").empty();
+                $.each(data,
+                    function (i) {
+                        var optionhtml = '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                        $("#MenuCategoryId").append(optionhtml);
+                    });
+            },
+            error: function (xhr, status, err) {
+                if (xhr.status == 401) {
+                    alert('Error');
+                    window.location.href = "/Portal/Logout";
+                }
+
+                if (xhr.status == 500) {
+                    alert('Error');
+                    window.location.href = "/Portal/Logout";
+                }
+            }
+        });
+    }
+
+
+</script>
