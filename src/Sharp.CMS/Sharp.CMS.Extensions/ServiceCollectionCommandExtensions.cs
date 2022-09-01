@@ -5,6 +5,7 @@ using Sharp.CMS.Data.Audit.Command;
 using Sharp.CMS.Data.MenuCategory.Command;
 using Sharp.CMS.Data.MenuMaster.Command;
 using Sharp.CMS.Data.MenuOrdering.Command;
+using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.Notices.Command;
 using Sharp.CMS.Data.RoleMaster.Command;
 using Sharp.CMS.Data.UserMaster.Command;
@@ -24,6 +25,7 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<INoticeCommand, NoticeCommand>();
             services.AddTransient<INoticeDetailsCommand, NoticeDetailsCommand>();
             services.AddTransient<IOrderingCommand, OrderingCommand>();
+            services.AddTransient<INewPageCommand, NewPageCommand>();
             
             return services;
         }

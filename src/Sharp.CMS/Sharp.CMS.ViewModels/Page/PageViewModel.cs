@@ -25,7 +25,7 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "IsNew")]
         public bool IsNew { get; set; }
 
-        [Display(Name = "MenuName")]
+        [Display(Name = "MenuName LL")]
         public string MenuNameLl { get; set; }
 
         [Display(Name = "MenuName")]

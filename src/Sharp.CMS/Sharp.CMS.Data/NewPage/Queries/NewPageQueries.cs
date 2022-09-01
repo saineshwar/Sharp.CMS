@@ -13,23 +13,6 @@ namespace Sharp.CMS.Data.NewPage.Queries
             _sharpContext = sharpContext;
         }
 
-        public List<SelectListItem> ListofRoles()
-        {
-            var listofrolesdata = (from roles in _sharpContext.PageModel
-                                   orderby roles.PageId ascending
-                                   where roles.Status == 1
-                                   select new SelectListItem()
-                                   {
-                                       Text = roles.MenuName,
-                                       Value = roles.PageId.ToString()
-                                   }).ToList();
-
-            listofrolesdata.Insert(0, new SelectListItem()
-            {
-                Value = "",
-                Text = "-----Select-----"
-            });
-            return listofrolesdata;
-        }
+       
     }
 }

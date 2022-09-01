@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.MenuCategory;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
@@ -14,9 +16,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
     [SessionTimeOut]
     public class NewPageController : Controller
     {
-        public NewPageController()
+        private readonly IMapper _mapper;
+        public NewPageController(IMapper mapper)
         {
-            
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -26,11 +29,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             return View(pageViewModel);
         }
 
-
-
         [HttpPost]
         public IActionResult Create(PageViewModel pageViewModel)
         {
+            var pageModel = _mapper.Map<PageModel>(pageViewModel);
             return View();
         }
 
