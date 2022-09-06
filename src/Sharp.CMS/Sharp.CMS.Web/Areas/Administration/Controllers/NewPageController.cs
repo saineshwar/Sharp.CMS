@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.MenuCategory;
 using Sharp.CMS.ViewModels.Page;
@@ -17,9 +18,11 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
     public class NewPageController : Controller
     {
         private readonly IMapper _mapper;
-        public NewPageController(IMapper mapper)
+        private readonly INewPageCommand _iNewPageCommand;
+        public NewPageController(IMapper mapper, INewPageCommand newPageCommand)
         {
             _mapper = mapper;
+            _iNewPageCommand = newPageCommand;
         }
 
         [HttpGet]
@@ -33,13 +36,13 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         public IActionResult Create(PageViewModel pageViewModel)
         {
             var pageModel = _mapper.Map<PageModel>(pageViewModel);
-            return View();
+            pageModel.CreatedOn =DateTime.Now;
+            pageModel.PageId = 0;
+            var result = _iNewPageCommand.Add(pageModel);
+
+
+            return View(pageViewModel);
         }
 
-        //public IActionResult GetCategory(RequestForMenuCategory requestCategory)
-        //{
-        //    var listofCategory = _menuCategoryQueries.GetCategorybyRoleId(requestCategory.RoleId);
-        //    return Json(listofCategory);
-        //}
     }
 }

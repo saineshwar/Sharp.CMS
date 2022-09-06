@@ -17,70 +17,110 @@
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
 
-
-
-
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="PageTitleEn"></label>
                         <input asp-for="PageTitleEn" placeholder="Enter Page Title" class="form-control" />
                         <span class="text-danger" asp-validation-for="PageTitleEn"></span>
                     </div>
 
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="PageTitleLl"></label>
                         <input asp-for="PageTitleLl" placeholder="Enter Page Title" class="form-control" />
                         <span class="text-danger" asp-validation-for="PageTitleLl"></span>
                     </div>
+                </div>
+                <div class="form-row">
 
-                    <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="Permalink"></label>
                         <input asp-for="Permalink" placeholder="Keep Blank To Auto Generate" class="form-control" />
                         <span class="text-danger" asp-validation-for="Permalink"></span>
                     </div>
                 </div>
                 <div class="form-row">
-                    
-                
 
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MenuNameEn"></label>
-                        <input asp-for="MenuNameEn" placeholder="Enter Menu Name" class="form-control"/>
+                        <input asp-for="MenuNameEn" placeholder="Enter Menu Name" class="form-control" />
                         <span class="text-danger" asp-validation-for="MenuNameEn"></span>
                     </div>
 
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MenuNameLl"></label>
-                        <input asp-for="MenuNameLl" placeholder="Enter Menu Name" class="form-control"/>
+                        <input asp-for="MenuNameLl" placeholder="Enter Menu Name" class="form-control" />
                         <span class="text-danger" asp-validation-for="MenuNameLl"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="PageHeading"></label>
+                        <input asp-for="PageHeading" placeholder="Enter Page Heading" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageHeading"></span>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="PageHeadingLl"></label>
+                        <input asp-for="PageHeadingLl" placeholder="Enter Page Heading" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageHeadingLl"></span>
                     </div>
                 </div>
 
                 <div class="form-row">
-                    
-                    <div class="form-group col-md-4">
+
+
+
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="MetaDescriptionEN"></label>
+                        <input asp-for="MetaDescriptionEN" placeholder="Enter Meta Description" class="form-control" />
+                        <span class="text-danger" asp-validation-for="MetaDescriptionEN"></span>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="MetaDescriptionLl"></label>
+                        <input asp-for="MetaDescriptionLl" placeholder="Enter Meta Description" class="form-control" />
+                        <span class="text-danger" asp-validation-for="MetaDescriptionLl"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="MetaKeywordsEN"></label>
+                        <input asp-for="MetaKeywordsEN" placeholder="Enter Meta Keywords" class="form-control" />
+                        <span class="text-danger" asp-validation-for="MetaKeywordsEN"></span>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="MetaKeywordsLl"></label>
+                        <input asp-for="MetaKeywordsLl" placeholder="Enter Meta Keywords" class="form-control" />
+                        <span class="text-danger" asp-validation-for="MetaKeywordsLl"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group col-md-3">
                         <div class="form-check">
                             <input type="checkbox" asp-for="IsParent" class="form-check-input" />
                             <label class="form-check-label" asp-for="IsParent">IsParent</label>
                             <span class="text-danger" asp-validation-for="IsParent"></span>
                         </div>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <div class="form-check">
-                            <input type="checkbox" asp-for="Status" class="form-check-input"/>
+                            <input type="checkbox" asp-for="Status" class="form-check-input" />
                             <label class="form-check-label" asp-for="Status">Active</label>
                             <span class="text-danger" asp-validation-for="Status"></span>
                         </div>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <div class="form-check">
-                            <input type="checkbox" asp-for="OpenInNewTab" class="form-check-input"/>
+                            <input type="checkbox" asp-for="OpenInNewTab" class="form-check-input" />
                             <label class="form-check-label" asp-for="OpenInNewTab">OpenInNewTab</label>
                             <span class="text-danger" asp-validation-for="OpenInNewTab"></span>
                         </div>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <div class="form-check">
-                            <input type="checkbox" asp-for="IsNew" class="form-check-input"/>
+                            <input type="checkbox" asp-for="IsNew" class="form-check-input" />
                             <label class="form-check-label" asp-for="IsNew">IsNew</label>
                             <span class="text-danger" asp-validation-for="IsNew"></span>
                         </div>

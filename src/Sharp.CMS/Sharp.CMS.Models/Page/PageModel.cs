@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sharp.CMS.Models.Page
 {
-    [Table("PageModel")]
+    [Table("Page")]
     public class PageModel
     {
         [Key]
