@@ -71,26 +71,27 @@
 
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaDescriptionEN"></label>
-                        <input asp-for="MetaDescriptionEN" placeholder="Enter Meta Description" class="form-control" />
+          
+                        <textarea asp-for="MetaDescriptionEN" placeholder="Enter Meta Description" class="form-control" required="required"></textarea>
                         <span class="text-danger" asp-validation-for="MetaDescriptionEN"></span>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaDescriptionLl"></label>
-                        <input asp-for="MetaDescriptionLl" placeholder="Enter Meta Description" class="form-control" />
+                        <textarea asp-for="MetaDescriptionLl" placeholder="Enter Meta Description" class="form-control" required="required"></textarea>
                         <span class="text-danger" asp-validation-for="MetaDescriptionLl"></span>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaKeywordsEN"></label>
-                        <input asp-for="MetaKeywordsEN" placeholder="Enter Meta Keywords" class="form-control" />
+                        <textarea asp-for="MetaKeywordsEN" placeholder="Meta Keywords English" class="form-control" required="required"></textarea>
                         <span class="text-danger" asp-validation-for="MetaKeywordsEN"></span>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaKeywordsLl"></label>
-                        <input asp-for="MetaKeywordsLl" placeholder="Enter Meta Keywords" class="form-control" />
+                        <textarea asp-for="MetaKeywordsLl" placeholder="Meta Keywords Local Language" class="form-control"  required="required"></textarea>
                         <span class="text-danger" asp-validation-for="MetaKeywordsLl"></span>
                     </div>
                 </div>

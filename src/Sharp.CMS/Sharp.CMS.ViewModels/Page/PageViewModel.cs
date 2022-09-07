@@ -39,7 +39,7 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "Page Heading English")]
         public string PageHeading { get; set; }
 
-        [Display(Name = "Pag eHeading Local Language")]
+        [Display(Name = "Page Heading Local Language")]
         public string PageHeadingLl { get; set; }
 
         [Display(Name = "Meta Description English")]

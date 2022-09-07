@@ -1,7 +1,12 @@
-﻿namespace Sharp.CMS.ViewModels.Page
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Sharp.CMS.ViewModels.Page
 {
-    public class PageFooter
+    public class PageFooterViewModel
     {
-        
+        [MaxLength(200)]
+        public string PageFooterName { get; set; }
+        [MaxLength]
+        public string PageFooterDetails { get; set; }
     }
 }
