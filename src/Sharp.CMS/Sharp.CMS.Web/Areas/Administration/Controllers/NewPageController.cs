@@ -44,5 +44,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             return View(pageViewModel);
         }
 
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }
