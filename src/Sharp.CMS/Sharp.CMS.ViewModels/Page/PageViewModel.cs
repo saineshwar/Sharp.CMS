@@ -15,6 +15,9 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "PageTitle Other")]
         public string PageTitleLl { get; set; }
 
+        [Display(Name = "Alias")]
+        public string Alias { get; set; }
+
         [Display(Name = "Status")]
         public bool Status { get; set; }
 

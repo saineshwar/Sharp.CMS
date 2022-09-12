@@ -36,8 +36,16 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         public IActionResult Create(PageViewModel pageViewModel)
         {
             var pageModel = _mapper.Map<PageModel>(pageViewModel);
-            pageModel.CreatedOn =DateTime.Now;
+            pageModel.CreatedOn = DateTime.Now;
             pageModel.PageId = 0;
+
+          
+
+            if (!string.IsNullOrEmpty(pageViewModel.Permalink))
+            {
+                pageViewModel.Alias = "";
+            }
+
             var result = _iNewPageCommand.Add(pageModel);
 
 

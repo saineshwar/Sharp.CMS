@@ -1,17 +1,17 @@
 ﻿@model Sharp.CMS.ViewModels.Page.PageViewModel
 @{
-    ViewBag.PageName = "Menu";
+    ViewBag.PageName = "Page";
 }
 
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Add Page</h3>
+            <h3 class="card-title">Add New Page</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form asp-controller="NewPage" autocomplete="off" asp-antiforgery="true" asp-action="Create" method="post">
+        <form asp-controller="NewPage" autocomplete="off" asp-antiforgery="true" id="newPageform" asp-action="Create" method="post">
 
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
@@ -31,10 +31,15 @@
                 </div>
                 <div class="form-row">
 
-                <div class="form-group col-md-6">
+                    <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="Permalink"></label>
                         <input asp-for="Permalink" placeholder="Keep Blank To Auto Generate" class="form-control" />
                         <span class="text-danger" asp-validation-for="Permalink"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="Alias"></label>
+                        <input asp-for="Alias" placeholder="Enter Alias" class="form-control" />
+                        <span class="text-danger" asp-validation-for="Alias"></span>
                     </div>
                 </div>
                 <div class="form-row">
@@ -71,7 +76,7 @@
 
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaDescriptionEN"></label>
-          
+
                         <textarea asp-for="MetaDescriptionEN" placeholder="Enter Meta Description" class="form-control" required="required"></textarea>
                         <span class="text-danger" asp-validation-for="MetaDescriptionEN"></span>
                     </div>
@@ -91,7 +96,7 @@
 
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaKeywordsLl"></label>
-                        <textarea asp-for="MetaKeywordsLl" placeholder="Meta Keywords Local Language" class="form-control"  required="required"></textarea>
+                        <textarea asp-for="MetaKeywordsLl" placeholder="Meta Keywords Local Language" class="form-control" required="required"></textarea>
                         <span class="text-danger" asp-validation-for="MetaKeywordsLl"></span>
                     </div>
                 </div>
@@ -131,7 +136,7 @@
             <!-- /.card-body -->
 
             <div class="card-footer">
-                <button type="submit" class="btn btn-success">Save</button>
+                <button type="submit" id="btnsubmit" class="btn btn-success">Save</button>
                 <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPage" asp-action="Create">Clear</a>
                 <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPage" asp-action="Index">List</a>
 
@@ -144,9 +149,37 @@
 
     $(document).ready(function () {
 
-        $("#divpp").hide();
+        $("#btnsubmit").click(function ()
+        {
+            if ($('#bugform').valid()) {
 
-        $("#IsParent").change(function () {
+                var textboxData = CKEDITOR.instances.Description.getData();
+                if (textboxData === '') {
+                    $.alert({
+                        title: 'Validation!',
+                        content: 'Enter Bug Description.',
+                        type: 'red'
+                    });
+                } else {
+                    $.confirm({
+                        title: 'Confirmation!',
+                        type: 'green',
+                        content: 'Do you want to Create Bug?',
+                        buttons: {
+                            confirm: function () {
+                                $("#loader").show();
+                                $('#bugform').submit();
+                            },
+                            cancel: function () {
+                                $.alert('Canceled!');
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        $("#Permalink").change(function () {
 
             if ($('#IsParent').prop('checked')) {
                 $("#divpp").show();
@@ -161,33 +194,7 @@
 
     });
 
-    function BindParentPages() {
-        $.ajax({
-            type: "POST",
-            url: "/Administration/MenuMaster/GetCategory",
-            data: { roleId: $("#RoleId").val() },
-            dataType: "json",
-            success: function (data, textStatus, xhr) {
-                $("#MenuCategoryId").empty();
-                $.each(data,
-                    function (i) {
-                        var optionhtml = '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
-                        $("#MenuCategoryId").append(optionhtml);
-                    });
-            },
-            error: function (xhr, status, err) {
-                if (xhr.status == 401) {
-                    alert('Error');
-                    window.location.href = "/Portal/Logout";
-                }
-
-                if (xhr.status == 500) {
-                    alert('Error');
-                    window.location.href = "/Portal/Logout";
-                }
-            }
-        });
-    }
+    
 
 
 </script>
