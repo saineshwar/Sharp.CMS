@@ -136,7 +136,7 @@
             <!-- /.card-body -->
 
             <div class="card-footer">
-                <button type="submit" id="btnsubmit" class="btn btn-success">Save</button>
+                <button type="button" id="btnsubmit" class="btn btn-success">Save</button>
                 <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPage" asp-action="Create">Clear</a>
                 <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPage" asp-action="Index">List</a>
 
@@ -151,24 +151,28 @@
 
         $("#btnsubmit").click(function ()
         {
-            if ($('#bugform').valid()) {
+            if ($('#newPageform').valid())
+            {
 
-                var textboxData = CKEDITOR.instances.Description.getData();
-                if (textboxData === '') {
+
+                if ($("#Permalink").val() == "" && $("#Alias").val() == "")
+                {
                     $.alert({
                         title: 'Validation!',
-                        content: 'Enter Bug Description.',
+                        content: 'Enter Permalink or Alias.',
                         type: 'red'
                     });
-                } else {
+                }
+                else
+                {
                     $.confirm({
                         title: 'Confirmation!',
                         type: 'green',
-                        content: 'Do you want to Create Bug?',
+                        content: 'Do you want to Create New Page?',
                         buttons: {
                             confirm: function () {
                                 $("#loader").show();
-                                $('#bugform').submit();
+                                $('#newPageform').submit();
                             },
                             cancel: function () {
                                 $.alert('Canceled!');
@@ -179,22 +183,23 @@
             }
         });
 
-        $("#Permalink").change(function () {
+        //$("#Permalink").change(function ()
+        //{
 
-            if ($('#IsParent').prop('checked')) {
-                $("#divpp").show();
+        //    if ($('#IsParent').prop('checked')) {
+        //        $("#divpp").show();
 
-            } else {
-                $("#divpp").hide();
-            }
+        //    } else {
+        //        $("#divpp").hide();
+        //    }
 
-        });
+        //});
 
 
 
     });
 
-    
+
 
 
 </script>

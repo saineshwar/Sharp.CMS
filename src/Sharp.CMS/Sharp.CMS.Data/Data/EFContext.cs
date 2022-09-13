@@ -24,6 +24,7 @@ namespace Sharp.CMS.Data.Data
         public DbSet<Notice> Notice { get; set; }
         public DbSet<NoticeDetails> NoticeDetails { get; set; }
         public DbSet<PageModel> PageModel { get; set; }
+        public DbSet<PageHeaderModel> PageHeaderModel { get; set; }
         public DbSet<PageDetailsModel> PageDetailsModel { get; set; }
     }
 }

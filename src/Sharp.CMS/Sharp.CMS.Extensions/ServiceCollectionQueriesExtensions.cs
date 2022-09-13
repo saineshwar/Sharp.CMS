@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sharp.CMS.Data.Audit.Queries;
 using Sharp.CMS.Data.MenuCategory.Queries;
 using Sharp.CMS.Data.MenuMaster.Queries;
+using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Data.Notices.Queries;
 using Sharp.CMS.Data.RoleMaster.Queries;
 using Sharp.CMS.Data.UserMaster.Queries;
@@ -21,6 +22,8 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IAssignedRolesQueries, AssignedRolesQueries>();
             services.AddTransient<IAuditQueries, AuditQueries>();
             services.AddTransient<INoticeQueries, NoticeQueries>();
+            services.AddTransient<INewPageQueries, NewPageQueries>();
+            services.AddTransient<INewPageHeaderQueries, NewPageHeaderQueries>();
             return services;
         }
     }
