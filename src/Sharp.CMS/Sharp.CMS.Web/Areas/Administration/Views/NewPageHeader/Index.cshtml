@@ -13,12 +13,8 @@
             <table id="MenuDataTable" class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>PageId</th>
-                        <th>PageName</th>
-                        <th>MenuName</th>
-                        <th>MenuName_LL</th>
-                        <th>PageTitle</th>
-                        <th>PageTitle_LL</th>
+                        <th>PageHeaderId</th>
+                        <th>PageHeaderName</th>
                         <th>Status</th>
                         <th>Edit</th>
                         <th>Delete</th>
@@ -45,7 +41,7 @@
                 "order": [[ 0, "desc" ]],
                 "filter": true,
                 "ajax": {
-                    "url": "/Administration/NewPage/GridAllPages",
+                    "url": "/Administration/NewPageHeader/GridAllPagesHeader",
                     "type": "POST",
                     "datatype": "json"
                 },
@@ -61,46 +57,22 @@
                         "searchable": false
                     },
                     {
-                        "targets": [3],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [4],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [5],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [6],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [7],
+                        "targets": [2],
                         "orderable": false,
                         "searchable": false
                     }
-                    
+
                 ],
                 "columns": [
-                    { "data": "PageId", "name": "PageId", "autoWidth": true },
-                    { "data": "PageName", "name": "PageName", "autoWidth": true },
-                    { "data": "MenuName_EN", "name": "MenuName_EN", "autoWidth": true },
-                    { "data": "MenuName_LL", "name": "MenuName_LL", "autoWidth": true },
-                    { "data": "PageTitle_EN", "name": "PageTitle_EN", "autoWidth": true },
-                    { "data": "PageTitle_LL", "name": "PageTitle_LL", "autoWidth": true },
+                    { "data": "PageHeaderId", "name": "PageHeaderId", "autoWidth": true },
+                    { "data": "PageHeaderName", "name": "PageHeaderName", "autoWidth": true },
                     { "data": "Status", "name": "Status", "autoWidth": true },
                     {
-                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/MenuMaster/Edit/' + full.PageId + '"> Edit</a>'; }
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/MenuMaster/Edit/' + full.PageHeaderId + '"> Edit</a>'; }
                     },
                     {
                         "render": function (data, type, full, meta) {
-                            return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.PageId + ');"> Delete </button>';
+                            return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.PageHeaderId + ');"> Delete </button>';
                         }
                     }
                 ]

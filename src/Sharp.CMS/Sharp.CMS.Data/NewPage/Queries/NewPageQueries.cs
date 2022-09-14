@@ -23,22 +23,22 @@ namespace Sharp.CMS.Data.NewPage.Queries
             {
                 var queryable = (from page in _sharpContext.PageModel
 
-                                           orderby page.PageId descending
-                                           select new NewPageGrid()
-                                           {
-                                               Status = page.Status == 1 ? "Active" : "InActive",
-                                               Alias = string.IsNullOrEmpty(page.Alias) == true ? "-" : page.Alias,
-                                               IsNew = page.IsNew,
-                                               IsPublished = page.IsPublished,
-                                               MenuName_EN = page.MenuName_EN,
-                                               MenuName_LL = page.MenuName_LL,
-                                               PageId = page.PageId,
-                                               PageTitle_EN = page.PageTitle_EN,
-                                               PageTitle_LL = page.PageTitle_LL,
-                                               OpenInNewTab = page.OpenInNewTab,
-                                               CreatedOn = page.CreatedOn
-                                              
-                                           }
+                                 orderby page.PageId descending
+                                 select new NewPageGrid()
+                                 {
+                                     Status = page.Status == 1 ? "Active" : "InActive",
+                                     PageName = page.PageName,
+                                     IsNew = page.IsNew,
+                                     IsPublished = page.IsPublished,
+                                     MenuName_EN = page.MenuName_EN,
+                                     MenuName_LL = page.MenuName_LL,
+                                     PageId = page.PageId,
+                                     PageTitle_EN = page.PageTitle_EN,
+                                     PageTitle_LL = page.PageTitle_LL,
+                                     OpenInNewTab = page.OpenInNewTab,
+                                     CreatedOn = page.CreatedOn
+
+                                 }
                     );
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
@@ -63,5 +63,22 @@ namespace Sharp.CMS.Data.NewPage.Queries
                 throw;
             }
         }
+
+        public bool CheckPageNameExists(string pagename)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageModel
+                                 where page.PageName == pagename
+                                 select page).Any();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

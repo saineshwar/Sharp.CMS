@@ -44,19 +44,25 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.CreatedOn = DateTime.Now;
                 pageModel.PageId = 0;
 
-                if (!string.IsNullOrEmpty(pageViewModel.Permalink))
+                if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
                 {
-                    pageViewModel.Alias = "";
+                   
                 }
 
-                if (!string.IsNullOrEmpty(pageViewModel.Alias))
+
+                if (!string.IsNullOrEmpty(pageViewModel.Permalink))
+                {
+                    pageViewModel.PageName = "";
+                }
+
+                if (!string.IsNullOrEmpty(pageViewModel.PageName))
                 {
                     pageViewModel.Permalink = "";
                 }
 
                 var result = _iNewPageCommand.Add(pageModel);
             }
-            
+
             return View(pageViewModel);
         }
 
@@ -92,7 +98,14 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             }
         }
 
-
+        public IActionResult CheckTitleExists(PageTitleRequest pageTitleRequest)
+        {
+            if (_iNewPageQueries.CheckPageNameExists(pageTitleRequest.PageName))
+            {
+                return Json(new { result = "Y" });
+            }
+            return Json(new { result = "N" });
+        }
 
     }
 }

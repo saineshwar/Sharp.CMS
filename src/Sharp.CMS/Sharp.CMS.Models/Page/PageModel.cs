@@ -27,6 +27,6 @@ namespace Sharp.CMS.Models.Page
         public string MenuName_LL { get; set; }
         public string PageTitle_EN { get; set; }
         public string PageTitle_LL { get; set; }
-        public string Alias { get; set; }
+        public string PageName { get; set; }
     }
 }

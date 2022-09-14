@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
 using Sharp.CMS.Data.NewPage.Command;
+using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
@@ -18,10 +19,12 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
     {
         private readonly IMapper _mapper;
         private readonly INewPageHeaderCommand _iNewPageHeaderCommand;
-        public NewPageHeaderController(INewPageHeaderCommand newPageHeaderCommand, IMapper mapper)
+        private readonly INewPageHeaderQueries _iNewPageHeaderQueries;
+        public NewPageHeaderController(INewPageHeaderCommand newPageHeaderCommand, IMapper mapper, INewPageHeaderQueries newPageHeaderQueries)
         {
             _iNewPageHeaderCommand = newPageHeaderCommand;
             _mapper = mapper;
+            _iNewPageHeaderQueries = newPageHeaderQueries;
         }
 
         [HttpGet]
@@ -37,6 +40,11 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (_iNewPageHeaderQueries.CheckPageHeaderNameExists(pageHeaderView.PageHeaderName))
+                {
+
+                }
+
                 var pageheaderModel = _mapper.Map<PageHeaderModel>(pageHeaderView);
                 pageheaderModel.CreatedOn = DateTime.Now;
                 pageheaderModel.PageHeaderId = 0;
@@ -46,6 +54,39 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             }
 
             return View(pageHeaderView);
+        }
+
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GridAllPagesHeader()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var records = _iNewPageHeaderQueries.ShowAllPageHeader(sortColumn, sortColumnDirection, searchValue);
+                recordsTotal = records.Count();
+                var data = records.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

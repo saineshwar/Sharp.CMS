@@ -14,7 +14,7 @@ namespace Sharp.CMS.ViewModels.Page
         public bool? IsPublished { get; set; }
         public bool? OpenInNewTab { get; set; }
         public bool? IsNew { get; set; }
-        public string Alias { get; set; }
+        public string PageName { get; set; }
         public string Status { get; set; }
     }
 }
