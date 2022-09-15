@@ -1,4 +1,5 @@
-﻿using Sharp.CMS.Data.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.Page;
 
 namespace Sharp.CMS.Data.NewPage.Command
@@ -13,6 +14,12 @@ namespace Sharp.CMS.Data.NewPage.Command
         public int Add(PageHeaderModel pageHeaderModel)
         {
             _sharpContext.PageHeaderModel.Add(pageHeaderModel);
+            return _sharpContext.SaveChanges();
+        }
+
+        public int Update(PageHeaderModel pageHeaderModel)
+        {
+            _sharpContext.Entry(pageHeaderModel).State = EntityState.Modified;
             return _sharpContext.SaveChanges();
         }
     }

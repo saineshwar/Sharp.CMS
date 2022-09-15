@@ -10,6 +10,7 @@ using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
+using Sharp.CMS.Web.Notification;
 
 namespace Sharp.CMS.Web.Areas.Administration.Controllers
 {
@@ -20,11 +21,16 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly IMapper _mapper;
         private readonly INewPageHeaderCommand _iNewPageHeaderCommand;
         private readonly INewPageHeaderQueries _iNewPageHeaderQueries;
-        public NewPageHeaderController(INewPageHeaderCommand newPageHeaderCommand, IMapper mapper, INewPageHeaderQueries newPageHeaderQueries)
+        private readonly INotificationService _notificationService;
+        public NewPageHeaderController(
+            INewPageHeaderCommand newPageHeaderCommand,
+            IMapper mapper,
+            INewPageHeaderQueries newPageHeaderQueries, INotificationService notificationService)
         {
             _iNewPageHeaderCommand = newPageHeaderCommand;
             _mapper = mapper;
             _iNewPageHeaderQueries = newPageHeaderQueries;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -42,7 +48,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             {
                 if (_iNewPageHeaderQueries.CheckPageHeaderNameExists(pageHeaderView.PageHeaderName))
                 {
-
+                    _notificationService.DangerNotification("Message", "Header Name Entered already Exists.");
+                    return View(pageHeaderView);
                 }
 
                 var pageheaderModel = _mapper.Map<PageHeaderModel>(pageHeaderView);
@@ -51,9 +58,63 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageheaderModel.PageHeaderDetails = HttpUtility.HtmlDecode(pageHeaderView.PageHeaderDetails);
 
                 var result = _iNewPageHeaderCommand.Add(pageheaderModel);
+                if (result > 0)
+                {
+                    _notificationService.SuccessNotification("Message", $"Page Header Details Saved Successfully.");
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(pageHeaderView);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                _notificationService.DangerNotification("Message", "Something went wrong please try again.");
+
+                return RedirectToAction("Index");
+            }
+            var editmodel = _iNewPageHeaderQueries.GetPageHeaderbyPageHeaderId(id.Value);
+            if (editmodel == null)
+            {
+                _notificationService.DangerNotification("Message", "Something went wrong please try again.");
+
+                return RedirectToAction("Index");
+            }
+
+            return View(editmodel);
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(EditPageHeaderViewModel editPage)
+        {
+            if (ModelState.IsValid)
+            {
+                var editmodel = _iNewPageHeaderQueries.GetPageHeaderbyPageHeaderId(editPage.PageHeaderId);
+                if (editmodel.PageHeaderName == editPage.PageHeaderName)
+                {
+                    var pageheaderModel = _mapper.Map<PageHeaderModel>(editPage);
+                    var result = _iNewPageHeaderCommand.Update(pageheaderModel);
+                    if (result > 0)
+                    {
+                        _notificationService.SuccessNotification("Message", $"Page Header Details Updated Successfully.");
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    if (_iNewPageHeaderQueries.CheckPageHeaderNameExists(editPage.PageHeaderName))
+                    {
+                        _notificationService.DangerNotification("Message", "Page header Name already Exits");
+                    }
+                }
+            }
+
+            return View(editPage);
         }
 
 
@@ -62,6 +123,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             return View();
         }
+
+
 
         [HttpPost]
         public IActionResult GridAllPagesHeader()

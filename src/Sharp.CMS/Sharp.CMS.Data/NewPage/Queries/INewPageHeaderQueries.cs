@@ -7,5 +7,6 @@ namespace Sharp.CMS.Data.NewPage.Queries
     {
         IQueryable<NewPageHeaderGrid> ShowAllPageHeader(string sortColumn, string sortColumnDir, string search);
         bool CheckPageHeaderNameExists(string pageheadername);
+        EditPageHeaderViewModel GetPageHeaderbyPageHeaderId(int PageHeaderId);
     }
 }

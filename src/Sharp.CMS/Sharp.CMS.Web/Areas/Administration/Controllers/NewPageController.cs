@@ -11,6 +11,7 @@ using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.MenuCategory;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
+using Sharp.CMS.Web.Notification;
 
 namespace Sharp.CMS.Web.Areas.Administration.Controllers
 {
@@ -21,11 +22,16 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly IMapper _mapper;
         private readonly INewPageCommand _iNewPageCommand;
         private readonly INewPageQueries _iNewPageQueries;
-        public NewPageController(IMapper mapper, INewPageCommand newPageCommand, INewPageQueries newPageQueries)
+        private readonly INotificationService _notificationService;
+        public NewPageController(IMapper mapper, 
+            INewPageCommand newPageCommand,
+            INewPageQueries newPageQueries,
+            INotificationService notificationService)
         {
             _mapper = mapper;
             _iNewPageCommand = newPageCommand;
             _iNewPageQueries = newPageQueries;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -46,9 +52,9 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
                 if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
                 {
-                   
+                    _notificationService.DangerNotification("Message", "Page Name Entered already Exists.");
+                    return View(pageViewModel);
                 }
-
 
                 if (!string.IsNullOrEmpty(pageViewModel.Permalink))
                 {
@@ -61,10 +67,40 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 }
 
                 var result = _iNewPageCommand.Add(pageModel);
+
+                if (result > 0)
+                {
+                    _notificationService.SuccessNotification("Message", $"Page Details Saved Successfully.");
+                    return RedirectToAction("Index");
+                }
             }
 
             return View(pageViewModel);
         }
+
+
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                _notificationService.DangerNotification("Message", "Something went wrong please try again.");
+
+                return RedirectToAction("Index");
+            }
+            var editmodel = _iNewPageQueries.GetPageDetailsbyPageId(id.Value);
+            if (editmodel == null)
+            {
+                _notificationService.DangerNotification("Message", "Something went wrong please try again.");
+
+                return RedirectToAction("Index");
+            }
+
+            return View(editmodel);
+        }
+
+
 
         [HttpGet]
         public IActionResult Index()

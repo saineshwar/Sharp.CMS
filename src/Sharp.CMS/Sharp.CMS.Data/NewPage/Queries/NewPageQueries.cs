@@ -80,5 +80,41 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
+        public EditPageViewModel GetPageDetailsbyPageId(int PageId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageModel
+                                 join pageDetail in _sharpContext.PageDetailsModel on page.PageId equals pageDetail.PageId
+                                 where page.PageId == PageId
+                                 select new EditPageViewModel()
+                                 {
+                                     PageId = page.PageId,
+                                     Permalink = page.Permalink,
+                                     PageTitleEn = page.PageTitle_EN,
+                                     PageTitleLl = page.PageTitle_LL,
+                                     IsNew = page.IsNew,
+                                     MenuNameEn = page.MenuName_EN,
+                                     MenuNameLl = page.MenuName_LL,
+                                     OpenInNewTab = page.OpenInNewTab,
+                                     PageName = page.PageName,
+                                     MetaDescriptionEN = pageDetail.MetaDescription_EN,
+                                     MetaDescriptionLl = pageDetail.MetaDescription_LL,
+                                     MetaKeywordsEN = pageDetail.MetaKeywords_EN,
+                                     MetaKeywordsLl = pageDetail.MetaKeywords_LL,
+                                     PageHeading = pageDetail.PageHeading_EN,
+                                     PageHeadingLl = pageDetail.PageHeading_EN,
+                                     Status = page.Status
+
+                                 }).FirstOrDefault();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿@model Sharp.CMS.ViewModels.Page.PageHeaderViewModel
+﻿@model Sharp.CMS.ViewModels.Page.EditPageHeaderViewModel
 @{
     ViewBag.PageName = "Page Header";
 }
@@ -10,8 +10,8 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form asp-controller="NewPageHeader" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Create" method="post">
-
+        <form asp-controller="NewPageHeader" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="PageHeaderId" />
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
@@ -56,6 +56,8 @@
     <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
     <script>
+
+   
 
         CKEDITOR.replace('PageHeaderDetails',
             {
@@ -107,7 +109,7 @@
                         $.confirm({
                             title: 'Confirmation!',
                             type: 'green',
-                            content: 'Do you want to Save Page Header Details?',
+                            content: 'Do you want to Update Page Header Details?',
                             buttons: {
                                 confirm: function () {
                                     $("#loader").show();
@@ -125,8 +127,6 @@
 
             });
         });
-
-
     </script>
 
 }

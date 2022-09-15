@@ -23,7 +23,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                  orderby page.PageHeaderId descending
                                  select new NewPageHeaderGrid()
                                  {
-                                     Status = page.Status == 1 ? "Active" : "InActive",
+                                     Status = page.Status == true ? "Active" : "InActive",
                                      CreatedOn = page.CreatedOn,
                                      PageHeaderName = page.PageHeaderName,
                                      PageHeaderId = page.PageHeaderId
@@ -60,6 +60,29 @@ namespace Sharp.CMS.Data.NewPage.Queries
                 var queryable = (from page in _sharpContext.PageHeaderModel
                                  where page.PageHeaderName == pageheadername
                                  select page).Any();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public EditPageHeaderViewModel GetPageHeaderbyPageHeaderId(int PageHeaderId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageHeaderModel
+                                 where page.PageHeaderId == PageHeaderId
+                                 select new EditPageHeaderViewModel()
+                                 {
+                                     PageHeaderDetails = page.PageHeaderDetails,
+                                     PageHeaderId = page.PageHeaderId,
+                                     PageHeaderName = page.PageHeaderName,
+                                     Status = page.Status
+                                 }).FirstOrDefault();
 
                 return queryable;
             }

@@ -2,8 +2,10 @@
 
 namespace Sharp.CMS.ViewModels.Page
 {
-    public class PageHeaderViewModel
+    public class EditPageHeaderViewModel
     {
+        public int PageHeaderId { get; set; }
+
         [Required(ErrorMessage = "Enter Page Header")]
         public string PageHeaderName { get; set; }
 
@@ -16,6 +18,4 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "Status")]
         public bool Status { get; set; }
     }
-
-
 }

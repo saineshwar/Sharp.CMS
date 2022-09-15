@@ -1,4 +1,4 @@
-﻿@model Sharp.CMS.ViewModels.Page.PageViewModel
+﻿@model Sharp.CMS.ViewModels.Page.EditPageViewModel
 @{
     ViewBag.PageName = "Page";
 }
@@ -11,8 +11,8 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form asp-controller="NewPage" autocomplete="off" asp-antiforgery="true" id="newPageform" asp-action="Create" method="post">
-
+        <form asp-controller="NewPage" autocomplete="off" asp-antiforgery="true" id="newPageform" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="PageId" />
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
@@ -211,7 +211,7 @@
 
             }
 
-        
+
         });
 
 
