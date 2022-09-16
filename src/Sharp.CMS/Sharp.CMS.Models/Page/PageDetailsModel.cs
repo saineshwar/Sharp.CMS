@@ -14,7 +14,10 @@ namespace Sharp.CMS.Models.Page
         public string MetaDescription_LL { get; set; }
         public string MetaKeywords_LL { get; set; }
         public string MetaKeywords_EN { get; set; }
+
+        [ForeignKey("PageId")]
         public int PageId { get; set; }
+        public  PageModel Page { get; set; }
 
     }
 }

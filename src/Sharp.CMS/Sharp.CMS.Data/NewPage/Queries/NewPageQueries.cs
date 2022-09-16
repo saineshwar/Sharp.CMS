@@ -37,7 +37,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      PageTitle_LL = page.PageTitle_LL,
                                      OpenInNewTab = page.OpenInNewTab,
                                      CreatedOn = page.CreatedOn
-
+                                     
                                  }
                     );
 

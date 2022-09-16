@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Sharp.CMS.Common;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
@@ -51,11 +53,14 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     _notificationService.DangerNotification("Message", "Header Name Entered already Exists.");
                     return View(pageHeaderView);
                 }
+                var currentdate = DateTime.Now;
+                var user = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
 
                 var pageheaderModel = _mapper.Map<PageHeaderModel>(pageHeaderView);
-                pageheaderModel.CreatedOn = DateTime.Now;
+                pageheaderModel.CreatedOn = currentdate;
                 pageheaderModel.PageHeaderId = 0;
                 pageheaderModel.PageHeaderDetails = HttpUtility.HtmlDecode(pageHeaderView.PageHeaderDetails);
+                pageheaderModel.CreatedBy = user;
 
                 var result = _iNewPageHeaderCommand.Add(pageheaderModel);
                 if (result > 0)

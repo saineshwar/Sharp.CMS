@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Sharp.CMS.Common;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
@@ -46,9 +48,23 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
+                var currentdate = DateTime.Now;
+
                 var pageModel = _mapper.Map<PageModel>(pageViewModel);
-                pageModel.CreatedOn = DateTime.Now;
+                pageModel.CreatedOn = currentdate;
                 pageModel.PageId = 0;
+                pageModel.CreatedBy = user;
+                pageModel.PageDetails = new PageDetailsModel()
+                {
+                    MetaDescription_EN = pageViewModel.MetaDescriptionEN,
+                    MetaDescription_LL = pageViewModel.MetaDescriptionLl,
+                    MetaKeywords_EN = pageViewModel.MetaKeywordsEN,
+                    MetaKeywords_LL = pageViewModel.MetaKeywordsLl,
+                    PageHeading_EN = pageViewModel.PageHeading,
+                    PageHeading_LL = pageViewModel.PageHeadingLl,
+                    PageDetailsId = 0
+                };
 
                 if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
                 {

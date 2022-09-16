@@ -1,5 +1,5 @@
 ﻿
-@{ ViewBag.PageName = "Menu"; }
+@{ ViewBag.PageName = "Page"; }
 
 @await Html.PartialAsync("~/Views/Shared/_DatatablesCss.cshtml")
 
@@ -84,7 +84,12 @@
                         "targets": [7],
                         "orderable": false,
                         "searchable": false
-                    }
+                    },
+                {
+                "targets": [8],
+                "orderable": false,
+                "searchable": false
+            }
                     
                 ],
                 "columns": [
@@ -96,7 +101,7 @@
                     { "data": "PageTitle_LL", "name": "PageTitle_LL", "autoWidth": true },
                     { "data": "Status", "name": "Status", "autoWidth": true },
                     {
-                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/MenuMaster/Edit/' + full.PageId + '"> Edit</a>'; }
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/NewPage/Edit/' + full.PageId + '"> Edit</a>'; }
                     },
                     {
                         "render": function (data, type, full, meta) {
