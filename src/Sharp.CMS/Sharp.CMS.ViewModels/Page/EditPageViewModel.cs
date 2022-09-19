@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Sharp.CMS.ViewModels.Page
 {
@@ -53,5 +55,10 @@ namespace Sharp.CMS.ViewModels.Page
 
         [Display(Name = "Meta Keywords Local Language")]
         public string MetaKeywordsLl { get; set; }
+
+        [Display(Name = "Status")]
+        [Required(ErrorMessage = "Required Status")]
+        public int StatusId { get; set; }
+        public List<SelectListItem> ListofStatus { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Web;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Sharp.CMS.Common;
+using Sharp.CMS.Data.CommonMasters.Queries;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
@@ -24,15 +25,17 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INewPageHeaderCommand _iNewPageHeaderCommand;
         private readonly INewPageHeaderQueries _iNewPageHeaderQueries;
         private readonly INotificationService _notificationService;
+        private ICommonMastersQueries _commonMastersQueries;
         public NewPageHeaderController(
             INewPageHeaderCommand newPageHeaderCommand,
             IMapper mapper,
-            INewPageHeaderQueries newPageHeaderQueries, INotificationService notificationService)
+            INewPageHeaderQueries newPageHeaderQueries, INotificationService notificationService, ICommonMastersQueries commonMastersQueries)
         {
             _iNewPageHeaderCommand = newPageHeaderCommand;
             _mapper = mapper;
             _iNewPageHeaderQueries = newPageHeaderQueries;
             _notificationService = notificationService;
+            _commonMastersQueries = commonMastersQueries;
         }
 
         [HttpGet]

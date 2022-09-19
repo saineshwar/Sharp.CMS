@@ -5,6 +5,7 @@ using Sharp.CMS.Models.MenuMaster;
 using Sharp.CMS.Models.Notices;
 using Sharp.CMS.Models.Page;
 using Sharp.CMS.Models.RoleMaster;
+using Sharp.CMS.Models.StatusMaster;
 using Sharp.CMS.Models.UserMaster;
 
 namespace Sharp.CMS.Data.Data
@@ -25,6 +26,11 @@ namespace Sharp.CMS.Data.Data
         public DbSet<NoticeDetails> NoticeDetails { get; set; }
         public DbSet<PageModel> PageModel { get; set; }
         public DbSet<PageHeaderModel> PageHeaderModel { get; set; }
+        public DbSet<PageFooterModel> PageFooterModel { get; set; }
         public DbSet<PageDetailsModel> PageDetailsModel { get; set; }
+        public DbSet<StatusMasterModel> StatusMaster { get; set; }
+
+        
+
     }
 }

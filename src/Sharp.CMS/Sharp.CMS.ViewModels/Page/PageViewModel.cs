@@ -19,9 +19,6 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "Page Name")]
         public string PageName { get; set; }
 
-        [Display(Name = "Status")]
-        public bool Status { get; set; }
-
         [Display(Name = "OpenInNewTab")]
         public bool OpenInNewTab { get; set; }
 
@@ -54,5 +51,11 @@ namespace Sharp.CMS.ViewModels.Page
 
         [Display(Name = "Meta Keywords Local Language")]
         public string MetaKeywordsLl { get; set; }
+
+        [Display(Name = "Status")]
+        [Required(ErrorMessage = "Required Status")]
+        public int StatusId { get; set; }
+        public List<SelectListItem> ListofStatus { get; set; }
+
     }
 }  

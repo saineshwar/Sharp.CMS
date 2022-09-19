@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.Common;
+using Sharp.CMS.Data.CommonMasters.Queries;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
@@ -25,27 +26,34 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INewPageCommand _iNewPageCommand;
         private readonly INewPageQueries _iNewPageQueries;
         private readonly INotificationService _notificationService;
+        private readonly ICommonMastersQueries _commonMastersQueries;
         public NewPageController(IMapper mapper, 
             INewPageCommand newPageCommand,
             INewPageQueries newPageQueries,
-            INotificationService notificationService)
+            INotificationService notificationService, ICommonMastersQueries commonMastersQueries)
         {
             _mapper = mapper;
             _iNewPageCommand = newPageCommand;
             _iNewPageQueries = newPageQueries;
             _notificationService = notificationService;
+            _commonMastersQueries = commonMastersQueries;
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            var pageViewModel = new PageViewModel();
+            var pageViewModel = new PageViewModel()
+            {
+                ListofStatus = _commonMastersQueries.GetStatusList()
+            };
             return View(pageViewModel);
         }
 
         [HttpPost]
         public IActionResult Create(PageViewModel pageViewModel)
         {
+            pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
+
             if (ModelState.IsValid)
             {
                 var user = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
@@ -106,13 +114,14 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return RedirectToAction("Index");
             }
             var editmodel = _iNewPageQueries.GetPageDetailsbyPageId(id.Value);
+           
             if (editmodel == null)
             {
                 _notificationService.DangerNotification("Message", "Something went wrong please try again.");
 
                 return RedirectToAction("Index");
             }
-
+            editmodel.ListofStatus = _commonMastersQueries.GetStatusList();
             return View(editmodel);
         }
 

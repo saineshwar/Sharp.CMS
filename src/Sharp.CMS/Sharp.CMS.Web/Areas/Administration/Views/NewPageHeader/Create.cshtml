@@ -54,7 +54,7 @@
     <link href="~/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
     <script src="~/plugins/moment/moment.min.js"></script>
     <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <script src="~/js/ckeditor/ckeditor.js"></script>
     <script>
 
         CKEDITOR.replace('PageHeaderDetails',
@@ -83,7 +83,7 @@
             config.tabSpaces = 0;
             config.forcePasteAsPlainText = true;
             config.enterMode = CKEDITOR.ENTER_DIV;
-            config.basicEntities = false;
+            config.basicEntities = true;
         };
 
         $(document).ready(function ()

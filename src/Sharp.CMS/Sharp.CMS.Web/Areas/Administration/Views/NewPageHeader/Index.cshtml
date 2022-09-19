@@ -10,7 +10,7 @@
             <h3 class="card-title">All</h3>
         </div>
         <div class="card-body">
-            <table id="MenuDataTable" class="table table-bordered table-hover">
+            <table id="CustomDataTable" class="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th>PageHeaderId</th>
@@ -35,7 +35,7 @@
 @section scripts{
     <script>
         $(document).ready(function () {
-            $('#MenuDataTable').DataTable({
+            $('#CustomDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
                 "order": [[ 0, "desc" ]],

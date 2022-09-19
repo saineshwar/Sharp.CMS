@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="MenuOrdering\Command\" />
-    <Folder Include="NewPage\Command\" />
   </ItemGroup>
 
 </Project>

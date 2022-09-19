@@ -1,0 +1,127 @@
+﻿
+@{ ViewBag.PageName = "Menu"; }
+
+@await Html.PartialAsync("~/Views/Shared/_DatatablesCss.cshtml")
+
+
+<div class="col-md-12">
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">All</h3>
+        </div>
+        <div class="card-body">
+            <table id="CustomDataTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>PageFooterId</th>
+                        <th>PageFooterName</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@await Html.PartialAsync("~/Views/Shared/_DatatablesScripts.cshtml")
+@Html.Hidden("item-to-delete", "", new { @id = "item-to-delete" })
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#CustomDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "order": [[ 0, "desc" ]],
+                "filter": true,
+                "ajax": {
+                    "url": "/Administration/NewPageFooter/GridAllPagesHeader",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [1],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [2],
+                        "orderable": false,
+                        "searchable": false
+                    }
+
+                ],
+                "columns": [
+                    { "data": "PageFooterId", "name": "PageFooterId", "autoWidth": true },
+                    { "data": "PageFooterName", "name": "PageFooterName", "autoWidth": true },
+                    { "data": "Status", "name": "Status", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/NewPageFooter/Edit/' + full.PageFooterId + '"> Edit</a>'; }
+                    },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.PageFooterId + ');"> Delete </button>';
+                        }
+                    }
+                ]
+            });
+
+
+
+        });
+
+        function Delete(menuId) {
+            $.confirm({
+                title: 'Delete!',
+                content: 'Do you want to Delete Menu!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/MenuMaster/DeleteMenu",
+                            type: "POST",
+                            data: { MenuId: menuId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+
+}
+

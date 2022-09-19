@@ -18,7 +18,7 @@ namespace Sharp.CMS.Models.Page
         public int? CreatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int? UpdatedBy { get; set; }
-        public int? Status { get; set; }
+        public bool Status { get; set; }
     }
 
 }

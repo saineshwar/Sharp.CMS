@@ -1,0 +1,132 @@
+﻿@model Sharp.CMS.ViewModels.Page.EditPageFooterViewModel
+@{
+    ViewBag.PageName = "Page Footer";
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Add New Footer</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="NewPageFooter" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="PageFooterId" />
+            <div class="card-body register-card-body">
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="mandatory" asp-for="PageFooterName"></label>
+                        <input asp-for="PageFooterName" placeholder="Enter Page Footer" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageFooterName"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label asp-for="PageFooterDetails"></label>
+                        <textarea asp-for="PageFooterDetails" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageFooterDetails"></span>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <div class="form-check">
+                        <input type="checkbox" asp-for="Status" class="form-check-input" />
+                        <label class="form-check-label" asp-for="Status">Active</label>
+                        <span class="text-danger" asp-validation-for="Status"></span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card-footer">
+                <button type="button" id="btnsubmit" class="btn btn-success">Save</button>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPageFooter" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPageFooter" asp-action="Index">List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <link href="~/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <script>
+
+   
+
+        CKEDITOR.replace('PageFooterDetails',
+            {
+                on:
+                {
+                    instanceReady: function (ev) {
+                        this.dataProcessor.writer.setRules('*',
+                            {
+                                indent: false,
+                                breakBeforeOpen: false,
+                                breakAfterOpen: false,
+                                breakBeforeClose: false,
+                                breakAfterClose: false
+                            });
+                    }
+                }
+            });
+
+
+        CKEDITOR.editorConfig = function (config) {
+            config.autoParagraph = false;
+            config.fullPage = true;
+            config.allowedContent = true;
+            config.ignoreEmptyParagraph = true;
+            config.tabSpaces = 0;
+            config.forcePasteAsPlainText = true;
+            config.enterMode = CKEDITOR.ENTER_DIV;
+            config.basicEntities = false;
+        };
+
+        $(document).ready(function ()
+        {
+            $("#btnsubmit").click(function ()
+            {
+                if ($('#newform').valid()) {
+                    var pageFooterDetailsData = CKEDITOR.instances.PageFooterDetails.getData();
+
+                    if (pageFooterDetailsData === '') {
+
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'Enter Page Footer Details.',
+                            type: 'red'
+                        });
+                    }
+                    else
+                    {
+
+                        $.confirm({
+                            title: 'Confirmation!',
+                            type: 'green',
+                            content: 'Do you want to Update Page Footer Details?',
+                            buttons: {
+                                confirm: function () {
+                                    $("#loader").show();
+                                    $('#newform').submit();
+                                },
+                                cancel: function () {
+                                    $.alert('Canceled!');
+                                }
+                            }
+                        });
+
+                    }
+                }
+
+
+            });
+        });
+    </script>
+
+}

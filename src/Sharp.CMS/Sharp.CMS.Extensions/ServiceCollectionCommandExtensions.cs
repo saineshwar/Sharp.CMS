@@ -27,6 +27,7 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IOrderingCommand, OrderingCommand>();
             services.AddTransient<INewPageCommand, NewPageCommand>();
             services.AddTransient<INewPageHeaderCommand, NewPageHeaderCommand>();
+            services.AddTransient<INewPageFooterCommand, NewPageFooterCommand>();
             
             return services;
         }
