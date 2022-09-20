@@ -78,7 +78,8 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                  where page.PageHeaderId == PageHeaderId
                                  select new EditPageHeaderViewModel()
                                  {
-                                     PageHeaderDetails = page.PageHeaderDetails,
+                                     PageHeaderDetailsEN = page.PageHeaderDetails_EN,
+                                     PageHeaderDetailsLL = page.PageHeaderDetails_LL,
                                      PageHeaderId = page.PageHeaderId,
                                      PageHeaderName = page.PageHeaderName,
                                      Status = page.Status

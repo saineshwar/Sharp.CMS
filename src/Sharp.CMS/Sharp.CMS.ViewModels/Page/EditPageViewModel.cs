@@ -13,7 +13,7 @@ namespace Sharp.CMS.ViewModels.Page
         public string PageTitleEn { get; set; }
 
         [Required(ErrorMessage = "Page Title Local Language Required")]
-        [Display(Name = "PageTitle Other")]
+        [Display(Name = "PageTitle (Marathi)")]
         public string PageTitleLl { get; set; }
 
         [Required(ErrorMessage = "Page Name Required")]
@@ -29,31 +29,31 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "IsNew")]
         public bool IsNew { get; set; }
 
-        [Display(Name = "MenuName Local Language")]
+        [Display(Name = "MenuName (Marathi)")]
         public string MenuNameLl { get; set; }
 
-        [Display(Name = "MenuName English")]
+        [Display(Name = "MenuName (English)")]
         public string MenuNameEn { get; set; }
 
         [Display(Name = "Permalink")]
         public string Permalink { get; set; }
 
-        [Display(Name = "Page Heading English")]
+        [Display(Name = "Page Heading (English)")]
         public string PageHeading { get; set; }
 
-        [Display(Name = "Page Heading Local Language")]
+        [Display(Name = "Page Heading (Marathi)")]
         public string PageHeadingLl { get; set; }
 
-        [Display(Name = "Meta Description English")]
+        [Display(Name = "Meta Description (English)")]
         public string MetaDescriptionEN { get; set; }
 
-        [Display(Name = "Meta Description Local Language")]
+        [Display(Name = "Meta Description (Marathi)")]
         public string MetaDescriptionLl { get; set; }
 
-        [Display(Name = "Meta Keywords English")]
+        [Display(Name = "Meta Keywords (English)")]
         public string MetaKeywordsEN { get; set; }
 
-        [Display(Name = "Meta Keywords Local Language")]
+        [Display(Name = "Meta Keywords (Marathi)")]
         public string MetaKeywordsLl { get; set; }
 
         [Display(Name = "Status")]

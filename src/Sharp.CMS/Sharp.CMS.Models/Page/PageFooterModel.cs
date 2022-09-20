@@ -12,8 +12,9 @@ namespace Sharp.CMS.Models.Page
         public int PageFooterId { get; set; }
         [MaxLength(200)]
         public string PageFooterName { get; set; }
-        [MaxLength]
-        public string PageFooterDetails { get; set; }
+       
+        public string PageFooterDetails_EN { get; set; }
+        public string PageFooterDetails_LL { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }

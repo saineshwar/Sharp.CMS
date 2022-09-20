@@ -12,8 +12,8 @@ namespace Sharp.CMS.Models.Page
         public int PageHeaderId { get; set; }
         [MaxLength(200)]
         public string PageHeaderName { get; set; }
-        [MaxLength]
-        public string PageHeaderDetails { get; set; }
+        public string PageHeaderDetails_EN { get; set; }
+        public string PageHeaderDetails_LL { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }

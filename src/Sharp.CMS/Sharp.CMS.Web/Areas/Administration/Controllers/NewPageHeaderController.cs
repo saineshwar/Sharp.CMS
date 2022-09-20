@@ -62,7 +62,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 var pageheaderModel = _mapper.Map<PageHeaderModel>(pageHeaderView);
                 pageheaderModel.CreatedOn = currentdate;
                 pageheaderModel.PageHeaderId = 0;
-                pageheaderModel.PageHeaderDetails = HttpUtility.HtmlDecode(pageHeaderView.PageHeaderDetails);
+                pageheaderModel.PageHeaderDetails_EN = HttpUtility.HtmlDecode(pageHeaderView.PageHeaderDetailsEN);
+                pageheaderModel.PageHeaderDetails_LL = HttpUtility.HtmlDecode(pageHeaderView.PageHeaderDetailsLL);
                 pageheaderModel.CreatedBy = user;
 
                 var result = _iNewPageHeaderCommand.Add(pageheaderModel);

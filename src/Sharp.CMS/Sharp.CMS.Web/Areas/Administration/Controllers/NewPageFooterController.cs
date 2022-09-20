@@ -56,7 +56,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 var pageFooterModel = _mapper.Map<PageFooterModel>(pageFooter);
                 pageFooterModel.CreatedOn = currentdate;
                 pageFooterModel.PageFooterId = 0;
-                pageFooterModel.PageFooterDetails = HttpUtility.HtmlDecode(pageFooter.PageFooterDetails);
+                pageFooterModel.PageFooterDetails_EN = HttpUtility.HtmlDecode(pageFooter.PageFooterDetailsEN);
+                pageFooterModel.PageFooterDetails_LL = HttpUtility.HtmlDecode(pageFooter.PageFooterDetailsLL);
                 pageFooterModel.CreatedBy = user;
 
                 var result = _newPageFooterCommand.Add(pageFooterModel);

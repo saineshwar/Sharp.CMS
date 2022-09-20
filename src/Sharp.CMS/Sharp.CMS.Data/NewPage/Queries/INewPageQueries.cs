@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -8,5 +10,6 @@ namespace Sharp.CMS.Data.NewPage.Queries
         IQueryable<NewPageGrid> ShowAllPages(string sortColumn, string sortColumnDir, string search);
         bool CheckPageNameExists(string pagename);
         EditPageViewModel GetPageDetailsbyPageId(int PageId);
+        List<SelectListItem> ListofPages();
     }
 }

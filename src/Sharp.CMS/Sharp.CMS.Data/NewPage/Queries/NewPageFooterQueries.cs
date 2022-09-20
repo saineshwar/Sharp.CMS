@@ -78,7 +78,8 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                  where page.PageFooterId == pageFooterId
                                  select new EditPageFooterViewModel()
                                  {
-                                     PageFooterDetails = page.PageFooterDetails,
+                                     PageFooterDetailsEN = page.PageFooterDetails_EN,
+                                     PageFooterDetailsLL = page.PageFooterDetails_LL,
                                      PageFooterId = page.PageFooterId,
                                      PageFooterName = page.PageFooterName,
                                      Status = page.Status

@@ -6,13 +6,21 @@ namespace Sharp.CMS.ViewModels.Page
     {
         public int PageHeaderId { get; set; }
 
+        [Display(Name = "Page Header (English)")]
         [Required(ErrorMessage = "Enter Page Header")]
         public string PageHeaderName { get; set; }
 
 
-        [Required(ErrorMessage = "Enter Page Details")]
+        [Display(Name = "Page Details (English)")]
+        [Required(ErrorMessage = "Enter Page Details (English)")]
         [MaxLength]
-        public string PageHeaderDetails { get; set; }
+        public string PageHeaderDetailsEN { get; set; }
+
+        [Display(Name = "Page Details (Marathi)")]
+        [Required(ErrorMessage = "Enter Page Details (Marathi)")]
+        [MaxLength]
+        public string PageHeaderDetailsLL { get; set; }
+
 
         [Required(ErrorMessage = "Status Required")]
         [Display(Name = "Status")]

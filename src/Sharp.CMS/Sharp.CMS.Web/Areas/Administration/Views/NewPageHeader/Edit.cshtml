@@ -6,7 +6,7 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Add New Header</h3>
+            <h3 class="card-title">Edit Header</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -21,14 +21,22 @@
                         <span class="text-danger" asp-validation-for="PageHeaderName"></span>
                     </div>
                 </div>
+                <hr />
 
                 <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label asp-for="PageHeaderDetails"></label>
-                        <textarea asp-for="PageHeaderDetails" class="form-control"></textarea>
-                        <span class="text-danger" asp-validation-for="PageHeaderDetails"></span>
+                    <div class="col-md-6">
+                        <label class="mandatory" asp-for="PageHeaderDetailsEN"></label>
+                        <textarea asp-for="PageHeaderDetailsEN" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageHeaderDetailsEN"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="mandatory" asp-for="PageHeaderDetailsLL"></label>
+                        <textarea asp-for="PageHeaderDetailsLL" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageHeaderDetailsLL"></span>
                     </div>
                 </div>
+
 
                 <div class="form-group col-md-3">
                     <div class="form-check">
@@ -57,9 +65,26 @@
     <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
     <script>
 
-   
 
-        CKEDITOR.replace('PageHeaderDetails',
+        CKEDITOR.replace('PageHeaderDetailsEN',
+            {
+                on:
+                {
+                    instanceReady: function (ev) {
+                        this.dataProcessor.writer.setRules('*',
+                            {
+                                indent: false,
+                                breakBeforeOpen: false,
+                                breakAfterOpen: false,
+                                breakBeforeClose: false,
+                                breakAfterClose: false
+                            });
+                    }
+                }
+            });
+
+
+        CKEDITOR.replace('PageHeaderDetailsLL',
             {
                 on:
                 {
@@ -88,14 +113,13 @@
             config.basicEntities = false;
         };
 
-        $(document).ready(function ()
-        {
-            $("#btnsubmit").click(function ()
-            {
+        $(document).ready(function () {
+            $("#btnsubmit").click(function () {
                 if ($('#newform').valid()) {
-                    var pageHeaderDetailsData = CKEDITOR.instances.PageHeaderDetails.getData();
+                    var pageHeaderDetailsEnData = CKEDITOR.instances.PageHeaderDetailsEN.getData();
+                    var pageHeaderDetailsLlData = CKEDITOR.instances.PageHeaderDetailsLL.getData();
 
-                    if (pageHeaderDetailsData === '') {
+                    if (pageHeaderDetailsEnData === '') {
 
                         $.alert({
                             title: 'Validation!',
@@ -103,8 +127,15 @@
                             type: 'red'
                         });
                     }
-                    else
-                    {
+                    else if (pageHeaderDetailsLlData === '') {
+
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'Enter Page Header Details.',
+                            type: 'red'
+                        });
+                    }
+                    else {
 
                         $.confirm({
                             title: 'Confirmation!',

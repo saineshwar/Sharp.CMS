@@ -6,7 +6,7 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Add New Footer</h3>
+            <h3 class="card-title">Edit Footer</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -22,14 +22,19 @@
                     </div>
                 </div>
 
+
                 <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label asp-for="PageFooterDetails"></label>
-                        <textarea asp-for="PageFooterDetails" class="form-control"></textarea>
-                        <span class="text-danger" asp-validation-for="PageFooterDetails"></span>
+                    <div class="col-md-6">
+                        <label class="mandatory" asp-for="PageFooterDetailsEN"></label>
+                        <textarea asp-for="PageFooterDetailsEN" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageFooterDetailsEN"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="mandatory" asp-for="PageFooterDetailsLL"></label>
+                        <textarea asp-for="PageFooterDetailsLL" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageFooterDetailsLL"></span>
                     </div>
                 </div>
-
                 <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" asp-for="Status" class="form-check-input" />
@@ -59,7 +64,7 @@
 
    
 
-        CKEDITOR.replace('PageFooterDetails',
+        CKEDITOR.replace('PageFooterDetailsEN',
             {
                 on:
                 {
@@ -75,6 +80,25 @@
                     }
                 }
             });
+
+
+        CKEDITOR.replace('PageFooterDetailsLL',
+            {
+                on:
+                {
+                    instanceReady: function (ev) {
+                        this.dataProcessor.writer.setRules('*',
+                            {
+                                indent: false,
+                                breakBeforeOpen: false,
+                                breakAfterOpen: false,
+                                breakBeforeClose: false,
+                                breakAfterClose: false
+                            });
+                    }
+                }
+            });
+
 
 
         CKEDITOR.editorConfig = function (config) {
@@ -93,9 +117,11 @@
             $("#btnsubmit").click(function ()
             {
                 if ($('#newform').valid()) {
-                    var pageFooterDetailsData = CKEDITOR.instances.PageFooterDetails.getData();
 
-                    if (pageFooterDetailsData === '') {
+                    var pageFooterDetailsEnData = CKEDITOR.instances.PageFooterDetails.getData();
+                    var pageFooterDetailsLLData = CKEDITOR.instances.PageFooterDetailsLL.getData();
+
+                    if (pageFooterDetailsEnData === '') {
 
                         $.alert({
                             title: 'Validation!',
@@ -103,6 +129,15 @@
                             type: 'red'
                         });
                     }
+                    else
+                        if (pageFooterDetailsLLData === '') {
+
+                            $.alert({
+                                title: 'Validation!',
+                                content: 'Enter Page Footer Details.',
+                                type: 'red'
+                            });
+                        }
                     else
                     {
 

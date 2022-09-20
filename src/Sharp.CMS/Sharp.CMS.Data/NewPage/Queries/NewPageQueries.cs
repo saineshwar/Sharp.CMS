@@ -37,7 +37,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      PageTitle_LL = page.PageTitle_LL,
                                      OpenInNewTab = page.OpenInNewTab,
                                      CreatedOn = page.CreatedOn
-                                     
+
                                  }
                     );
 
@@ -109,6 +109,33 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                  }).FirstOrDefault();
 
                 return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public List<SelectListItem> ListofPages()
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageModel
+
+                                 select new SelectListItem
+                                 {
+                                     Value = page.PageId.ToString(),
+                                     Text = page.PageName
+                                 }).ToList();
+
+                queryable.Insert(0, new SelectListItem()
+                {
+                    Value = "",
+                    Text = "-----Select-----"
+                });
+                return queryable;
+
             }
             catch (Exception)
             {
