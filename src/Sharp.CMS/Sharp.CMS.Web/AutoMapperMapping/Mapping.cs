@@ -26,6 +26,7 @@ namespace Sharp.CMS.Web.AutoMapperMapping
             CreateMap<PageFooterViewModel, PageFooterModel>();
             CreateMap<EditPageHeaderViewModel, PageHeaderModel>();
             CreateMap<EditPageFooterViewModel, PageFooterModel>();
+            CreateMap<ContainersViewModel, ContainersModel>();
         }
     }
 }

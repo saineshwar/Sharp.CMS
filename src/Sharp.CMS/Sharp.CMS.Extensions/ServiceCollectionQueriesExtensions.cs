@@ -27,6 +27,7 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<INewPageHeaderQueries, NewPageHeaderQueries>();
             services.AddTransient<ICommonMastersQueries, CommonMastersQueries>();
             services.AddTransient<INewPageFooterQueries, NewPageFooterQueries>();
+            services.AddTransient<INewContainerQueries, NewContainerQueries>();
             
             return services;
         }

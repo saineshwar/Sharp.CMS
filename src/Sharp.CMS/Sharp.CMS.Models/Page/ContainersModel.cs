@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sharp.CMS.Models.Page
@@ -16,6 +17,9 @@ namespace Sharp.CMS.Models.Page
         public string ContainerDescription_En { get; set; }
         [MaxLength(500)]
         public string ContainerDescription_Ll { get; set; }
-
+        public DateTime? CreatedOn { get; set; }
+        public int? CreatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public int? UpdatedBy { get; set; }
     }
 }

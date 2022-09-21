@@ -4,6 +4,8 @@
     ViewBag.PageName = "Container";
 }
 
+
+
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
@@ -11,7 +13,7 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form asp-controller="Container" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Create" method="post">
+        <form asp-controller="Container" autocomplete="off" asp-antiforgery="true" id="newform" enctype="multipart/form-data" asp-action="Create" method="post">
 
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
@@ -35,25 +37,38 @@
                 </div>
                 <hr />
                 <div class="form-row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="mandatory" asp-for="ContainerDescriptionEn"></label>
                         <textarea asp-for="ContainerDescriptionEn" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="ContainerDescriptionEn"></span>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-12">
                         <label class="mandatory" asp-for="ContainerDescriptionLl"></label>
                         <textarea asp-for="ContainerDescriptionLl" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="ContainerDescriptionLl"></span>
                     </div>
                 </div>
                 <hr />
-                <div class="form-group col-md-3">
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <label class="mandatory" asp-for="ContainerContentImages"></label>
+                        <input multiple="multiple" maxlength="10" type="file" />
+                    </div>
+                </div>
+                <hr />
+
+                <div class="form-row">
                     <div class="form-check">
                         <input type="checkbox" asp-for="Status" class="form-check-input" />
                         <label class="form-check-label" asp-for="Status">Active</label>
                         <span class="text-danger" asp-validation-for="Status"></span>
                     </div>
                 </div>
+
+
 
             </div>
             <div class="card-footer">
@@ -65,11 +80,15 @@
     </div>
 </div>
 
+
+
 @section scripts{
-    <link href="~/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
-    <script src="~/plugins/moment/moment.min.js"></script>
-    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+
+
+
     <script src="~/js/ckeditor/ckeditor.js"></script>
+
+
     <script>
 
         CKEDITOR.replace('ContainerDescriptionEn',
@@ -118,6 +137,8 @@
             config.enterMode = CKEDITOR.ENTER_DIV;
             config.basicEntities = true;
         };
+
+
 
         $(document).ready(function () {
             $("#btnsubmit").click(function () {

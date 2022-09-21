@@ -29,8 +29,8 @@ namespace Sharp.CMS.Data.Data
         public DbSet<PageFooterModel> PageFooterModel { get; set; }
         public DbSet<PageDetailsModel> PageDetailsModel { get; set; }
         public DbSet<StatusMasterModel> StatusMaster { get; set; }
+        public DbSet<ContainersModel> ContainersModel { get; set; }
 
-        
 
     }
 }
