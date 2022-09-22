@@ -55,7 +55,7 @@
                 <div class="form-row">
                     <div class="col-md-3">
                         <label class="mandatory" asp-for="ContainerContentImages"></label>
-                        <input multiple="multiple" maxlength="10" type="file" />
+                        <input multiple="multiple" id="ContentFiles" name="ContentFiles" type="file" />
                     </div>
                 </div>
                 <hr />
@@ -171,7 +171,7 @@
                             buttons: {
                                 confirm: function () {
                                     $("#loader").show();
-                                    $('#newform').submit();
+                                    $("#newform").submit();
                                 },
                                 cancel: function () {
                                     $.alert('Canceled!');

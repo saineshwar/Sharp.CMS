@@ -348,3 +348,4 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/src/Sharp.CMS/Sharp.CMS.Web/wwwroot/Media/Content

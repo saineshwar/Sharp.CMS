@@ -11,7 +11,7 @@ namespace Sharp.CMS.ViewModels.Attachments
         public DateTime? ModifiedOn { get; set; }
         public int? CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
-        public long? PageId { get; set; }
+        public int? PageId { get; set; }
         public string Path { get; set; }
         public string DirectoryName { get; set; }
     }

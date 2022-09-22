@@ -54,7 +54,6 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ContainersViewModel containersView)
         {
             containersView.ListofStatus = _iNewPageQueries.ListofPages();
@@ -75,9 +74,12 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pagecontainerModel.ContainerDescription_En = HttpUtility.HtmlDecode(containersView.ContainerDescriptionLl);
                 pagecontainerModel.ContainerDescription_Ll = HttpUtility.HtmlDecode(containersView.ContainerDescriptionLl);
                 pagecontainerModel.CreatedBy = user;
+                pagecontainerModel.CreatedOn = currentdate;
+                pagecontainerModel.Status = containersView.Status;
 
+                // ReSharper disable once CollectionNeverQueried.Local
                 var listofattachments = new List<AttachmentsViewModel>();
-
+                
                 var files = HttpContext.Request.Form.Files;
                 if (files.Any())
                 {
@@ -98,7 +100,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                             await file.CopyToAsync(target);
                             string directoryname = "Media";
 
-                            var filepath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media","Container")).Root + $@"\{newFileName}";
+                            var filepath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"\{newFileName}";
 
                             var attachments = new AttachmentsViewModel
                             {
@@ -109,7 +111,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                                 AttachmentType = fileExtension,
                                 CreatedOn = DateTime.Now,
                                 DirectoryName = directoryname,
-                                Path = filepath
+                                Path = filepath,
+                                
                             };
 
 

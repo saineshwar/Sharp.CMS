@@ -14,6 +14,11 @@ namespace Sharp.CMS.Data.NewPage.Command
         public int Add(ContainersModel containersModel)
         {
             _sharpContext.ContainersModel.Add(containersModel);
+
+            foreach (var VARIABLE in COLLECTION)
+            {
+                
+            }
             return _sharpContext.SaveChanges();
         }
     }
