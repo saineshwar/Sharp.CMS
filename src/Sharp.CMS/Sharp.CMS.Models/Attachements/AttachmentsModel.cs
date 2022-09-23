@@ -1,9 +1,14 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sharp.CMS.ViewModels.Attachments
+namespace Sharp.CMS.Models.Attachements
 {
-    public class AttachmentsViewModel
+    [Table("Attachments")]
+    public class AttachmentsModel
     {
+        [Key]
+        public long AttachmentId { get; set; }
         public string OriginalAttachmentName { get; set; }
         public string GenerateAttachmentName { get; set; }
         public string AttachmentType { get; set; }

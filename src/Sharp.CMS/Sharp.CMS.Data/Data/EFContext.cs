@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sharp.CMS.Models.Attachements;
 using Sharp.CMS.Models.Audit;
 using Sharp.CMS.Models.MenuCategory;
 using Sharp.CMS.Models.MenuMaster;
@@ -30,7 +31,7 @@ namespace Sharp.CMS.Data.Data
         public DbSet<PageDetailsModel> PageDetailsModel { get; set; }
         public DbSet<StatusMasterModel> StatusMaster { get; set; }
         public DbSet<ContainersModel> ContainersModel { get; set; }
-
+        public DbSet<AttachmentsModel> AttachmentsModel { get; set; }
 
     }
 }

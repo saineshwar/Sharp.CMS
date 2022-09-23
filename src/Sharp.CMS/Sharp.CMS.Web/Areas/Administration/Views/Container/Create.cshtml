@@ -53,9 +53,9 @@
                 </div>
                 <hr />
                 <div class="form-row">
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <label class="mandatory" asp-for="ContainerContentImages"></label>
-                        <input multiple="multiple" id="ContentFiles" name="ContentFiles" type="file" />
+                        <input multiple="multiple" id="ContentFiles" class="multi" accept="gif|jpg|png|pdf" data-maxfile="5120" name="ContentFiles" type="file" />
                     </div>
                 </div>
                 <hr />
@@ -73,8 +73,8 @@
             </div>
             <div class="card-footer">
                 <button type="button" id="btnsubmit" class="btn btn-success">Save</button>
-                <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPageFooter" asp-action="Create">Clear</a>
-                <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPageFooter" asp-action="Index">List</a>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="Container" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="Container" asp-action="Index">List</a>
             </div>
         </form>
     </div>
@@ -87,7 +87,7 @@
 
 
     <script src="~/js/ckeditor/ckeditor.js"></script>
-
+    <script src="~/scripts/custom/jquery.MultiFile.min.js"></script>
 
     <script>
 

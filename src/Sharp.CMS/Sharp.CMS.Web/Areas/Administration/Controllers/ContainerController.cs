@@ -62,7 +62,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             {
                 if (_iNewContainerQueries.CheckContainerNameExists(containersView.ContainerName))
                 {
-                    _notificationService.DangerNotification("Message", "Footer Name Entered already Exists.");
+                    _notificationService.DangerNotification("Message", "Container Name Entered already Exists.");
                     return View(containersView);
                 }
                 var currentdate = DateTime.Now;
@@ -79,7 +79,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
                 // ReSharper disable once CollectionNeverQueried.Local
                 var listofattachments = new List<AttachmentsViewModel>();
-                
+
                 var files = HttpContext.Request.Form.Files;
                 if (files.Any())
                 {
@@ -100,7 +100,9 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                             await file.CopyToAsync(target);
                             string directoryname = "Media";
 
-                            var filepath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"\{newFileName}";
+                            var physicalPath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"{newFileName}";
+
+                            string filePath = "~/Media/Content/" + newFileName;
 
                             var attachments = new AttachmentsViewModel
                             {
@@ -111,12 +113,12 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                                 AttachmentType = fileExtension,
                                 CreatedOn = DateTime.Now,
                                 DirectoryName = directoryname,
-                                Path = filepath,
-                                
+                                VirtualPath = filePath,
+                                PhysicalPath = physicalPath
                             };
 
 
-                            await using (FileStream fs = System.IO.File.Create(filepath))
+                            await using (FileStream fs = System.IO.File.Create(physicalPath))
                             {
                                 await file.CopyToAsync(fs);
                                 fs.Flush();
@@ -129,8 +131,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 }
 
 
-                var result = _iNewContainerCommand.Add(pagecontainerModel);
-                if (result > 0)
+                var result = _iNewContainerCommand.Add(pagecontainerModel, listofattachments);
+                if (result)
                 {
                     _notificationService.SuccessNotification("Message", $"Page Container Details Saved Successfully.");
                     return RedirectToAction("Index");
@@ -144,5 +146,52 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult GridAllContainers()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var records = _iNewContainerQueries.ShowAllContainers(sortColumn, sortColumnDirection, searchValue);
+                recordsTotal = records.Count();
+                var data = records.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                _notificationService.DangerNotification("Message", "Something went wrong please try again.");
+
+                return RedirectToAction("Index");
+            }
+            var editmodel = _newPageFooterQueries.GetPageFooterbyPageFooterId(id.Value);
+            if (editmodel == null)
+            {
+                _notificationService.DangerNotification("Message", "Something went wrong please try again.");
+
+                return RedirectToAction("Index");
+            }
+
+            return View(editmodel);
+        }
+
     }
 }

@@ -264,3 +264,5 @@ body {
     background: #ffa99b !important;
 }
 */
+
+.MultiFile-remove {background: #ffeeee;border: 1px solid #c30;color: red;padding: 0 4px;line-height: 100% !important;font-size: 1.1em;margin-top: 8px;display: inline-block;border-radius: 4px;margin-right: 4px;}

@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
 {
@@ -22,6 +23,45 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                  select page).Any();
 
                 return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public IQueryable<ContainersGrid> ShowAllContainers(string sortColumn, string sortColumnDir, string search)
+        {
+            try
+            {
+                var queryable = (from container in _sharpContext.ContainersModel
+                                 join page in _sharpContext.PageModel on container.PageId equals page.PageId
+                                 orderby container.ContainersId descending
+                                 select new ContainersGrid()
+                                 {
+                                     Status = container.Status == true ? "Active" : "InActive",
+                                     ContainerName = container.ContainerName,
+                                     PageName = page.PageName,
+                                     ContainersId = container.ContainersId
+                                 }
+                    );
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
+                {
+                    queryable = queryable.OrderBy(sortColumn + " " + sortColumnDir);
+                }
+                else
+                {
+                    queryable = queryable.OrderByDescending(x => x.ContainersId);
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    queryable = queryable.Where(m => m.ContainerName.Contains(search));
+                }
+
+                return queryable;
+
             }
             catch (Exception)
             {
