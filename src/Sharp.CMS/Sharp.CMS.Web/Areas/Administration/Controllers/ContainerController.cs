@@ -182,7 +182,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
                 return RedirectToAction("Index");
             }
-            var editmodel = _newPageFooterQueries.GetPageFooterbyPageFooterId(id.Value);
+            var editmodel = _iNewContainerQueries.GetCoontainerDetailsbyId(id.Value);
             if (editmodel == null)
             {
                 _notificationService.DangerNotification("Message", "Something went wrong please try again.");
@@ -190,7 +190,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(editmodel);
+
+            var pagecontainerModel = _mapper.Map<EditContainersViewModel>(editmodel);
+            pagecontainerModel.ListofStatus = _iNewPageQueries.ListofPages();
+            return View(pagecontainerModel);
         }
 
     }

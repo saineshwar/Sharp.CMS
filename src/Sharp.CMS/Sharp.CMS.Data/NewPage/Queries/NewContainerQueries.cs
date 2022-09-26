@@ -1,7 +1,11 @@
 ﻿using Sharp.CMS.Data.Data;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using System.Net.Mail;
+using Sharp.CMS.Models.Attachements;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -62,6 +66,38 @@ namespace Sharp.CMS.Data.NewPage.Queries
 
                 return queryable;
 
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<AttachmentsModel> GetListofAttachmentsbyPageId(int pageId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.AttachmentsModel
+                                 where page.PageId == pageId
+                                 select page).ToList();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public ContainersModel GetCoontainerDetailsbyId(int containersId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.ContainersModel
+                                 where page.ContainersId == containersId
+                                 select page).FirstOrDefault();
+
+                return queryable;
             }
             catch (Exception)
             {

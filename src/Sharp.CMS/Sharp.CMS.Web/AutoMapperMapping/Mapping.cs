@@ -27,6 +27,10 @@ namespace Sharp.CMS.Web.AutoMapperMapping
             CreateMap<EditPageHeaderViewModel, PageHeaderModel>();
             CreateMap<EditPageFooterViewModel, PageFooterModel>();
             CreateMap<ContainersViewModel, ContainersModel>();
+            CreateMap<ContainersModel, EditContainersViewModel>().
+                ForMember(x=>x.ContainerDescriptionEn , y=>y.MapFrom(z=>z.ContainerDescription_En))
+                .ForMember(x => x.ContainerDescriptionLl, y => y.MapFrom(z => z.ContainerDescription_Ll
+                ));
 
         }
     }

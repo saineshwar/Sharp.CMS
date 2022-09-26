@@ -1,0 +1,192 @@
+﻿@model Sharp.CMS.ViewModels.Page.EditContainersViewModel
+
+@{
+    ViewBag.PageName = "Container";
+}
+
+
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Add New Container</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form asp-controller="Container" autocomplete="off" asp-antiforgery="true" id="newform" enctype="multipart/form-data" asp-action="Edit" method="post">
+            <input type="hidden" asp-for="ContainersId"/>
+            <div class="card-body register-card-body">
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="form-row">
+
+                    <div class="col-md-3">
+                        <label class="mandatory" asp-for="PageId"></label>
+                        <select asp-for="PageId" class="form-control"
+                                asp-items="@(new SelectList(Model.ListofStatus, "Value", "Text"))">
+                        </select>
+                        <span class="text-danger" asp-validation-for="PageId"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <label class="mandatory" asp-for="ContainerName"></label>
+                        <input asp-for="ContainerName" placeholder="Enter Container Name" class="form-control" />
+                        <span class="text-danger" asp-validation-for="ContainerName"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="ContainerDescriptionEn"></label>
+                        <textarea asp-for="ContainerDescriptionEn" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="ContainerDescriptionEn"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="ContainerDescriptionLl"></label>
+                        <textarea asp-for="ContainerDescriptionLl" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="ContainerDescriptionLl"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label class="mandatory" asp-for="ContainerContentImages"></label>
+                        <input multiple="multiple" id="ContentFiles" class="multi" accept="gif|jpg|png|pdf" data-maxfile="5120" name="ContentFiles" type="file" />
+                    </div>
+                </div>
+                <hr />
+
+                <div class="form-row">
+                    <div class="form-check">
+                        <input type="checkbox" asp-for="Status" class="form-check-input" />
+                        <label class="form-check-label" asp-for="Status">Active</label>
+                        <span class="text-danger" asp-validation-for="Status"></span>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="card-footer">
+                <button type="button" id="btnsubmit" class="btn btn-success">Save</button>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="Container" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="Container" asp-action="Index">List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+
+
+    <script src="~/js/ckeditor/ckeditor.js"></script>
+    <script src="~/scripts/custom/jquery.MultiFile.min.js"></script>
+
+    <script>
+
+        CKEDITOR.replace('ContainerDescriptionEn',
+            {
+                on:
+                {
+                    instanceReady: function (ev) {
+                        this.dataProcessor.writer.setRules('*',
+                            {
+                                indent: false,
+                                breakBeforeOpen: false,
+                                breakAfterOpen: false,
+                                breakBeforeClose: false,
+                                breakAfterClose: false
+                            });
+                    }
+                }
+            });
+
+
+        CKEDITOR.replace('ContainerDescriptionLl',
+            {
+                on:
+                {
+                    instanceReady: function (ev) {
+                        this.dataProcessor.writer.setRules('*',
+                            {
+                                indent: false,
+                                breakBeforeOpen: false,
+                                breakAfterOpen: false,
+                                breakBeforeClose: false,
+                                breakAfterClose: false
+                            });
+                    }
+                }
+            });
+
+
+        CKEDITOR.editorConfig = function (config) {
+            config.autoParagraph = false;
+            config.fullPage = true;
+            config.allowedContent = true;
+            config.ignoreEmptyParagraph = true;
+            config.tabSpaces = 0;
+            config.forcePasteAsPlainText = true;
+            config.enterMode = CKEDITOR.ENTER_DIV;
+            config.basicEntities = true;
+        };
+
+
+
+        $(document).ready(function () {
+            $("#btnsubmit").click(function () {
+                if ($('#newform').valid()) {
+                    var pageHeaderDetailsEnData = CKEDITOR.instances.ContainerDescriptionEn.getData();
+                    var pageHeaderDetailsLlData = CKEDITOR.instances.ContainerDescriptionLl.getData();
+
+                    if (pageHeaderDetailsEnData === '') {
+
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'Enter Page Header Details.',
+                            type: 'red'
+                        });
+                    }
+                    else if (pageHeaderDetailsLlData === '') {
+
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'Enter Page Header Details.',
+                            type: 'red'
+                        });
+                    }
+                    else {
+
+                        $.confirm({
+                            title: 'Confirmation!',
+                            type: 'green',
+                            content: 'Do you want to Save Page Header Details?',
+                            buttons: {
+                                confirm: function () {
+                                    $("#loader").show();
+                                    $("#newform").submit();
+                                },
+                                cancel: function () {
+                                    $.alert('Canceled!');
+                                }
+                            }
+                        });
+
+                    }
+                }
+
+
+            });
+        });
+
+
+    </script>
+
+}
