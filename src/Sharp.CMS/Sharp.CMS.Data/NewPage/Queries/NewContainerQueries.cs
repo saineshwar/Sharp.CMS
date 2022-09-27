@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Net.Mail;
+using Microsoft.EntityFrameworkCore;
 using Sharp.CMS.Models.Attachements;
 using Sharp.CMS.Models.Page;
+using Sharp.CMS.ViewModels.Attachments;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -73,13 +75,20 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
-        public List<AttachmentsModel> GetListofAttachmentsbyPageId(int pageId)
+        public List<DisplayAttachmentsViewModel> GetListofAttachmentsbyPageId(int pageId)
         {
             try
             {
-                var queryable = (from page in _sharpContext.AttachmentsModel
-                                 where page.PageId == pageId
-                                 select page).ToList();
+                var queryable = (from attachments in _sharpContext.AttachmentsModel.AsNoTracking()
+                                 where attachments.PageId == pageId
+                                 select new DisplayAttachmentsViewModel()
+                                 {
+                                     VirtualPath = attachments.VirtualPath,
+                                     DirectoryName = attachments.DirectoryName,
+                                     AttachmentId = attachments.AttachmentId,
+                                     AttachmentType = attachments.AttachmentType,
+                                     OriginalAttachmentName = attachments.OriginalAttachmentName
+                                 }).ToList();
 
                 return queryable;
             }
@@ -89,11 +98,28 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
+        public AttachmentsModel GetAttachmentsByAttachmentId(long pageId, long attachmentId)
+        {
+            try
+            {
+                var attachmentsinfo = (from attachments in _sharpContext.AttachmentsModel.AsNoTracking()
+                    where attachments.PageId == pageId && attachments.AttachmentId == attachmentId
+                    select attachments).FirstOrDefault();
+                return attachmentsinfo;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
         public ContainersModel GetCoontainerDetailsbyId(int containersId)
         {
             try
             {
-                var queryable = (from page in _sharpContext.ContainersModel
+                var queryable = (from page in _sharpContext.ContainersModel.AsNoTracking()
                                  where page.ContainersId == containersId
                                  select page).FirstOrDefault();
 

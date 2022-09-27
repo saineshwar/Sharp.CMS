@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 using Sharp.CMS.ViewModels.Attachments;
 
@@ -29,18 +30,21 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INewContainerQueries _iNewContainerQueries;
         private readonly INotificationService _notificationService;
         private readonly IMapper _mapper;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public ContainerController(INewPageQueries newPageQueries,
             INewContainerCommand newContainerCommand,
             INewContainerCommand iNewContainerCommand,
             INewContainerQueries iNewContainerQueries,
             INotificationService notificationService,
-            IMapper mapper)
+
+            IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _iNewPageQueries = newPageQueries;
             _iNewContainerCommand = iNewContainerCommand;
             _iNewContainerQueries = iNewContainerQueries;
             _notificationService = notificationService;
             _mapper = mapper;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -102,7 +106,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
                             var physicalPath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"{newFileName}";
 
-                            string filePath = "~/Media/Content/" + newFileName;
+                            string filePath = "/Media/Content/" + newFileName;
 
                             var attachments = new AttachmentsViewModel
                             {
@@ -110,7 +114,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                                 CreatedBy = user,
                                 GenerateAttachmentName = newFileName,
                                 OriginalAttachmentName = file.FileName,
-                                AttachmentType = fileExtension,
+                                AttachmentType = file.ContentType,
                                 CreatedOn = DateTime.Now,
                                 DirectoryName = directoryname,
                                 VirtualPath = filePath,
@@ -190,11 +194,45 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return RedirectToAction("Index");
             }
 
-
             var pagecontainerModel = _mapper.Map<EditContainersViewModel>(editmodel);
             pagecontainerModel.ListofStatus = _iNewPageQueries.ListofPages();
+            var listofattachment = _iNewContainerQueries.GetListofAttachmentsbyPageId(id.Value);
+            pagecontainerModel.ListofAttachments = listofattachment.Count > 0 ? listofattachment : new List<DisplayAttachmentsViewModel>();
+
             return View(pagecontainerModel);
         }
 
+        public async Task<IActionResult> DownloadAttachment(long pageId, long attachmentId)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(Convert.ToString(attachmentId)))
+                {
+                    var document = _iNewContainerQueries.GetAttachmentsByAttachmentId(pageId, attachmentId);
+                    if (document != null)
+                    {
+
+                        var documentdetail =
+                            _iNewContainerQueries.GetAttachmentsByAttachmentId(pageId, document.AttachmentId);
+
+                        string path = $"wwwroot{document.VirtualPath}";
+                        byte[] data = await System.IO.File.ReadAllBytesAsync(path);
+          
+                        return File(data, System.Net.Mime.MediaTypeNames.Application.Octet, document.GenerateAttachmentName);
+                    }
+
+                    return RedirectToAction("Index", "Container");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Container");
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

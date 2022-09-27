@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Sharp.CMS.ViewModels.Attachments;
 
 namespace Sharp.CMS.ViewModels.Page
 {
@@ -29,5 +30,7 @@ namespace Sharp.CMS.ViewModels.Page
 
         [Display(Name = "Conten tImages")]
         public string ContainerContentImages { get; set; }
+
+        public List<DisplayAttachmentsViewModel> ListofAttachments { get; set; }
     }
 }
