@@ -28,7 +28,7 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "Status")]
         public bool Status { get; set; }
 
-        [Display(Name = "Conten tImages")]
+        [Display(Name = "Content Images")]
         public string ContainerContentImages { get; set; }
 
         public List<DisplayAttachmentsViewModel> ListofAttachments { get; set; }

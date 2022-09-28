@@ -32,7 +32,6 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
         public ContainerController(INewPageQueries newPageQueries,
-            INewContainerCommand newContainerCommand,
             INewContainerCommand iNewContainerCommand,
             INewContainerQueries iNewContainerQueries,
             INotificationService notificationService,
@@ -202,6 +201,93 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             return View(pagecontainerModel);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditContainersViewModel editPage)
+        {
+            if (ModelState.IsValid)
+            {
+                var editmodel = _iNewContainerQueries.GetCoontainerDetailsbyId(editPage.ContainersId);
+                if (editmodel.ContainerName == editPage.ContainerName)
+                {
+                   
+                    var pagecontainerModel = _mapper.Map<ContainersModel>(editmodel);
+
+
+                    var listofattachments = new List<AttachmentsViewModel>();
+
+                    var files = HttpContext.Request.Form.Files;
+                    if (files.Any())
+                    {
+                        foreach (var file in files)
+                        {
+                            if (file.Length > 0)
+                            {
+                                //Getting FileName
+                                var fileName = Path.GetFileName(file.FileName);
+                                //Assigning Unique Filename (Guid)
+                                var myUniqueFileName = Convert.ToString(Guid.NewGuid().ToString("N"));
+                                //Getting file Extension
+                                var fileExtension = Path.GetExtension(fileName);
+                                // concatenating  FileName + FileExtension
+                                var newFileName = String.Concat(myUniqueFileName, fileExtension);
+
+                                await using var target = new MemoryStream();
+                                await file.CopyToAsync(target);
+                                string directoryname = "Media";
+
+                                var physicalPath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"{newFileName}";
+
+                                string filePath = "/Media/Content/" + newFileName;
+                                var currentdate = DateTime.Now;
+                                var user = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
+
+                                var attachments = new AttachmentsViewModel
+                                {
+                                    PageId = Convert.ToInt32(editPage.PageId),
+                                    CreatedBy = user,
+                                    GenerateAttachmentName = newFileName,
+                                    OriginalAttachmentName = file.FileName,
+                                    AttachmentType = file.ContentType,
+                                    CreatedOn = DateTime.Now,
+                                    DirectoryName = directoryname,
+                                    VirtualPath = filePath,
+                                    PhysicalPath = physicalPath
+                                };
+
+
+                                await using (FileStream fs = System.IO.File.Create(physicalPath))
+                                {
+                                    await file.CopyToAsync(fs);
+                                    fs.Flush();
+                                }
+
+                                listofattachments.Add(attachments);
+
+                            }
+                        }
+                    }
+
+                    var result = _iNewContainerCommand.Add(pagecontainerModel, listofattachments);
+
+
+                    if (result)
+                    {
+                        _notificationService.SuccessNotification("Message", $"Container Details Updated Successfully.");
+                        return RedirectToAction("Index");
+                    }
+                }
+                else
+                {
+                    if (_iNewContainerQueries.CheckContainerNameExists(editPage.ContainerName))
+                    {
+                        _notificationService.DangerNotification("Message", "Container Name already Exits");
+                    }
+                }
+            }
+
+            return View(editPage);
+        }
+
         public async Task<IActionResult> DownloadAttachment(long pageId, long attachmentId)
         {
             try
@@ -231,6 +317,33 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+
+        public  IActionResult DeleteAttachment(RequestAttachments requestAttachments)
+        {
+            try
+            {
+                var document = _iNewContainerQueries.GetAttachmentsByAttachmentId(requestAttachments.PageId, requestAttachments.AttachmentsId);
+
+                var result = _iNewContainerCommand.DeleteAttachmentByAttachmentId(document);
+
+                if (result)
+                {
+                    var fullName = HttpContext.Session.GetString(AllSessionKeys.FullName);
+                    var user = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
+
+                    return Json(new { Status = true });
+                }
+                else
+                {
+                    return Json(new { Status = false });
+                }
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }

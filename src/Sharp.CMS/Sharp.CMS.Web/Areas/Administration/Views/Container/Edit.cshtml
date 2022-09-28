@@ -15,12 +15,14 @@
         <!-- form start -->
         <form asp-controller="Container" autocomplete="off" asp-antiforgery="true" id="newform" enctype="multipart/form-data" asp-action="Edit" method="post">
             <input type="hidden" asp-for="ContainersId" />
+            <input type="hidden" asp-for="PageId" />
+
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
                     <div class="col-md-3">
                         <label class="mandatory" asp-for="PageId"></label>
-                        <select asp-for="PageId" class="form-control"
+                        <select readonly="readonly" asp-for="PageId" class="form-control"
                                 asp-items="@(new SelectList(Model.ListofStatus, "Value", "Text"))">
                         </select>
                         <span class="text-danger" asp-validation-for="PageId"></span>
@@ -271,6 +273,23 @@
                 }
             }
         }
+
+        
+        function DisplayModelStateErrors(modelState) {
+            var message = "";
+            var propStrings = Object.keys(modelState);
+
+            $.each(propStrings, function (i, propString) {
+                var propErrors = modelState[propString];
+                $.each(propErrors, function (j, propError) {
+                    message += propError;
+                });
+                message += "\n";
+            });
+
+            alert(message);
+        };
+
 
     </script>
 
