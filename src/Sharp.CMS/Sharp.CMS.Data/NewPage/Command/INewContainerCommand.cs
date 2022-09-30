@@ -7,7 +7,7 @@ namespace Sharp.CMS.Data.NewPage.Command
 {
     public interface INewContainerCommand
     {
-        bool Add(ContainersModel containersModel, List<AttachmentsViewModel> listofAttachment);
+     
         bool Update(ContainersModel containersModel, List<AttachmentsViewModel> listofAttachment);
         bool DeleteAttachmentByAttachmentId(AttachmentsModel attachmentsModel);
     }

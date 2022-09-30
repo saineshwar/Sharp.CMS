@@ -29,7 +29,7 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<INewPageHeaderCommand, NewPageHeaderCommand>();
             services.AddTransient<INewPageFooterCommand, NewPageFooterCommand>();
             services.AddTransient<INewContainerCommand, NewContainerCommand>();
-            
+            services.AddTransient<IWidgetsCommand, WidgetsCommand>();
             return services;
         }
     }

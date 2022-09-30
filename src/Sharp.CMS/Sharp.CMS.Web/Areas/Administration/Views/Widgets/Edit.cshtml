@@ -1,42 +1,45 @@
-﻿@model Sharp.CMS.ViewModels.Page.ContainersViewModel
-
+﻿@model Sharp.CMS.ViewModels.Page.EditWidgetsViewModel
 @{
-    ViewBag.PageName = "Container";
+    ViewBag.PageName = "Widget";
 }
-
-
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Add New Container</h3>
+            <h3 class="card-title">Edit Widget</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form asp-controller="Container" autocomplete="off" asp-antiforgery="true" id="newform" enctype="multipart/form-data" asp-action="Create" method="post">
+        <form asp-controller="Widgets" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Edit" method="post">
 
+            <input type="hidden" asp-for="PageWidgetId" />
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-             
                 <div class="form-row">
                     <div class="col-md-3">
-                        <label class="mandatory" asp-for="ContainerName"></label>
-                        <input asp-for="ContainerName" placeholder="Enter Container Name" class="form-control" />
-                        <span class="text-danger" asp-validation-for="ContainerName"></span>
+                        <label class="mandatory" asp-for="PageWidgetName"></label>
+                        <input asp-for="PageWidgetName" placeholder="Enter Page Widget Name" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageWidgetName"></span>
                     </div>
                 </div>
                 <hr />
-              
-                <hr />
                 <div class="form-row">
-                    <div class="col-md-6">
-                        <label class="mandatory" asp-for="ContainerContentImages"></label>
-                        <input multiple="multiple" id="ContentFiles" class="multi" accept="gif|jpg|png|pdf" data-maxfile="5120" name="ContentFiles" type="file" />
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="PageWidgetDetailsEN"></label>
+                        <textarea asp-for="PageWidgetDetailsEN" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageWidgetDetailsEN"></span>
                     </div>
                 </div>
                 <hr />
-
                 <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="PageWidgetDetailsLL"></label>
+                        <textarea asp-for="PageWidgetDetailsLL" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageWidgetDetailsLL"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" asp-for="Status" class="form-check-input" />
                         <label class="form-check-label" asp-for="Status">Active</label>
@@ -45,12 +48,11 @@
                 </div>
 
 
-
             </div>
             <div class="card-footer">
                 <button type="button" id="btnsubmit" class="btn btn-success">Save</button>
-                <a asp-area="Administration" class="btn btn-danger" asp-controller="Container" asp-action="Create">Clear</a>
-                <a asp-area="Administration" class="btn btn-primary" asp-controller="Container" asp-action="Index">List</a>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="Widgets" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="Widgets" asp-action="Index">List</a>
             </div>
         </form>
     </div>
@@ -59,15 +61,13 @@
 
 
 @section scripts{
-
-
-
+    <link href="~/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
     <script src="~/js/ckeditor/ckeditor.js"></script>
-    <script src="~/scripts/custom/jquery.MultiFile.min.js"></script>
-
     <script>
 
-        CKEDITOR.replace('ContainerDescriptionEn',
+        CKEDITOR.replace('PageWidgetDetailsEN',
             {
                 on:
                 {
@@ -85,7 +85,7 @@
             });
 
 
-        CKEDITOR.replace('ContainerDescriptionLl',
+        CKEDITOR.replace('PageWidgetDetailsLL',
             {
                 on:
                 {
@@ -114,27 +114,25 @@
             config.basicEntities = true;
         };
 
-
-
         $(document).ready(function () {
             $("#btnsubmit").click(function () {
                 if ($('#newform').valid()) {
-                    var pageHeaderDetailsEnData = CKEDITOR.instances.ContainerDescriptionEn.getData();
-                    var pageHeaderDetailsLlData = CKEDITOR.instances.ContainerDescriptionLl.getData();
+                    var pageWidgetDetailsEnData = CKEDITOR.instances.PageWidgetDetailsEN.getData();
+                    var pageWidgetDetailsLlData = CKEDITOR.instances.PageWidgetDetailsLL.getData();
 
-                    if (pageHeaderDetailsEnData === '') {
+                    if (pageWidgetDetailsEnData === '') {
 
                         $.alert({
                             title: 'Validation!',
-                            content: 'Enter Page Header Details.',
+                            content: 'Enter Page Widget Details.',
                             type: 'red'
                         });
                     }
-                    else if (pageHeaderDetailsLlData === '') {
+                    else if (pageWidgetDetailsLlData === '') {
 
                         $.alert({
                             title: 'Validation!',
-                            content: 'Enter Page Header Details.',
+                            content: 'Enter Page Widget Details.',
                             type: 'red'
                         });
                     }
@@ -143,11 +141,11 @@
                         $.confirm({
                             title: 'Confirmation!',
                             type: 'green',
-                            content: 'Do you want to Save Page Header Details?',
+                            content: 'Do you want to Save Page Widget Details?',
                             buttons: {
                                 confirm: function () {
                                     $("#loader").show();
-                                    $("#newform").submit();
+                                    $('#newform').submit();
                                 },
                                 cancel: function () {
                                     $.alert('Canceled!');

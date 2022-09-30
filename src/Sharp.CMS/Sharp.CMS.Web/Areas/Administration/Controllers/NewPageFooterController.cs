@@ -114,6 +114,16 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     {
                         _notificationService.DangerNotification("Message", "Page footer Name already Exits");
                     }
+                    else
+                    {
+                        var pagefooterModel = _mapper.Map<PageFooterModel>(editPage);
+                        var result = _newPageFooterCommand.Update(pagefooterModel);
+                        if (result > 0)
+                        {
+                            _notificationService.SuccessNotification("Message", $"Page Footer Details Updated Successfully.");
+                            return RedirectToAction("Index");
+                        }
+                    }
                 }
             }
 

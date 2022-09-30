@@ -86,6 +86,8 @@ namespace Sharp.CMS.Data.NewPage.Queries
             {
                 var queryable = (from page in _sharpContext.PageModel
                                  join pageDetail in _sharpContext.PageDetailsModel on page.PageId equals pageDetail.PageId
+                                 join containers in _sharpContext.ContainersModel on page.PageId equals containers.PageId into containersGroup
+                                 from containersleft in containersGroup.DefaultIfEmpty()
                                  where page.PageId == PageId
                                  select new EditPageViewModel()
                                  {
@@ -103,9 +105,12 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      MetaKeywordsEN = pageDetail.MetaKeywords_EN,
                                      MetaKeywordsLl = pageDetail.MetaKeywords_LL,
                                      PageHeading = pageDetail.PageHeading_EN,
-                                     PageHeadingLl = pageDetail.PageHeading_EN,
-                                     Status = page.Status
-
+                                     PageHeadingLl = pageDetail.PageHeading_LL,
+                                     StatusId = page.Status,
+                                     ContainerDescriptionLl = containersleft.ContainerDescription_Ll,
+                                     ContainerDescriptionEn = containersleft.ContainerDescription_En,
+                                     IsActive = page.IsActive,
+                                     
                                  }).FirstOrDefault();
 
                 return queryable;

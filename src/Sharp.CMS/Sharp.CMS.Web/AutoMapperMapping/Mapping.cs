@@ -31,7 +31,8 @@ namespace Sharp.CMS.Web.AutoMapperMapping
                 ForMember(x=>x.ContainerDescriptionEn , y=>y.MapFrom(z=>z.ContainerDescription_En))
                 .ForMember(x => x.ContainerDescriptionLl, y => y.MapFrom(z => z.ContainerDescription_Ll
                 ));
-
+            CreateMap<PageWidgetsViewModel, PageWidgetsModel>();
+            CreateMap<EditWidgetsViewModel, PageWidgetsModel>();
         }
     }
 }

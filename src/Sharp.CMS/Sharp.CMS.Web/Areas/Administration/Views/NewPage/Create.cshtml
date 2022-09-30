@@ -99,6 +99,31 @@
                         <span class="text-danger" asp-validation-for="MetaKeywordsLl"></span>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="ContainerDescriptionEn"></label>
+                        <textarea asp-for="ContainerDescriptionEn" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="ContainerDescriptionEn"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="ContainerDescriptionLl"></label>
+                        <textarea asp-for="ContainerDescriptionLl" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="ContainerDescriptionLl"></span>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label class="mandatory" asp-for="ContainerContentImages"></label>
+                        <input multiple="multiple" id="ContentFiles" class="multi" accept="gif|jpg|png|pdf" data-maxfile="5120" name="ContentFiles" type="file" />
+                    </div>
+                </div>
+                
                 <hr />
                 <div class="form-row">
 
@@ -123,6 +148,14 @@
                             <span class="text-danger" asp-validation-for="IsNew"></span>
                         </div>
                     </div>
+                    <hr />
+                    <div class="form-group col-md-3">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="IsActive" class="form-check-input" />
+                            <label class="form-check-label" asp-for="IsActive">Active</label>
+                            <span class="text-danger" asp-validation-for="IsActive"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- /.card-body -->
@@ -137,7 +170,57 @@
     </div>
 </div>
 
+
+<script src="~/js/ckeditor/ckeditor.js"></script>
+<script src="~/scripts/custom/jquery.MultiFile.min.js"></script>
 <script type="text/javascript">
+
+    CKEDITOR.replace('ContainerDescriptionEn',
+        {
+            on:
+            {
+                instanceReady: function (ev) {
+                    this.dataProcessor.writer.setRules('*',
+                        {
+                            indent: false,
+                            breakBeforeOpen: false,
+                            breakAfterOpen: false,
+                            breakBeforeClose: false,
+                            breakAfterClose: false
+                        });
+                }
+            }
+        });
+
+
+    CKEDITOR.replace('ContainerDescriptionLl',
+        {
+            on:
+            {
+                instanceReady: function (ev) {
+                    this.dataProcessor.writer.setRules('*',
+                        {
+                            indent: false,
+                            breakBeforeOpen: false,
+                            breakAfterOpen: false,
+                            breakBeforeClose: false,
+                            breakAfterClose: false
+                        });
+                }
+            }
+        });
+
+
+    CKEDITOR.editorConfig = function (config) {
+        config.autoParagraph = false;
+        config.fullPage = true;
+        config.allowedContent = true;
+        config.ignoreEmptyParagraph = true;
+        config.tabSpaces = 0;
+        config.forcePasteAsPlainText = true;
+        config.enterMode = CKEDITOR.ENTER_DIV;
+        config.basicEntities = true;
+    };
 
     $(document).ready(function () {
 

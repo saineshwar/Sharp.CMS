@@ -26,7 +26,7 @@ namespace Sharp.CMS.Models.Page
         public string PageTitle_EN { get; set; }
         public string PageTitle_LL { get; set; }
         public string PageName { get; set; }
-        public  PageDetailsModel PageDetails { get; set; } 
-        
+        public  PageDetailsModel PageDetails { get; set; }
+        public bool IsActive { get; set; }
     }
 }

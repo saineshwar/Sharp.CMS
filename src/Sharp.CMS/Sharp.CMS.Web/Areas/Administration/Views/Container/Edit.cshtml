@@ -22,7 +22,7 @@
                 <div class="form-row">
                     <div class="col-md-3">
                         <label class="mandatory" asp-for="PageId"></label>
-                        <select readonly="readonly" asp-for="PageId" class="form-control"
+                        <select disabled="disabled" asp-for="PageId" class="form-control"
                                 asp-items="@(new SelectList(Model.ListofStatus, "Value", "Text"))">
                         </select>
                         <span class="text-danger" asp-validation-for="PageId"></span>

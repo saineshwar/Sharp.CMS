@@ -32,6 +32,6 @@ namespace Sharp.CMS.Data.Data
         public DbSet<StatusMasterModel> StatusMaster { get; set; }
         public DbSet<ContainersModel> ContainersModel { get; set; }
         public DbSet<AttachmentsModel> AttachmentsModel { get; set; }
-
+        public DbSet<PageWidgetsModel> PageWidgetsModel { get; set; }
     }
 }

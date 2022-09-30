@@ -57,5 +57,15 @@ namespace Sharp.CMS.ViewModels.Page
         public int StatusId { get; set; }
         public List<SelectListItem> ListofStatus { get; set; }
 
+        [Display(Name = "Container Description (English)")]
+        public string ContainerDescriptionEn { get; set; }
+
+        [Display(Name = "Container Description (Marathi)")]
+        public string ContainerDescriptionLl { get; set; }
+        public int? Status { get; set; }
+
+        [Display(Name = "Content Images")]
+        public string ContainerContentImages { get; set; }
+        public bool IsActive { get; set; }
     }
 }  

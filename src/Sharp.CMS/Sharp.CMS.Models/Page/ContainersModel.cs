@@ -9,7 +9,7 @@ namespace Sharp.CMS.Models.Page
     {
         [Key]
         public int ContainersId { get; set; }
-        public int? PageId { get; set; }
+
         [MaxLength(50)]
         public string ContainerName { get; set; }
         public int? SortOrder { get; set; }
@@ -22,5 +22,6 @@ namespace Sharp.CMS.Models.Page
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
         public bool Status { get; set; }
+        public int? PageId { get; set; }
     }
 }

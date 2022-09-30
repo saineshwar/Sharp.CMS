@@ -7,11 +7,6 @@ namespace Sharp.CMS.ViewModels.Page
     public class ContainersViewModel
     {
 
-        [Display(Name = "Page Name")]
-        [Required(ErrorMessage = "Select Page Header")]
-        public string PageId { get; set; }
-        public List<SelectListItem> ListofStatus { get; set; }
-
         [MaxLength(50)]
         [Display(Name = "Container Name")]
         [Required(ErrorMessage = "Enter Container Name")]

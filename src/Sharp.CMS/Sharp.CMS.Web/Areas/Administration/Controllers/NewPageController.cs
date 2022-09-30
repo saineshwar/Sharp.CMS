@@ -1,16 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.FileProviders;
 using Sharp.CMS.Common;
 using Sharp.CMS.Data.CommonMasters.Queries;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
+using Sharp.CMS.ViewModels.Attachments;
 using Sharp.CMS.ViewModels.MenuCategory;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
@@ -27,10 +31,11 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INewPageQueries _iNewPageQueries;
         private readonly INotificationService _notificationService;
         private readonly ICommonMastersQueries _commonMastersQueries;
-        public NewPageController(IMapper mapper, 
+        public NewPageController(IMapper mapper,
             INewPageCommand newPageCommand,
             INewPageQueries newPageQueries,
-            INotificationService notificationService, ICommonMastersQueries commonMastersQueries)
+            INotificationService notificationService,
+            ICommonMastersQueries commonMastersQueries)
         {
             _mapper = mapper;
             _iNewPageCommand = newPageCommand;
@@ -50,7 +55,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(PageViewModel pageViewModel)
+        public async Task<IActionResult> Create(PageViewModel pageViewModel)
         {
             pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
 
@@ -63,6 +68,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.CreatedOn = currentdate;
                 pageModel.PageId = 0;
                 pageModel.CreatedBy = user;
+                pageModel.Status = pageViewModel.StatusId;
                 pageModel.PageDetails = new PageDetailsModel()
                 {
                     MetaDescription_EN = pageViewModel.MetaDescriptionEN,
@@ -90,9 +96,71 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     pageViewModel.Permalink = "";
                 }
 
-                var result = _iNewPageCommand.Add(pageModel);
 
-                if (result > 0)
+                var pagecontainerModel = new ContainersModel();
+                pagecontainerModel.ContainersId = 0;
+                pagecontainerModel.ContainerDescription_En = HttpUtility.HtmlDecode(pageViewModel.ContainerDescriptionEn);
+                pagecontainerModel.ContainerDescription_Ll = HttpUtility.HtmlDecode(pageViewModel.ContainerDescriptionLl);
+                pagecontainerModel.CreatedBy = user;
+                pagecontainerModel.CreatedOn = currentdate;
+                pagecontainerModel.Status = pageViewModel.IsActive;
+       
+
+                // ReSharper disable once CollectionNeverQueried.Local
+                var listofattachments = new List<AttachmentsViewModel>();
+
+                var files = HttpContext.Request.Form.Files;
+                if (files.Any())
+                {
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 0)
+                        {
+                            //Getting FileName
+                            var fileName = Path.GetFileName(file.FileName);
+                            //Assigning Unique Filename (Guid)
+                            var myUniqueFileName = Convert.ToString(Guid.NewGuid().ToString("N"));
+                            //Getting file Extension
+                            var fileExtension = Path.GetExtension(fileName);
+                            // concatenating  FileName + FileExtension
+                            var newFileName = String.Concat(myUniqueFileName, fileExtension);
+
+                            await using var target = new MemoryStream();
+                            await file.CopyToAsync(target);
+                            string directoryname = "Media";
+
+                            var physicalPath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"{newFileName}";
+
+                            string filePath = "/Media/Content/" + newFileName;
+
+                            var attachments = new AttachmentsViewModel
+                            {
+                                CreatedBy = user,
+                                GenerateAttachmentName = newFileName,
+                                OriginalAttachmentName = file.FileName,
+                                AttachmentType = file.ContentType,
+                                CreatedOn = DateTime.Now,
+                                DirectoryName = directoryname,
+                                VirtualPath = filePath,
+                                PhysicalPath = physicalPath,
+
+                            };
+
+                            await using (FileStream fs = System.IO.File.Create(physicalPath))
+                            {
+                                await file.CopyToAsync(fs);
+                                fs.Flush();
+                            }
+
+                            listofattachments.Add(attachments);
+
+                        }
+                    }
+                }
+
+                var result = _iNewPageCommand.Add(pageModel, pagecontainerModel, listofattachments);
+
+                if (result)
                 {
                     _notificationService.SuccessNotification("Message", $"Page Details Saved Successfully.");
                     return RedirectToAction("Index");
@@ -114,7 +182,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return RedirectToAction("Index");
             }
             var editmodel = _iNewPageQueries.GetPageDetailsbyPageId(id.Value);
-           
+
             if (editmodel == null)
             {
                 _notificationService.DangerNotification("Message", "Something went wrong please try again.");
@@ -126,6 +194,19 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult Edit(EditPageViewModel editPage)
+        {
+            if (ModelState.IsValid)
+            {
+                var editmodel = _iNewPageQueries.GetPageDetailsbyPageId(editPage.PageId);
+
+
+
+            }
+
+            return View(editPage);
+        }
 
         [HttpGet]
         public IActionResult Index()

@@ -120,6 +120,16 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     {
                         _notificationService.DangerNotification("Message", "Page header Name already Exits");
                     }
+                    else
+                    {
+                        var pageheaderModel = _mapper.Map<PageHeaderModel>(editPage);
+                        var result = _iNewPageHeaderCommand.Update(pageheaderModel);
+                        if (result > 0)
+                        {
+                            _notificationService.SuccessNotification("Message", $"Page Header Details Updated Successfully.");
+                            return RedirectToAction("Index");
+                        }
+                    }
                 }
             }
 

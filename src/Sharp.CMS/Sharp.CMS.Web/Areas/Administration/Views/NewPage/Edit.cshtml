@@ -97,7 +97,24 @@
                         <span class="text-danger" asp-validation-for="MetaKeywordsLl"></span>
                     </div>
                 </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="ContainerDescriptionEn"></label>
+                        <textarea asp-for="ContainerDescriptionEn" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="ContainerDescriptionEn"></span>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="ContainerDescriptionLl"></label>
+                        <textarea asp-for="ContainerDescriptionLl" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="ContainerDescriptionLl"></span>
+                    </div>
+                </div>
 
+                <hr />
                 <div class="form-row">
 
                     <div class="form-group col-md-3">
@@ -121,6 +138,14 @@
                             <span class="text-danger" asp-validation-for="IsNew"></span>
                         </div>
                     </div>
+                    <hr />
+                    <div class="form-group col-md-3">
+                        <div class="form-check">
+                            <input type="checkbox" asp-for="IsActive" class="form-check-input" />
+                            <label class="form-check-label" asp-for="IsActive">Active</label>
+                            <span class="text-danger" asp-validation-for="IsActive"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- /.card-body -->
@@ -135,12 +160,58 @@
     </div>
 </div>
 
+<script src="~/js/ckeditor/ckeditor.js"></script>
+<script src="~/scripts/custom/jquery.MultiFile.min.js"></script>
 <script type="text/javascript">
+    CKEDITOR.replace('ContainerDescriptionEn',
+        {
+            on:
+            {
+                instanceReady: function (ev) {
+                    this.dataProcessor.writer.setRules('*',
+                        {
+                            indent: false,
+                            breakBeforeOpen: false,
+                            breakAfterOpen: false,
+                            breakBeforeClose: false,
+                            breakAfterClose: false
+                        });
+                }
+            }
+        });
 
+
+    CKEDITOR.replace('ContainerDescriptionLl',
+        {
+            on:
+            {
+                instanceReady: function (ev) {
+                    this.dataProcessor.writer.setRules('*',
+                        {
+                            indent: false,
+                            breakBeforeOpen: false,
+                            breakAfterOpen: false,
+                            breakBeforeClose: false,
+                            breakAfterClose: false
+                        });
+                }
+            }
+        });
+
+
+    CKEDITOR.editorConfig = function (config) {
+        config.autoParagraph = false;
+        config.fullPage = true;
+        config.allowedContent = true;
+        config.ignoreEmptyParagraph = true;
+        config.tabSpaces = 0;
+        config.forcePasteAsPlainText = true;
+        config.enterMode = CKEDITOR.ENTER_DIV;
+        config.basicEntities = true;
+    };
     $(document).ready(function () {
 
-        $("#btnsubmit").click(function ()
-        {
+        $("#btnsubmit").click(function () {
             if ($('#newPageform').valid()) {
 
 
@@ -173,19 +244,15 @@
         });
 
 
-        $("#PageName").blur(function ()
-        {
-            if ($("#PageName").val() != "")
-            {
+        $("#PageName").blur(function () {
+            if ($("#PageName").val() != "") {
                 $.ajax({
                     type: "POST",
                     url: "/Administration/NewPage/CheckTitleExists",
                     data: { PageName: $("#PageName").val() },
                     dataType: "json",
-                    success: function (data, textStatus, xhr)
-                    {
-                        if (data.result == "Y")
-                        {
+                    success: function (data, textStatus, xhr) {
+                        if (data.result == "Y") {
                             $.alert({
                                 title: 'Validation!',
                                 content: 'PageTitle Already Exits.',
