@@ -31,17 +31,20 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INewPageQueries _iNewPageQueries;
         private readonly INotificationService _notificationService;
         private readonly ICommonMastersQueries _commonMastersQueries;
+        private INewContainerQueries _inewContainerQueries;
+
         public NewPageController(IMapper mapper,
             INewPageCommand newPageCommand,
             INewPageQueries newPageQueries,
             INotificationService notificationService,
-            ICommonMastersQueries commonMastersQueries)
+            ICommonMastersQueries commonMastersQueries, INewContainerQueries newContainerQueries)
         {
             _mapper = mapper;
             _iNewPageCommand = newPageCommand;
             _iNewPageQueries = newPageQueries;
             _notificationService = notificationService;
             _commonMastersQueries = commonMastersQueries;
+            _inewContainerQueries = newContainerQueries;
         }
 
         [HttpGet]
@@ -190,22 +193,105 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return RedirectToAction("Index");
             }
             editmodel.ListofStatus = _commonMastersQueries.GetStatusList();
+            var listofattachment = _inewContainerQueries.GetListofAttachmentsbyPageId(id.Value);
+            editmodel.ListofAttachments = listofattachment.Count > 0 ? listofattachment : new List<DisplayAttachmentsViewModel>();
             return View(editmodel);
         }
 
 
         [HttpPost]
-        public IActionResult Edit(EditPageViewModel editPage)
+        public async Task<IActionResult> Edit(EditPageViewModel pageViewModel)
         {
             if (ModelState.IsValid)
             {
-                var editmodel = _iNewPageQueries.GetPageDetailsbyPageId(editPage.PageId);
+                var editmodel = _iNewPageQueries.GetPageDetailsbyPageId(pageViewModel.PageId);
 
+                var user = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
+                var currentdate = DateTime.Now;
+
+                var pageModel = _mapper.Map<PageModel>(pageViewModel);
+                pageModel.CreatedOn = currentdate;
+                pageModel.CreatedBy = user;
+                pageModel.Status = pageViewModel.StatusId;
+                pageModel.PageDetails = new PageDetailsModel()
+                {
+                    MetaDescription_EN = pageViewModel.MetaDescriptionEN,
+                    MetaDescription_LL = pageViewModel.MetaDescriptionLl,
+                    MetaKeywords_EN = pageViewModel.MetaKeywordsEN,
+                    MetaKeywords_LL = pageViewModel.MetaKeywordsLl,
+                    PageHeading_EN = pageViewModel.PageHeading,
+                    PageHeading_LL = pageViewModel.PageHeadingLl,
+                    PageDetailsId = editmodel.PageDetailsId
+                };
+
+
+                var pagecontainerModel = new ContainersModel();
+                pagecontainerModel.ContainersId = editmodel.ContainersId;
+                pagecontainerModel.ContainerDescription_En = HttpUtility.HtmlDecode(pageViewModel.ContainerDescriptionEn);
+                pagecontainerModel.ContainerDescription_Ll = HttpUtility.HtmlDecode(pageViewModel.ContainerDescriptionLl);
+                pagecontainerModel.CreatedBy = user;
+                pagecontainerModel.CreatedOn = currentdate;
+                pagecontainerModel.Status = pageViewModel.IsActive;
+                pagecontainerModel.PageId = editmodel.PageId;
+
+                // ReSharper disable once CollectionNeverQueried.Local
+                var listofattachments = new List<AttachmentsViewModel>();
+
+                var files = HttpContext.Request.Form.Files;
+                if (files.Any())
+                {
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 0)
+                        {
+                            //Getting FileName
+                            var fileName = Path.GetFileName(file.FileName);
+                            //Assigning Unique Filename (Guid)
+                            var myUniqueFileName = Convert.ToString(Guid.NewGuid().ToString("N"));
+                            //Getting file Extension
+                            var fileExtension = Path.GetExtension(fileName);
+                            // concatenating  FileName + FileExtension
+                            var newFileName = String.Concat(myUniqueFileName, fileExtension);
+
+                            await using var target = new MemoryStream();
+                            await file.CopyToAsync(target);
+                            string directoryname = "Media";
+
+                            var physicalPath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"{newFileName}";
+
+                            string filePath = "/Media/Content/" + newFileName;
+
+                            var attachments = new AttachmentsViewModel
+                            {
+                                CreatedBy = user,
+                                GenerateAttachmentName = newFileName,
+                                OriginalAttachmentName = file.FileName,
+                                AttachmentType = file.ContentType,
+                                CreatedOn = DateTime.Now,
+                                DirectoryName = directoryname,
+                                VirtualPath = filePath,
+                                PhysicalPath = physicalPath,
+                                PageId = pageViewModel.PageId
+                            };
+
+                            await using (FileStream fs = System.IO.File.Create(physicalPath))
+                            {
+                                await file.CopyToAsync(fs);
+                                fs.Flush();
+                            }
+
+                            listofattachments.Add(attachments);
+
+                        }
+                    }
+                }
+
+                var result = _iNewPageCommand.Update(pageModel, pagecontainerModel, listofattachments);
 
 
             }
 
-            return View(editPage);
+            return View(pageViewModel);
         }
 
         [HttpGet]

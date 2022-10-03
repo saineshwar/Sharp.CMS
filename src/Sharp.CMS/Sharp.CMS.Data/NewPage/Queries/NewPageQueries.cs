@@ -110,6 +110,8 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      ContainerDescriptionLl = containersleft.ContainerDescription_Ll,
                                      ContainerDescriptionEn = containersleft.ContainerDescription_En,
                                      IsActive = page.IsActive,
+                                     ContainersId = containersleft.ContainersId,
+                                     PageDetailsId = pageDetail.PageDetailsId
                                      
                                  }).FirstOrDefault();
 

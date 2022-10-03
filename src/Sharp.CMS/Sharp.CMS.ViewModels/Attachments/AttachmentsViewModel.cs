@@ -14,5 +14,6 @@ namespace Sharp.CMS.ViewModels.Attachments
         public string PhysicalPath { get; set; }
         public string VirtualPath { get; set; }
         public string DirectoryName { get; set; }
+        public int? PageId { get; set; }
     }
 }

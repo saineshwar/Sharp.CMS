@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Transactions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.Attachements;
@@ -19,16 +20,16 @@ namespace Sharp.CMS.Data.NewPage.Command
             _logger = logger;
         }
 
-        public bool Add(PageModel PageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachments)
+        public bool Add(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachments)
         {
             try
             {
                 using var transactionScope = new TransactionScope();
 
-                _sharpContext.PageModel.Add(PageModel);
+                _sharpContext.PageModel.Add(pageModel);
                 _sharpContext.SaveChanges();
 
-                containersModel.PageId = PageModel.PageId;
+                containersModel.PageId = pageModel.PageId;
                 _sharpContext.ContainersModel.Add(containersModel);
                 _sharpContext.SaveChanges();
 
@@ -40,7 +41,7 @@ namespace Sharp.CMS.Data.NewPage.Command
                         OriginalAttachmentName = attach.OriginalAttachmentName,
                         GenerateAttachmentName = attach.GenerateAttachmentName,
                         AttachmentType = attach.AttachmentType,
-                        PageId = PageModel.PageId,
+                        PageId = pageModel.PageId,
                         ContainersId = containersModel.ContainersId,
                         CreatedBy = attach.CreatedBy,
                         CreatedOn = attach.CreatedOn,
@@ -65,8 +66,51 @@ namespace Sharp.CMS.Data.NewPage.Command
                 return false;
             }
 
+        }
+        public bool Update(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachment)
+        {
+            try
+            {
+                using var transactionScope = new TransactionScope();
 
+                _sharpContext.Entry(pageModel).State = EntityState.Modified;
+                _sharpContext.SaveChanges();
+
+                _sharpContext.Entry(containersModel).State = EntityState.Modified;
+                _sharpContext.SaveChanges();
+
+                foreach (var attach in listofAttachment)
+                {
+                    var attachmentsModel = new AttachmentsModel()
+                    {
+                        AttachmentId = 0,
+                        OriginalAttachmentName = attach.OriginalAttachmentName,
+                        GenerateAttachmentName = attach.GenerateAttachmentName,
+                        AttachmentType = attach.AttachmentType, 
+                        PageId = attach.PageId,
+                        ContainersId = containersModel.ContainersId,
+                        CreatedBy = attach.CreatedBy,
+                        CreatedOn = attach.CreatedOn,
+                        VirtualPath = attach.VirtualPath,
+                        PhysicalPath = attach.PhysicalPath,
+                        DirectoryName = attach.DirectoryName
+                    };
+
+                    _sharpContext.AttachmentsModel.Add(attachmentsModel);
+                    _sharpContext.SaveChanges();
+                }
+
+                transactionScope.Complete();
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "Update :Add");
+                return false;
+            }
 
         }
+
+
     }
 }

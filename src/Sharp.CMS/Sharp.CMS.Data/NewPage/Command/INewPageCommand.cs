@@ -6,6 +6,7 @@ namespace Sharp.CMS.Data.NewPage.Command
 {
     public interface INewPageCommand
     {
-        bool Add(PageModel PageModel, ContainersModel ContainersModel, List<AttachmentsViewModel> listofAttachments);
+        bool Add(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachments);
+        bool Update(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachment);
     }
 }

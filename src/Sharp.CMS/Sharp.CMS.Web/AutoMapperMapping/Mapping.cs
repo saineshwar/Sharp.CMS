@@ -33,6 +33,7 @@ namespace Sharp.CMS.Web.AutoMapperMapping
                 ));
             CreateMap<PageWidgetsViewModel, PageWidgetsModel>();
             CreateMap<EditWidgetsViewModel, PageWidgetsModel>();
+            CreateMap<EditPageViewModel, PageModel>();
         }
     }
 }

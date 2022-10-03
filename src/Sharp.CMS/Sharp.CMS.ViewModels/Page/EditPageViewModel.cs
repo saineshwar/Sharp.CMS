@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Sharp.CMS.ViewModels.Attachments;
 
 namespace Sharp.CMS.ViewModels.Page
 {
@@ -26,19 +27,24 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "IsNew")]
         public bool IsNew { get; set; }
 
+
         [Display(Name = "MenuName (Marathi)")]
+        [Required(ErrorMessage = "MenuName (Marathi) Required")]
         public string MenuNameLl { get; set; }
 
         [Display(Name = "MenuName (English)")]
+        [Required(ErrorMessage = "MenuName (English) Required")]
         public string MenuNameEn { get; set; }
 
         [Display(Name = "Permalink")]
         public string Permalink { get; set; }
 
         [Display(Name = "Page Heading (English)")]
+        [Required(ErrorMessage = "Page Heading (English) Required")]
         public string PageHeading { get; set; }
 
         [Display(Name = "Page Heading (Marathi)")]
+        [Required(ErrorMessage = "Page Heading (Marathi) Required")]
         public string PageHeadingLl { get; set; }
 
         [Display(Name = "Meta Description (English)")]
@@ -69,8 +75,10 @@ namespace Sharp.CMS.ViewModels.Page
 
         public bool IsActive { get; set; }
 
+        public int ContainersId { get; set; }
+        public int PageDetailsId { get; set; }
 
-
+        public List<DisplayAttachmentsViewModel> ListofAttachments { get; set; }
 
     }
 }
