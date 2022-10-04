@@ -23,19 +23,21 @@
                 </div>
                 <hr />
                 <div class="form-row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class="mandatory" asp-for="PageHeaderDetailsEN"></label>
                         <textarea asp-for="PageHeaderDetailsEN" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="PageHeaderDetailsEN"></span>
                     </div>
-                
-                    <div class="col-md-6">
+                </div>
+                    <hr/>
+                    <div class="form-row">
+                    <div class="col-md-12">
                         <label class="mandatory" asp-for="PageHeaderDetailsLL"></label>
                         <textarea asp-for="PageHeaderDetailsLL" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="PageHeaderDetailsLL"></span>
                     </div>
                 </div>
-
+                <hr/>
                 <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" asp-for="Status" class="form-check-input" />

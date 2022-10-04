@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Folder Include="Attachments\" />
+    <Folder Include="InnerPage\" />
   </ItemGroup>
 
 </Project>

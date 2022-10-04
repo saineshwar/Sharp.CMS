@@ -1,4 +1,4 @@
-﻿@model Sharp.CMS.ViewModels.Page.EditPageViewModel
+﻿@model Sharp.CMS.ViewModels.InnerPage.EditInnerPageViewModel
 @{
     ViewBag.PageName = "Page";
 }
@@ -12,7 +12,7 @@
         <!-- /.card-header -->
         <!-- form start -->
         <form asp-controller="NewPage" autocomplete="off" asp-antiforgery="true" id="newPageform" enctype="multipart/form-data" asp-action="Edit" method="post">
-            <input type="hidden" asp-for="PageId" />
+            <input type="hidden" asp-for="InnerPageId" />
             <input type="hidden" asp-for="PageDetailsId" />
             <input type="hidden" asp-for="ContainersId" />
 
@@ -150,14 +150,14 @@
                                                 <td>
                                                     <a class="btn btn-primary"
                                                        data-toggle="tooltip" data-placement="top"
-                                                       title="Download Attachment !" onclick="downloadAttachment('@Model.PageId', '@attachment.AttachmentId')" href="javascript:void(0);"> <i class="fa fa-download"></i> Download </a>
+                                                       title="Download Attachment !" onclick="downloadAttachment('@Model.InnerPageId', '@attachment.AttachmentId')" href="javascript:void(0);"> <i class="fa fa-download"></i> Download </a>
 
                                                 </td>
                                                 <td>
                                                     <a data-toggle="tooltip"
                                                        data-placement="top"
                                                        title="Delete Attachment !"
-                                                       class="btn btn-danger" onclick="deleteAttachment('@attachment.AttachmentId', '@Model.PageId')" href="javascript:void(0);"> <i class="fa fa-trash"></i> Delete </a>
+                                                       class="btn btn-danger" onclick="deleteAttachment('@attachment.AttachmentId', '@Model.InnerPageId')" href="javascript:void(0);"> <i class="fa fa-trash"></i> Delete </a>
                                                 </td>
                                             </tr>
                                         }
@@ -212,8 +212,8 @@
 
             <div class="card-footer">
                 <button type="button" id="btnsubmit" class="btn btn-success">Save</button>
-                <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPage" asp-action="Create">Clear</a>
-                <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPage" asp-action="Index">List</a>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="InnerNewPage" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="InnerNewPage" asp-action="Index">List</a>
 
             </div>
         </form>
