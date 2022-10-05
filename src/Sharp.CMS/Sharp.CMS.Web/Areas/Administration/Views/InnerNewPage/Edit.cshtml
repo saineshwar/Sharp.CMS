@@ -11,17 +11,25 @@
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form asp-controller="NewPage" autocomplete="off" asp-antiforgery="true" id="newPageform" enctype="multipart/form-data" asp-action="Edit" method="post">
+        <form asp-controller="InnerNewPage" autocomplete="off" asp-antiforgery="true" id="newPageform" enctype="multipart/form-data" asp-action="Edit" method="post">
             <input type="hidden" asp-for="InnerPageId" />
             <input type="hidden" asp-for="PageDetailsId" />
             <input type="hidden" asp-for="ContainersId" />
-
+      
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
                 <div class="form-row">
                     <div class="form-group col-md-3">
+                        <label class="mandatory" asp-for="PageId"></label>
+                        <select asp-for="PageId" class="form-control"
+                                asp-items="@(new SelectList(Model.ListofPages, "Value", "Text"))">
+                        </select>
+                        <span class="text-danger" asp-validation-for="PageId"></span>
+                    </div>
+                    <div class="form-group col-md-3">
                         <label class="mandatory" asp-for="PageName"></label>
-                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control" />
+                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control"/>
                         <span class="text-danger" asp-validation-for="PageName"></span>
                     </div>
                 </div>
@@ -150,14 +158,14 @@
                                                 <td>
                                                     <a class="btn btn-primary"
                                                        data-toggle="tooltip" data-placement="top"
-                                                       title="Download Attachment !" onclick="downloadAttachment('@Model.InnerPageId', '@attachment.AttachmentId')" href="javascript:void(0);"> <i class="fa fa-download"></i> Download </a>
+                                                       title="Download Attachment !" onclick="downloadAttachment('@Model.InnerPageId', '@attachment.InnerAttachmentId')" href="javascript:void(0);"> <i class="fa fa-download"></i> Download </a>
 
                                                 </td>
                                                 <td>
                                                     <a data-toggle="tooltip"
                                                        data-placement="top"
                                                        title="Delete Attachment !"
-                                                       class="btn btn-danger" onclick="deleteAttachment('@attachment.AttachmentId', '@Model.InnerPageId')" href="javascript:void(0);"> <i class="fa fa-trash"></i> Delete </a>
+                                                       class="btn btn-danger" onclick="deleteAttachment('@attachment.InnerAttachmentId', '@Model.InnerPageId')" href="javascript:void(0);"> <i class="fa fa-trash"></i> Delete </a>
                                                 </td>
                                             </tr>
                                         }
@@ -328,7 +336,7 @@
     });
 
     function downloadAttachment(pageId, attachmentsId) {
-        window.location = "/Administration/Container/DownloadAttachment?pageId=" + pageId + "&AttachmentId=" + attachmentsId;
+        window.location = "/Administration/InnerContainer/DownloadAttachment?pageId=" + pageId + "&AttachmentId=" + attachmentsId;
     }
 
     function deleteAttachment(attachmentsId, pageId) {
@@ -343,7 +351,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Administration/Container/DeleteAttachment",
+                    url: "/Administration/InnerContainer/DeleteAttachment",
                     dataType: "json",
                     data: jsonObject,
                     success: function (data, textStatus, xhr) {

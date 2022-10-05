@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Sharp.CMS.Common;
 using Sharp.CMS.Data.CommonMasters.Queries;
+using Sharp.CMS.Data.InnerPages.Queries;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.InnerPage;
@@ -31,23 +32,25 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INotificationService _notificationService;
         private readonly INewContainerQueries _inewContainerQueries;
         private readonly ICommonMastersQueries _commonMastersQueries;
-        private readonly IInnerNewPageQueries _IInnerNewPageQueries;
-        private readonly IInnerNewPageCommand _IInnerNewPageCommand;
-        private readonly INewPageQueries _INewPageQueries;
+        private readonly IInnerNewPageQueries _iInnerNewPageQueries;
+        private readonly IInnerNewPageCommand _iInnerNewPageCommand;
+        private readonly INewPageQueries _iNewPageQueries;
+        private readonly IInnerNewContainerQueries _innerNewContainerQueries;
         public InnerNewPageController(IMapper mapper, INotificationService notificationService, 
             INewContainerQueries inewContainerQueries, 
             ICommonMastersQueries commonMastersQueries, 
             IInnerNewPageQueries iInnerNewPageQueries, 
             IInnerNewPageCommand innerNewPageCommand, 
-            INewPageQueries newPageQueries)
+            INewPageQueries newPageQueries, IInnerNewContainerQueries innerNewContainerQueries)
         {
             _mapper = mapper;
             _notificationService = notificationService;
             _inewContainerQueries = inewContainerQueries;
             _commonMastersQueries = commonMastersQueries;
-            _IInnerNewPageQueries = iInnerNewPageQueries;
-            _IInnerNewPageCommand = innerNewPageCommand;
-            _INewPageQueries = newPageQueries;
+            _iInnerNewPageQueries = iInnerNewPageQueries;
+            _iInnerNewPageCommand = innerNewPageCommand;
+            _iNewPageQueries = newPageQueries;
+            _innerNewContainerQueries = innerNewContainerQueries;
         }
 
         [HttpGet]
@@ -56,7 +59,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             var pageViewModel = new InnerPageViewModel()
             {
                 ListofStatus = _commonMastersQueries.GetStatusList(),
-                ListofPages = _INewPageQueries.ListofPages()
+                ListofPages = _iNewPageQueries.ListofPages()
             };
             return View(pageViewModel);
         }
@@ -65,11 +68,11 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         public async Task<IActionResult> Create(InnerPageViewModel pageViewModel)
         {
             pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
-            pageViewModel.ListofPages = _INewPageQueries.ListofPages();
+            pageViewModel.ListofPages = _iNewPageQueries.ListofPages();
 
             if (ModelState.IsValid)
             {
-                if (_IInnerNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
+                if (_iInnerNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
                 {
                     _notificationService.DangerNotification("Message", "Page Name Entered already Exists.");
                     return View(pageViewModel);
@@ -167,7 +170,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     }
                 }
 
-                var result = _IInnerNewPageCommand.Add(pageModel, pagecontainerModel, listofattachments);
+                var result = _iInnerNewPageCommand.Add(pageModel, pagecontainerModel, listofattachments);
 
                 if (result)
                 {
@@ -190,7 +193,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
                 return RedirectToAction("Index");
             }
-            var editmodel = _IInnerNewPageQueries.GetPageDetailsbyPageId(id.Value);
+            var editmodel = _iInnerNewPageQueries.GetPageDetailsbyPageId(id.Value);
 
             if (editmodel == null)
             {
@@ -199,9 +202,9 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return RedirectToAction("Index");
             }
             editmodel.ListofStatus = _commonMastersQueries.GetStatusList();
-            editmodel.ListofPages = _INewPageQueries.ListofPages();
-            var listofattachment = _inewContainerQueries.GetListofAttachmentsbyPageId(id.Value);
-            editmodel.ListofAttachments = listofattachment.Count > 0 ? listofattachment : new List<DisplayAttachmentsViewModel>();
+            editmodel.ListofPages = _iNewPageQueries.ListofPages();
+            var listofattachment = _innerNewContainerQueries.GetListofAttachmentsbyPageId(id.Value);
+            editmodel.ListofAttachments = listofattachment.Count > 0 ? listofattachment : new List<DisplayInnerAttachmentsViewModel>();
             return View(editmodel);
         }
 
@@ -212,7 +215,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             if (ModelState.IsValid)
             {
 
-                var editmodel = _IInnerNewPageQueries.GetPageDetailsbyPageId(pageViewModel.InnerPageId);
+                var editmodel = _iInnerNewPageQueries.GetPageDetailsbyPageId(pageViewModel.InnerPageId);
 
                 if (pageViewModel.PageName == editmodel.PageName)
                 {
@@ -268,7 +271,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                                 await file.CopyToAsync(target);
                                 string directoryname = "Media";
 
-                                var physicalPath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root + $@"{newFileName}";
+                                var physicalPath =
+                                    $@"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "Content")).Root}{newFileName}";
 
                                 string filePath = "/Media/Content/" + newFileName;
 
@@ -298,11 +302,17 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     }
                     #endregion
 
-                    var result = _IInnerNewPageCommand.Update(pageModel, pagecontainerModel, listofattachments);
+                    var result = _iInnerNewPageCommand.Update(pageModel, pagecontainerModel, listofattachments);
+
+                    if (result)
+                    {
+                        _notificationService.SuccessNotification("Message", $"Page Details Updated Successfully.");
+                        return RedirectToAction("Index");
+                    }
                 }
                 else
                 {
-                    if (_IInnerNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
+                    if (_iInnerNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
                     {
                         _notificationService.DangerNotification("Message", "Page Name already Exits");
                     }
@@ -390,11 +400,22 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         }
                         #endregion
 
-                        var result = _IInnerNewPageCommand.Update(pageModel, pagecontainerModel, listofattachments);
+                        var result = _iInnerNewPageCommand.Update(pageModel, pagecontainerModel, listofattachments);
+
+                        if (result)
+                        {
+                            _notificationService.SuccessNotification("Message", $"Page Details Updated Successfully.");
+                            return RedirectToAction("Index");
+                        }
                     }
                 }
             }
 
+
+            pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
+            pageViewModel.ListofPages = _iNewPageQueries.ListofPages();
+            var listofattachment = _innerNewContainerQueries.GetListofAttachmentsbyPageId(pageViewModel.InnerPageId);
+            pageViewModel.ListofAttachments = listofattachment.Count > 0 ? listofattachment : new List<DisplayInnerAttachmentsViewModel>();
             return View(pageViewModel);
         }
 
@@ -418,7 +439,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                var records = _IInnerNewPageQueries.ShowAllPages(sortColumn, sortColumnDirection, searchValue);
+                var records = _iInnerNewPageQueries.ShowAllPages(sortColumn, sortColumnDirection, searchValue);
                 recordsTotal = records.Count();
                 var data = records.Skip(skip).Take(pageSize).ToList();
                 var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
@@ -432,7 +453,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
         public IActionResult CheckTitleExists(PageTitleRequest pageTitleRequest)
         {
-            if (_IInnerNewPageQueries.CheckPageNameExists(pageTitleRequest.PageName))
+            if (_iInnerNewPageQueries.CheckPageNameExists(pageTitleRequest.PageName))
             {
                 return Json(new { result = "Y" });
             }
@@ -443,8 +464,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             try
             {
-                var data = _IInnerNewPageQueries.GetInnerPage(requestDelete.InnerPageId);
-                var result = _IInnerNewPageCommand.Deactivate(data);
+                var data = _iInnerNewPageQueries.GetInnerPage(requestDelete.InnerPageId);
+                var result = _iInnerNewPageCommand.Deactivate(data);
                 if (result)
                 {
                     _notificationService.SuccessNotification("Message", "The Inner Page Deactivated successfully!");

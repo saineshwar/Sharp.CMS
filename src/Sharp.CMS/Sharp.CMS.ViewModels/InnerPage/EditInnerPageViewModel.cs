@@ -83,6 +83,6 @@ namespace Sharp.CMS.ViewModels.InnerPage
         public int ContainersId { get; set; }
         public int PageDetailsId { get; set; }
 
-        public List<DisplayAttachmentsViewModel> ListofAttachments { get; set; }
+        public List<DisplayInnerAttachmentsViewModel> ListofAttachments { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sharp.CMS.Data.Audit.Command;
+using Sharp.CMS.Data.InnerPages.Command;
 using Sharp.CMS.Data.MenuCategory.Command;
 using Sharp.CMS.Data.MenuMaster.Command;
 using Sharp.CMS.Data.MenuOrdering.Command;
@@ -30,6 +31,9 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<INewPageFooterCommand, NewPageFooterCommand>();
             services.AddTransient<INewContainerCommand, NewContainerCommand>();
             services.AddTransient<IWidgetsCommand, WidgetsCommand>();
+            services.AddTransient<IInnerNewPageCommand, InnerNewPageCommand>();
+            services.AddTransient<IInnerNewContainerCommand, InnerNewContainerCommand>();
+            
             return services;
         }
     }

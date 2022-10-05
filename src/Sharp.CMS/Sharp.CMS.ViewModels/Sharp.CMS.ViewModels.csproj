@@ -8,9 +8,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Attachments\" />
-    <Folder Include="InnerPage\" />
-  </ItemGroup>
-
 </Project>

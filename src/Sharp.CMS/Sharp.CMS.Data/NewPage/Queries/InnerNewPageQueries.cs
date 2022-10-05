@@ -87,7 +87,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
             {
                 var queryable = (from page in _sharpContext.InnerPageModel
                                  join pageDetail in _sharpContext.InnerPageDetailsModel on page.InnerPageId equals pageDetail.InnerPageId
-                                 join containers in _sharpContext.ContainersModel on page.InnerPageId equals containers.PageId into containersGroup
+                                 join containers in _sharpContext.InnerContainersModel on page.InnerPageId equals containers.InnerPageId into containersGroup
                                  from containersleft in containersGroup.DefaultIfEmpty()
                                  where page.InnerPageId == PageId
                                  select new EditInnerPageViewModel()
@@ -111,7 +111,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      ContainerDescriptionLl = containersleft.ContainerDescription_Ll,
                                      ContainerDescriptionEn = containersleft.ContainerDescription_En,
                                      IsActive = page.IsActive,
-                                     ContainersId = containersleft.ContainersId,
+                                     ContainersId = containersleft.InnerContainersId,
                                      PageDetailsId = pageDetail.InnerPageDetailsId,
                                      PageId = page.PageId.ToString()
 
