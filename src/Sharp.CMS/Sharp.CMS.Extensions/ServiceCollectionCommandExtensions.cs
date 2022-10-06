@@ -33,6 +33,7 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IWidgetsCommand, WidgetsCommand>();
             services.AddTransient<IInnerNewPageCommand, InnerNewPageCommand>();
             services.AddTransient<IInnerNewContainerCommand, InnerNewContainerCommand>();
+            services.AddTransient<IInnerNewPageHeaderCommand, InnerNewPageHeaderCommand>();
             
             return services;
         }

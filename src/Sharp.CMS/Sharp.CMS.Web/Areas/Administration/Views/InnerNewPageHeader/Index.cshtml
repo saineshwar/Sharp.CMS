@@ -1,0 +1,127 @@
+﻿
+@{ ViewBag.PageName = "Page Header"; }
+
+@await Html.PartialAsync("~/Views/Shared/_DatatablesCss.cshtml")
+
+
+<div class="col-md-12">
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">All</h3>
+        </div>
+        <div class="card-body">
+            <table id="CustomDataTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>InnerPageHeaderId</th>
+                        <th>PageHeaderName</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@await Html.PartialAsync("~/Views/Shared/_DatatablesScripts.cshtml")
+@Html.Hidden("item-to-delete", "", new { @id = "item-to-delete" })
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#CustomDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "order": [[ 0, "desc" ]],
+                "filter": true,
+                "ajax": {
+                    "url": "/Administration/InnerNewPageHeader/GridAllPagesHeader",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [1],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [2],
+                        "orderable": false,
+                        "searchable": false
+                    }
+
+                ],
+                "columns": [
+                    { "data": "InnerPageHeaderId", "name": "InnerPageHeaderId", "autoWidth": true },
+                    { "data": "PageHeaderName", "name": "PageHeaderName", "autoWidth": true },
+                    { "data": "Status", "name": "Status", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/NewPageHeader/Edit/' + full.InnerNewPageHeader + '"> Edit</a>'; }
+                    },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.InnerPageHeaderId + ');"> Delete </button>';
+                        }
+                    }
+                ]
+            });
+
+
+
+        });
+
+        function Delete(InnerPageHeaderId) {
+            $.confirm({
+                title: 'Delete!',
+                content: 'Do you want to Delete Inner Page Header!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/InnerNewPageHeader/Delete",
+                            type: "POST",
+                            data: { InnerPageHeaderId: InnerPageHeaderId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+
+}
+

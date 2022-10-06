@@ -35,9 +35,9 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IInnerNewPageQueries, InnerNewPageQueries>();
            
             services.AddTransient<IInnerNewContainerQueries, InnerNewContainerQueries>();
+            services.AddTransient<IInnerNewPageHeaderQueries, InnerNewPageHeaderQueries>();
 
             
-
 
             return services;
         }
