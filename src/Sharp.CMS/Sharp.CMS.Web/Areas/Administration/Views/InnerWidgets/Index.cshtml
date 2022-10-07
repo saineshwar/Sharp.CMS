@@ -1,5 +1,5 @@
 ﻿
-@{ ViewBag.PageName = "Page"; }
+@{ ViewBag.PageName = "Widget"; }
 
 @await Html.PartialAsync("~/Views/Shared/_DatatablesCss.cshtml")
 
@@ -13,12 +13,8 @@
             <table id="CustomDataTable" class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>PageId</th>
-                        <th>PageName</th>
-                        <th>MenuName</th>
-                        <th>MenuName_LL</th>
-                        <th>PageTitle</th>
-                        <th>PageTitle_LL</th>
+                        <th>InnerPageWidgetId</th>
+                        <th>PageWidgetName</th>
                         <th>Status</th>
                         <th>Edit</th>
                         <th>Delete</th>
@@ -42,10 +38,10 @@
             $('#CustomDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                "order": [[ 0, "desc" ]],
+                "order": [[0, "desc"]],
                 "filter": true,
                 "ajax": {
-                    "url": "/Administration/NewPage/GridAllPages",
+                    "url": "/Administration/InnerWidgets/GridAllWidgets",
                     "type": "POST",
                     "datatype": "json"
                 },
@@ -61,51 +57,23 @@
                         "searchable": false
                     },
                     {
-                        "targets": [3],
+                        "targets": [2],
                         "orderable": false,
                         "searchable": false
-                    },
-                    {
-                        "targets": [4],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [5],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [6],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                    {
-                        "targets": [7],
-                        "orderable": false,
-                        "searchable": false
-                    },
-                {
-                "targets": [8],
-                "orderable": false,
-                "searchable": false
-            }
-                    
+                    }
+
+
                 ],
                 "columns": [
-                    { "data": "PageId", "name": "PageId", "autoWidth": true },
-                    { "data": "PageName", "name": "PageName", "autoWidth": true },
-                    { "data": "MenuName_EN", "name": "MenuName_EN", "autoWidth": true },
-                    { "data": "MenuName_LL", "name": "MenuName_LL", "autoWidth": true },
-                    { "data": "PageTitle_EN", "name": "PageTitle_EN", "autoWidth": true },
-                    { "data": "PageTitle_LL", "name": "PageTitle_LL", "autoWidth": true },
+                    { "data": "InnerPageWidgetId", "name": "InnerPageWidgetId", "autoWidth": true },
+                    { "data": "PageWidgetName", "name": "PageWidgetName", "autoWidth": true },
                     { "data": "Status", "name": "Status", "autoWidth": true },
                     {
-                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/NewPage/Edit/' + full.PageId + '"> Edit</a>'; }
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/InnerWidgets/Edit/' + full.InnerPageWidgetId + '"> Edit</a>'; }
                     },
                     {
                         "render": function (data, type, full, meta) {
-                            return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.PageId + ');"> Delete </button>';
+                            return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.InnerPageWidgetId + ');"> Delete </button>';
                         }
                     }
                 ]
@@ -115,16 +83,16 @@
 
         });
 
-        function Delete(PageId) {
+        function Delete(InnerPageWidgetId) {
             $.confirm({
-                title: 'Alert !',
-                content: 'Do you want to Deactivate Page!',
+                title: 'Delete!',
+                nt: 'Do you want to Deactivate Widget!',
                 buttons: {
                     confirm: function () {
                         $.ajax({
-                            url: "/Administration/NewPage/Deactivate",
+                            url: "/Administration/InnerWidgets/Deactivate",
                             type: "POST",
-                            data: { Id: PageId },
+                            data: { Id: InnerPageWidgetId },
                             success: function (data, textStatus, xhr) {
                                 if (data.Result == "success") {
                                     location.reload();

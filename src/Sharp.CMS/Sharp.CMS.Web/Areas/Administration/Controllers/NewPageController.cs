@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Sharp.CMS.ViewModels.InnerPage;
 
 namespace Sharp.CMS.Web.Areas.Administration.Controllers
 {
@@ -50,7 +51,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             var pageViewModel = new PageViewModel()
             {
-                ListofStatus = _commonMastersQueries.GetStatusList()
+                ListofStatus = _commonMastersQueries.GetStatusList(),
+                ListofPages = _iNewPageQueries.ListofPages()
             };
             return View(pageViewModel);
         }
@@ -59,10 +61,11 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         public async Task<IActionResult> Create(PageViewModel pageViewModel)
         {
             pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
+            pageViewModel.ListofPages = _iNewPageQueries.ListofPages();
 
             if (ModelState.IsValid)
             {
-                if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
+                if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName, string.IsNullOrEmpty(pageViewModel.ParentPageId) ? null : Convert.ToInt32(pageViewModel.ParentPageId)))
                 {
                     _notificationService.DangerNotification("Message", "Page Name Entered already Exists.");
                     return View(pageViewModel);
@@ -76,18 +79,22 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.PageId = 0;
                 pageModel.CreatedBy = user;
                 pageModel.Status = pageViewModel.StatusId;
+
+                pageModel.IsChildPage = !string.IsNullOrEmpty(pageViewModel.ParentPageId);
+
                 pageModel.PageDetails = new PageDetailsModel()
                 {
+                    PageDetailsId = 0,
                     MetaDescription_EN = pageViewModel.MetaDescriptionEN,
                     MetaDescription_LL = pageViewModel.MetaDescriptionLl,
                     MetaKeywords_EN = pageViewModel.MetaKeywordsEN,
                     MetaKeywords_LL = pageViewModel.MetaKeywordsLl,
                     PageHeading_EN = pageViewModel.PageHeading,
                     PageHeading_LL = pageViewModel.PageHeadingLl,
-                    PageDetailsId = 0
+
                 };
 
-              
+
                 if (!string.IsNullOrEmpty(pageViewModel.Permalink))
                 {
                     pageViewModel.PageName = "";
@@ -106,7 +113,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pagecontainerModel.CreatedBy = user;
                 pagecontainerModel.CreatedOn = currentdate;
                 pagecontainerModel.Status = pageViewModel.IsActive;
-       
+
 
                 // ReSharper disable once CollectionNeverQueried.Local
                 var listofattachments = new List<AttachmentsViewModel>();
@@ -194,6 +201,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             editmodel.ListofStatus = _commonMastersQueries.GetStatusList();
             var listofattachment = _inewContainerQueries.GetListofAttachmentsbyPageId(id.Value);
             editmodel.ListofAttachments = listofattachment.Count > 0 ? listofattachment : new List<DisplayAttachmentsViewModel>();
+            editmodel.ListofPages = _iNewPageQueries.ListofPages();
             return View(editmodel);
         }
 
@@ -287,14 +295,14 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
                             }
                         }
-                    } 
+                    }
                     #endregion
 
                     var result = _iNewPageCommand.Update(pageModel, pagecontainerModel, listofattachments);
                 }
                 else
                 {
-                    if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName))
+                    if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName, pageViewModel.PageId))
                     {
                         _notificationService.DangerNotification("Message", "Page Name already Exits");
                     }
@@ -424,12 +432,38 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
         public IActionResult CheckTitleExists(PageTitleRequest pageTitleRequest)
         {
-            if (_iNewPageQueries.CheckPageNameExists(pageTitleRequest.PageName))
+            if (_iNewPageQueries.CheckPageNameExists(pageTitleRequest.PageName, pageTitleRequest.ParentPageId))
             {
                 return Json(new { result = "Y" });
             }
             return Json(new { result = "N" });
         }
 
+        public JsonResult Deactivate(RequestDelete requestDelete)
+        {
+            try
+            {
+                if (requestDelete.Id == null)
+                {
+                    return Json(new { Result = "failed", Message = "Something Went Wrong" });
+                }
+
+                var data = _iNewPageQueries.GetPagebyPageId(requestDelete.Id.Value);
+                var result = _iNewPageCommand.Deactivate(data);
+                if (result)
+                {
+                    _notificationService.SuccessNotification("Message", "The Page Deactivated successfully!");
+                    return Json(new { Result = "success" });
+                }
+                else
+                {
+                    return Json(new { Result = "failed", Message = "Cannot Delete" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Result = "failed", Message = "Cannot Delete" });
+            }
+        }
     }
 }

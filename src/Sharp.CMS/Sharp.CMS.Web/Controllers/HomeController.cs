@@ -11,6 +11,11 @@ namespace Sharp.CMS.Web.Controllers
 {
     public class HomeController : Controller
     {
+        public HomeController()
+        {
+            
+        }
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -18,11 +23,9 @@ namespace Sharp.CMS.Web.Controllers
             _logger = logger;
         }
 
-        //[Route("~/")]
-        //[Route("Home")]
-        //[Route("Home/Index")]
-        public IActionResult Index()
+        public IActionResult Index(string PageName)
         {
+
             return View();
         }
 

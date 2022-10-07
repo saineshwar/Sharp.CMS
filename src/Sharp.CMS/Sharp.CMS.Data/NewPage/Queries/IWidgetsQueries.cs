@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -8,5 +9,6 @@ namespace Sharp.CMS.Data.NewPage.Queries
         IQueryable<PageWidgetGrid> ShowAllPageWidget(string sortColumn, string sortColumnDir, string search);
         bool CheckPageWidgetNameExists(string pageWidgetName);
         EditWidgetsViewModel GetPageWidgetbyPageWidgetId(int pageWidgetId);
+        PageWidgetsModel GetPageWidget(int pageWidgetId);
     }
 }

@@ -82,21 +82,24 @@
 
         });
 
-        function Delete(menuId) {
+        function Delete(PageFooterId) {
             $.confirm({
-                title: 'Delete!',
-                content: 'Do you want to Delete Menu!',
+                title: 'Alert !',
+                content: 'Do you want to Deactivate New Page Footer!',
                 buttons: {
                     confirm: function () {
                         $.ajax({
-                            url: "/Administration/MenuMaster/DeleteMenu",
+                            url: "/Administration/NewPageFooter/Deactivate",
                             type: "POST",
-                            data: { MenuId: menuId },
-                            success: function (data, textStatus, xhr) {
-                                if (data.Result == "success") {
+                            data: { Id: PageFooterId },
+                            success: function (data, textStatus, xhr)
+                            {
+                                if (data.Result == "success")
+                                {
                                     location.reload();
                                 }
-                                if (data.Result == "failed") {
+                                if (data.Result == "failed")
+                                {
                                     $.alert('Something Went Wrong');
                                 }
                             },

@@ -161,17 +161,17 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             }
         }
 
-        public JsonResult Deactivate(RequestDeleteInnerHeaderPage requestDelete)
+        public JsonResult Deactivate(RequestDelete requestDelete)
         {
             try
             {
-                if (requestDelete.InnerPageHeaderId == null)
+                if (requestDelete.Id == null)
                 {
                     return Json(new { Result = "failed", Message = "Something Went Wrong" });
                 }
 
-                var data = _IInnerNewPageHeaderQueries.GetInnerPageHeader(requestDelete.InnerPageHeaderId.Value);
-                var result = _IInnerNewPageHeaderCommand.Delete(data);
+                var data = _IInnerNewPageHeaderQueries.GetInnerPageHeader(requestDelete.Id.Value);
+                var result = _IInnerNewPageHeaderCommand.Deactivate(data);
                 if (result)
                 {
                     _notificationService.SuccessNotification("Message", "The Inner Page Deactivated successfully!");

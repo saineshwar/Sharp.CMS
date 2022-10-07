@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -84,6 +85,22 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      PageFooterName = page.PageFooterName,
                                      Status = page.Status
                                  }).FirstOrDefault();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public PageFooterModel GetPageFooter(int pageFooterId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageFooterModel
+                    where page.PageFooterId == pageFooterId
+                    select page).FirstOrDefault();
 
                 return queryable;
             }

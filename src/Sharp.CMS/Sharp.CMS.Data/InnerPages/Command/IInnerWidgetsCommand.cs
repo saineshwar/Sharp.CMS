@@ -7,6 +7,6 @@ namespace Sharp.CMS.Data.InnerPages.Command
     {
         int Add(InnerPageWidgetsModel pageWidgets);
         int Update(InnerPageWidgetsModel pageWidgets);
-        bool Delete(InnerPageWidgetsModel pageWidgets);
+        bool Deactivate(InnerPageWidgetsModel pageWidgets);
     }
 }

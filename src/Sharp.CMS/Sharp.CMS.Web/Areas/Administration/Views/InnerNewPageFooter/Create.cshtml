@@ -1,45 +1,43 @@
-﻿@model Sharp.CMS.ViewModels.InnerPage.InnerEditPageHeaderViewModel
+﻿@model Sharp.CMS.ViewModels.InnerPage.InnerPageFooterViewModel
 @{
-    ViewBag.PageName = "Page Header";
+    ViewBag.PageName = "Page Footer";
 }
 
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Edit Inner Header</h3>
+            <h3 class="card-title">Add New Inner Footer</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form asp-controller="InnerNewPageHeader" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Edit" method="post">
-            <input type="hidden" asp-for="InnerPageHeaderId" />
+        <form asp-controller="InnerNewPageFooter" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Create" method="post">
+
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <label class="mandatory" asp-for="PageHeaderName"></label>
-                        <input asp-for="PageHeaderName" placeholder="Enter Page Header" class="form-control" />
-                        <span class="text-danger" asp-validation-for="PageHeaderName"></span>
-                    </div>
-                </div>
-                <hr />
-
-                <div class="form-row">
-                    <div class="col-md-12">
-                        <label class="mandatory" asp-for="PageHeaderDetailsEN"></label>
-                        <textarea asp-for="PageHeaderDetailsEN" class="form-control"></textarea>
-                        <span class="text-danger" asp-validation-for="PageHeaderDetailsEN"></span>
+                        <label class="mandatory" asp-for="PageFooterName"></label>
+                        <input asp-for="PageFooterName" placeholder="Enter Page Footer" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageFooterName"></span>
                     </div>
                 </div>
                 <hr />
                 <div class="form-row">
                     <div class="col-md-12">
-                        <label class="mandatory" asp-for="PageHeaderDetailsLL"></label>
-                        <textarea asp-for="PageHeaderDetailsLL" class="form-control"></textarea>
-                        <span class="text-danger" asp-validation-for="PageHeaderDetailsLL"></span>
+                        <label class="mandatory" asp-for="PageFooterDetailsEN"></label>
+                        <textarea asp-for="PageFooterDetailsEN" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageFooterDetailsEN"></span>
                     </div>
                 </div>
-
-
+                <hr />
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label class="mandatory" asp-for="PageFooterDetailsLL"></label>
+                        <textarea asp-for="PageFooterDetailsLL" class="form-control"></textarea>
+                        <span class="text-danger" asp-validation-for="PageFooterDetailsLL"></span>
+                    </div>
+                </div>
+                <hr />
                 <div class="form-group col-md-3">
                     <div class="form-check">
                         <input type="checkbox" asp-for="Status" class="form-check-input" />
@@ -51,8 +49,8 @@
             </div>
             <div class="card-footer">
                 <button type="button" id="btnsubmit" class="btn btn-success">Save</button>
-                <a asp-area="Administration" class="btn btn-danger" asp-controller="InnerNewPageHeader" asp-action="Create">Clear</a>
-                <a asp-area="Administration" class="btn btn-primary" asp-controller="InnerNewPageHeader" asp-action="Index">List</a>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="InnerNewPageFooter" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="InnerNewPageFooter" asp-action="Index">List</a>
             </div>
         </form>
     </div>
@@ -64,11 +62,10 @@
     <link href="~/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
     <script src="~/plugins/moment/moment.min.js"></script>
     <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <script src="~/js/ckeditor/ckeditor.js"></script>
     <script>
 
-
-        CKEDITOR.replace('PageHeaderDetailsEN',
+        CKEDITOR.replace('PageFooterDetailsEN',
             {
                 on:
                 {
@@ -86,7 +83,7 @@
             });
 
 
-        CKEDITOR.replace('PageHeaderDetailsLL',
+        CKEDITOR.replace('PageFooterDetailsLL',
             {
                 on:
                 {
@@ -102,6 +99,7 @@
                     }
                 }
             });
+
 
 
         CKEDITOR.editorConfig = function (config) {
@@ -112,37 +110,41 @@
             config.tabSpaces = 0;
             config.forcePasteAsPlainText = true;
             config.enterMode = CKEDITOR.ENTER_DIV;
-            config.basicEntities = false;
+            config.basicEntities = true;
         };
 
-        $(document).ready(function () {
-            $("#btnsubmit").click(function () {
+        $(document).ready(function ()
+        {
+            $("#btnsubmit").click(function ()
+            {
                 if ($('#newform').valid()) {
-                    var pageHeaderDetailsEnData = CKEDITOR.instances.PageHeaderDetailsEN.getData();
-                    var pageHeaderDetailsLlData = CKEDITOR.instances.PageHeaderDetailsLL.getData();
+                    var pageFooterDetailsEnData = CKEDITOR.instances.PageFooterDetailsEN.getData();
+                    var pageFooterDetailsLlData = CKEDITOR.instances.PageFooterDetailsLL.getData();
+                    
 
-                    if (pageHeaderDetailsEnData === '') {
-
-                        $.alert({
-                            title: 'Validation!',
-                            content: 'Enter Page Header Details.',
-                            type: 'red'
-                        });
-                    }
-                    else if (pageHeaderDetailsLlData === '') {
+                    if (pageFooterDetailsEnData === '') {
 
                         $.alert({
                             title: 'Validation!',
-                            content: 'Enter Page Header Details.',
+                            content: 'Enter Page Footer Details.',
                             type: 'red'
                         });
                     }
-                    else {
+                    else if (pageFooterDetailsLlData === '') {
+
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'Enter Page Footer Details.',
+                            type: 'red'
+                        });
+                    }
+                    else
+                    {
 
                         $.confirm({
                             title: 'Confirmation!',
                             type: 'green',
-                            content: 'Do you want to Update Page Header Details?',
+                            content: 'Do you want to Save Page Footer Details?',
                             buttons: {
                                 confirm: function () {
                                     $("#loader").show();
@@ -160,6 +162,8 @@
 
             });
         });
+
+
     </script>
 
 }

@@ -111,6 +111,25 @@ namespace Sharp.CMS.Data.NewPage.Command
 
         }
 
+        public bool Deactivate(PageModel pageModel)
+        {
+            using var transactionScope = new TransactionScope();
+            try
+            {
+                pageModel.IsActive = pageModel.IsActive != true;
+                _sharpContext.Entry(pageModel).State = EntityState.Modified;
 
+                _sharpContext.SaveChanges();
+
+                transactionScope.Complete();
+
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                _logger.LogError(ex, "NewPageCommand:Deactivate");
+                return false;
+            }
+        }
     }
 }

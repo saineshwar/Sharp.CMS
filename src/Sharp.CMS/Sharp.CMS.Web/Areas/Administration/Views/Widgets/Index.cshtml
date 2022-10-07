@@ -38,7 +38,7 @@
             $('#CustomDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                "order": [[ 0, "desc" ]],
+                "order": [[0, "desc"]],
                 "filter": true,
                 "ajax": {
                     "url": "/Administration/Widgets/GridAllWidgets",
@@ -61,7 +61,7 @@
                         "orderable": false,
                         "searchable": false
                     }
-                 
+
 
                 ],
                 "columns": [
@@ -83,16 +83,16 @@
 
         });
 
-        function Delete(menuId) {
+        function Delete(PageWidgetId) {
             $.confirm({
                 title: 'Delete!',
-                content: 'Do you want to Delete Menu!',
+                nt: 'Do you want to Deactivate Widget!',
                 buttons: {
                     confirm: function () {
                         $.ajax({
-                            url: "/Administration/Widgets/DeleteMenu",
+                            url: "/Administration/Widgets/Deactivate",
                             type: "POST",
-                            data: { MenuId: menuId },
+                            data: { Id: PageWidgetId },
                             success: function (data, textStatus, xhr) {
                                 if (data.Result == "success") {
                                     location.reload();

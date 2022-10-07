@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.InnerPage;
 using Sharp.CMS.ViewModels.InnerPage;
 using Sharp.CMS.ViewModels.Page;
 
@@ -85,6 +86,22 @@ namespace Sharp.CMS.Data.InnerPages.Queries
                                      PageWidgetName = page.PageWidgetName,
                                      Status = page.Status
                                  }).FirstOrDefault();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public InnerPageWidgetsModel GetPageWidget(int InnerPageWidgetId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.InnerPageWidgetsModel
+                                 where page.InnerPageWidgetId == InnerPageWidgetId
+                                 select page).FirstOrDefault();
 
                 return queryable;
             }

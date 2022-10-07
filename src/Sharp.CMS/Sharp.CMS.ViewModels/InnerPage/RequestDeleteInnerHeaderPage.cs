@@ -4,4 +4,14 @@
     {
         public int? InnerPageHeaderId { get; set; }
     }
+
+    public class RequestDeleteInnerFooterPage
+    {
+        public int? InnerPageFooterId { get; set; }
+    }
+
+    public class RequestDelete
+    {
+        public int? Id { get; set; }
+    }
 }

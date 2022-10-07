@@ -24,5 +24,12 @@ namespace Sharp.CMS.Data.InnerPages.Command
             _sharpContext.Entry(pageFooterModel).State = EntityState.Modified;
             return _sharpContext.SaveChanges();
         }
+
+        public int Deactivate(InnerPageFooterModel pageFooterModel)
+        {
+            pageFooterModel.Status = pageFooterModel.Status != true;
+            _sharpContext.Entry(pageFooterModel).State = EntityState.Modified;
+            return _sharpContext.SaveChanges();
+        }
     }
 }

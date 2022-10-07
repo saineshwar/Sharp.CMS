@@ -67,5 +67,10 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "Content Images")]
         public string ContainerContentImages { get; set; }
         public bool IsActive { get; set; }
+
+        [Display(Name = "Parent Page")]
+        public string ParentPageId { get; set; }
+        public List<SelectListItem> ListofPages { get; set; }
+        public bool IsChildPage { get; set; }
     }
 }  

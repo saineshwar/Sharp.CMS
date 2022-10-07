@@ -11,6 +11,7 @@ using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Attachments;
+using Sharp.CMS.ViewModels.InnerPage;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
 using Sharp.CMS.Web.Notification;
@@ -190,6 +191,31 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             return View(pageWidgets);
         }
 
+        public JsonResult Deactivate(RequestDelete requestDelete)
+        {
+            try
+            {
+                if (requestDelete.Id == null)
+                {
+                    return Json(new { Result = "failed", Message = "Something Went Wrong" });
+                }
 
+                var data = _iWidgetsQueries.GetPageWidget(requestDelete.Id.Value);
+                var result = _iWidgetsCommand.Deactivate(data);
+                if (result)
+                {
+                    _notificationService.SuccessNotification("Message", "The Widget Deactivated successfully!");
+                    return Json(new { Result = "success" });
+                }
+                else
+                {
+                    return Json(new { Result = "failed", Message = "Cannot Delete" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Result = "failed", Message = "Cannot Delete" });
+            }
+        }
     }
 }

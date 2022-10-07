@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -69,7 +70,6 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
-
         public EditWidgetsViewModel GetPageWidgetbyPageWidgetId(int pageWidgetId)
         {
             try
@@ -84,6 +84,22 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      PageWidgetName = page.PageWidgetName,
                                      Status = page.Status
                                  }).FirstOrDefault();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public PageWidgetsModel GetPageWidget(int pageWidgetId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageWidgetsModel
+                    where page.PageWidgetId == pageWidgetId
+                    select page).FirstOrDefault();
 
                 return queryable;
             }

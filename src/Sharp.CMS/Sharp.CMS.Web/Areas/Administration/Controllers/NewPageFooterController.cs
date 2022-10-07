@@ -10,6 +10,7 @@ using Sharp.CMS.Common;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
+using Sharp.CMS.ViewModels.InnerPage;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
 using Sharp.CMS.Web.Notification;
@@ -24,7 +25,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INewPageFooterQueries _newPageFooterQueries;
         private readonly INotificationService _notificationService;
         private readonly INewPageFooterCommand _newPageFooterCommand;
-        public NewPageFooterController(INewPageFooterQueries newPageFooterQueries, INotificationService notificationService, IMapper mapper, INewPageFooterCommand newPageFooterCommand)
+        public NewPageFooterController(INewPageFooterQueries newPageFooterQueries, 
+            INotificationService notificationService, 
+            IMapper mapper,
+            INewPageFooterCommand newPageFooterCommand)
         {
             _newPageFooterQueries = newPageFooterQueries;
             _notificationService = notificationService;
@@ -161,6 +165,33 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public JsonResult Deactivate(RequestDelete requestDelete)
+        {
+            try
+            {
+                if (requestDelete.Id == null)
+                {
+                    return Json(new { Result = "failed", Message = "Something Went Wrong" });
+                }
+
+                var data = _newPageFooterQueries.GetPageFooter(requestDelete.Id.Value);
+                var result = _newPageFooterCommand.Deactivate(data);
+                if (result)
+                {
+                    _notificationService.SuccessNotification("Message", "The Page Footer Deactivated successfully!");
+                    return Json(new { Result = "success" });
+                }
+                else
+                {
+                    return Json(new { Result = "failed", Message = "Cannot Delete" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Result = "failed", Message = "Cannot Delete" });
             }
         }
     }

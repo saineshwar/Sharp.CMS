@@ -20,8 +20,15 @@
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
                     <div class="form-group col-md-3">
+                        <label class="mandatory" asp-for="ParentPageId"></label>
+                        <select asp-for="ParentPageId" class="form-control"
+                                asp-items="@(new SelectList(Model.ListofPages, "Value", "Text"))">
+                        </select>
+                        <span class="text-danger" asp-validation-for="ParentPageId"></span>
+                    </div>
+                    <div class="form-group col-md-3">
                         <label class="mandatory" asp-for="PageName"></label>
-                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control" />
+                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control"/>
                         <span class="text-danger" asp-validation-for="PageName"></span>
                     </div>
                 </div>

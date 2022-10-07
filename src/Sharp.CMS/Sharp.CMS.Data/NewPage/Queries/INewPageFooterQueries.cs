@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -8,5 +9,6 @@ namespace Sharp.CMS.Data.NewPage.Queries
         IQueryable<NewPageFooterGrid> ShowAllPageFooter(string sortColumn, string sortColumnDir, string search);
         bool CheckPageFooterNameExists(string pageFooterName);
         EditPageFooterViewModel GetPageFooterbyPageFooterId(int pageFooterId);
+        PageFooterModel GetPageFooter(int pageFooterId);
     }
 }

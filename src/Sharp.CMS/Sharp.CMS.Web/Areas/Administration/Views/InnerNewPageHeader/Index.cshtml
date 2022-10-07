@@ -60,6 +60,16 @@
                         "targets": [2],
                         "orderable": false,
                         "searchable": false
+                    },
+                    {
+                        "targets": [3],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [4],
+                        "orderable": false,
+                        "searchable": false
                     }
 
                 ],
@@ -68,7 +78,7 @@
                     { "data": "PageHeaderName", "name": "PageHeaderName", "autoWidth": true },
                     { "data": "Status", "name": "Status", "autoWidth": true },
                     {
-                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/NewPageHeader/Edit/' + full.InnerNewPageHeader + '"> Edit</a>'; }
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/InnerNewPageHeader/Edit/' + full.InnerPageHeaderId + '"> Edit</a>'; }
                     },
                     {
                         "render": function (data, type, full, meta) {
@@ -84,14 +94,14 @@
 
         function Delete(InnerPageHeaderId) {
             $.confirm({
-                title: 'Delete!',
-                content: 'Do you want to Delete Inner Page Header!',
+                title: 'Alert !',
+                content: 'Do you want to Deactivate Inner Page Header!',
                 buttons: {
                     confirm: function () {
                         $.ajax({
-                            url: "/Administration/InnerNewPageHeader/Delete",
+                            url: "/Administration/InnerNewPageHeader/Deactivate",
                             type: "POST",
-                            data: { InnerPageHeaderId: InnerPageHeaderId },
+                            data: { Id: InnerPageHeaderId },
                             success: function (data, textStatus, xhr) {
                                 if (data.Result == "success") {
                                     location.reload();

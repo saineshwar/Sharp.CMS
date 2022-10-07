@@ -26,14 +26,19 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<INoticeCommand, NoticeCommand>();
             services.AddTransient<INoticeDetailsCommand, NoticeDetailsCommand>();
             services.AddTransient<IOrderingCommand, OrderingCommand>();
+
+
             services.AddTransient<INewPageCommand, NewPageCommand>();
             services.AddTransient<INewPageHeaderCommand, NewPageHeaderCommand>();
             services.AddTransient<INewPageFooterCommand, NewPageFooterCommand>();
             services.AddTransient<INewContainerCommand, NewContainerCommand>();
             services.AddTransient<IWidgetsCommand, WidgetsCommand>();
+
             services.AddTransient<IInnerNewPageCommand, InnerNewPageCommand>();
             services.AddTransient<IInnerNewContainerCommand, InnerNewContainerCommand>();
             services.AddTransient<IInnerNewPageHeaderCommand, InnerNewPageHeaderCommand>();
+            services.AddTransient<IInnerNewPageFooterCommand, InnerNewPageFooterCommand>();
+            services.AddTransient<IInnerWidgetsCommand, InnerWidgetsCommand>();
             
             return services;
         }

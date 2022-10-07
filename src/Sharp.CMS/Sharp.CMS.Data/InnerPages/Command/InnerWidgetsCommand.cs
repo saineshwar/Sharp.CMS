@@ -29,7 +29,7 @@ namespace Sharp.CMS.Data.InnerPages.Command
             return _sharpContext.SaveChanges();
         }
 
-        public bool Delete(InnerPageWidgetsModel pageWidgets)
+        public bool Deactivate(InnerPageWidgetsModel pageWidgets)
         {
             using var transactionScope = new TransactionScope();
             try

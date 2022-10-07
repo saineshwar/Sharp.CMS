@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Page;
 
 namespace Sharp.CMS.Data.NewPage.Queries
@@ -93,5 +94,20 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
+        public PageHeaderModel GetPageHeader(int PageHeaderId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageHeaderModel
+                    where page.PageHeaderId == PageHeaderId
+                    select page).FirstOrDefault();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

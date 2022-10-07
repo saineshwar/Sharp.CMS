@@ -5,7 +5,7 @@ using Sharp.CMS.Models.InnerPage;
 using Sharp.CMS.ViewModels.InnerPage;
 using Sharp.CMS.ViewModels.Page;
 
-namespace Sharp.CMS.Data.NewPage.Queries
+namespace Sharp.CMS.Data.InnerPages.Queries
 {
     public interface IInnerNewPageQueries
     {

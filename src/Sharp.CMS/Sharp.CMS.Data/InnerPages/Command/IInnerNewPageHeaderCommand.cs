@@ -7,6 +7,6 @@ namespace Sharp.CMS.Data.InnerPages.Command
     {
         int Add(InnerPageHeaderModel PageModel);
         int Update(InnerPageHeaderModel pageHeaderModel);
-        bool Delete(InnerPageHeaderModel innerPageHeader);
+        bool Deactivate(InnerPageHeaderModel innerPageHeader);
     }
 }

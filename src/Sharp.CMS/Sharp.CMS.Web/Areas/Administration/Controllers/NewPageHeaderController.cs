@@ -11,6 +11,7 @@ using Sharp.CMS.Data.CommonMasters.Queries;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.Page;
+using Sharp.CMS.ViewModels.InnerPage;
 using Sharp.CMS.ViewModels.Page;
 using Sharp.CMS.Web.Filters;
 using Sharp.CMS.Web.Notification;
@@ -25,17 +26,18 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         private readonly INewPageHeaderCommand _iNewPageHeaderCommand;
         private readonly INewPageHeaderQueries _iNewPageHeaderQueries;
         private readonly INotificationService _notificationService;
-        private ICommonMastersQueries _commonMastersQueries;
+
         public NewPageHeaderController(
             INewPageHeaderCommand newPageHeaderCommand,
             IMapper mapper,
-            INewPageHeaderQueries newPageHeaderQueries, INotificationService notificationService, ICommonMastersQueries commonMastersQueries)
+            INewPageHeaderQueries newPageHeaderQueries, 
+            INotificationService notificationService, 
+            ICommonMastersQueries commonMastersQueries)
         {
             _iNewPageHeaderCommand = newPageHeaderCommand;
             _mapper = mapper;
             _iNewPageHeaderQueries = newPageHeaderQueries;
             _notificationService = notificationService;
-            _commonMastersQueries = commonMastersQueries;
         }
 
         [HttpGet]
@@ -167,6 +169,33 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             catch (Exception)
             {
                 throw;
+            }
+        }
+
+        public JsonResult Deactivate(RequestDelete requestDelete)
+        {
+            try
+            {
+                if (requestDelete.Id == null)
+                {
+                    return Json(new { Result = "failed", Message = "Something Went Wrong" });
+                }
+
+                var data = _iNewPageHeaderQueries.GetPageHeader(requestDelete.Id.Value);
+                var result = _iNewPageHeaderCommand.Deactivate(data);
+                if (result)
+                {
+                    _notificationService.SuccessNotification("Message", "The Page Header Deactivated successfully!");
+                    return Json(new { Result = "success" });
+                }
+                else
+                {
+                    return Json(new { Result = "failed", Message = "Cannot Delete" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Result = "failed", Message = "Cannot Delete" });
             }
         }
     }

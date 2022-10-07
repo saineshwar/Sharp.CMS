@@ -28,5 +28,7 @@ namespace Sharp.CMS.Models.Page
         public string PageName { get; set; }
         public  PageDetailsModel PageDetails { get; set; }
         public bool IsActive { get; set; }
+        public bool IsChildPage { get; set; }
+        public int? ParentPageId { get; set; }
     }
 }

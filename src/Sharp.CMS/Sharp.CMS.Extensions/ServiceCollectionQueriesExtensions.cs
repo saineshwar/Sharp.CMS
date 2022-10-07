@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Sharp.CMS.Data.Audit.Queries;
 using Sharp.CMS.Data.CommonMasters.Queries;
+using Sharp.CMS.Data.InnerPages.Command;
 using Sharp.CMS.Data.InnerPages.Queries;
 using Sharp.CMS.Data.MenuCategory.Queries;
 using Sharp.CMS.Data.MenuMaster.Queries;
@@ -33,12 +34,11 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IWidgetsQueries, WidgetsQueries>();
 
             services.AddTransient<IInnerNewPageQueries, InnerNewPageQueries>();
-           
             services.AddTransient<IInnerNewContainerQueries, InnerNewContainerQueries>();
             services.AddTransient<IInnerNewPageHeaderQueries, InnerNewPageHeaderQueries>();
-
+            services.AddTransient<IInnerNewPageFooterQueries, InnerNewPageFooterQueries>();
+            services.AddTransient<IInnerWidgetsQueries, InnerWidgetsQueries>();
             
-
             return services;
         }
     }

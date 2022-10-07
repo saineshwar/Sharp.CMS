@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Sharp.CMS.Common;
 using Sharp.CMS.Data.CommonMasters.Queries;
+using Sharp.CMS.Data.InnerPages.Command;
 using Sharp.CMS.Data.InnerPages.Queries;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;

@@ -29,7 +29,7 @@ namespace Sharp.CMS.Data.InnerPages.Command
             return _sharpContext.SaveChanges();
         }
 
-        public bool Delete(InnerPageHeaderModel innerPageHeader)
+        public bool Deactivate(InnerPageHeaderModel innerPageHeader)
         {
             using var transactionScope = new TransactionScope();
             try

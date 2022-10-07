@@ -4,11 +4,12 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Models.InnerPage;
 using Sharp.CMS.ViewModels.InnerPage;
 using Sharp.CMS.ViewModels.Page;
 
-namespace Sharp.CMS.Data.NewPage.Queries
+namespace Sharp.CMS.Data.InnerPages.Queries
 {
     public class InnerNewPageQueries : IInnerNewPageQueries
     {

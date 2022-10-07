@@ -153,9 +153,21 @@ namespace Sharp.CMS.Web
             {
                 endpoints.MapControllerRoute("areas", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+
+                endpoints.MapControllerRoute("DatabasePage",
+                    "{PageName}",
+                    new
+                    {
+                        controller = "Home",
+                        action = "Index",
+                        PageName = ""
+                    });
+
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Portal}/{action=Login}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+              
             });
         }
     }

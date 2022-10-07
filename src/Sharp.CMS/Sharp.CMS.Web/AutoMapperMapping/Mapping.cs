@@ -41,6 +41,17 @@ namespace Sharp.CMS.Web.AutoMapperMapping
             CreateMap<EditInnerPageViewModel, InnerPageModel>();
 
 
+
+            CreateMap<InnerPageHeaderViewModel, InnerPageHeaderModel>();
+            CreateMap<InnerEditPageHeaderViewModel, InnerPageHeaderModel>();
+
+
+            CreateMap<InnerPageFooterViewModel, InnerPageFooterModel>();
+            CreateMap<InnerEditPageFooterViewModel, InnerPageFooterModel>();
+
+            CreateMap<InnerPageWidgetsViewModel, InnerPageWidgetsModel>();
+            CreateMap<InnerEditWidgetsViewModel, InnerPageWidgetsModel>();
+
         }
     }
 }

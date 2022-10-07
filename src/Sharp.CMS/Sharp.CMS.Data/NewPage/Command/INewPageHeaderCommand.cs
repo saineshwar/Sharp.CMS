@@ -6,5 +6,6 @@ namespace Sharp.CMS.Data.NewPage.Command
     {
         int Add(PageHeaderModel PageModel);
         int Update(PageHeaderModel pageHeaderModel);
+        bool Deactivate(PageHeaderModel pageHeaderModel);
     }
 }

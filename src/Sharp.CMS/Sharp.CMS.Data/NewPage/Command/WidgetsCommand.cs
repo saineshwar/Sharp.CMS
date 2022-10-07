@@ -27,7 +27,7 @@ namespace Sharp.CMS.Data.NewPage.Command
             return _sharpContext.SaveChanges();
         }
 
-        public bool Delete(PageWidgetsModel pageWidgets)
+        public bool Deactivate(PageWidgetsModel pageWidgets)
         {
             using var transactionScope = new TransactionScope();
             try
@@ -41,7 +41,7 @@ namespace Sharp.CMS.Data.NewPage.Command
             }
             catch (System.Exception ex)
             {
-                _logger.LogError(ex, "NewContainerCommand:DeleteAttachmentByAttachmentId");
+                _logger.LogError(ex, "WidgetsCommand:Deactivate");
                 return false;
             }
         }

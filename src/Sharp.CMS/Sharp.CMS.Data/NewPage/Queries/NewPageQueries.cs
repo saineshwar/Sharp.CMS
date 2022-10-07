@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.MenuMaster;
 using Sharp.CMS.ViewModels.Page;
 
@@ -64,13 +65,24 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
-        public bool CheckPageNameExists(string pagename)
+        public bool CheckPageNameExists(string pagename, int? pageid)
         {
             try
             {
-                var queryable = (from page in _sharpContext.PageModel
+                bool queryable;
+                if (pageid == null)
+                {
+                    queryable = (from page in _sharpContext.PageModel
                                  where page.PageName == pagename
                                  select page).Any();
+                }
+                else
+                {
+
+                    queryable = (from page in _sharpContext.PageModel
+                                 where page.PageName == pagename && page.PageId == pageid
+                                 select page).Any();
+                }
 
                 return queryable;
             }
@@ -111,7 +123,9 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      ContainerDescriptionEn = containersleft.ContainerDescription_En,
                                      IsActive = page.IsActive,
                                      ContainersId = containersleft.ContainersId,
-                                     PageDetailsId = pageDetail.PageDetailsId
+                                     PageDetailsId = pageDetail.PageDetailsId,
+                                     ParentPageId = page.ParentPageId == null ? string.Empty : Convert.ToString(page.ParentPageId),
+                                     IsChildPage = page.IsChildPage,
                                      
                                  }).FirstOrDefault();
 
@@ -122,7 +136,6 @@ namespace Sharp.CMS.Data.NewPage.Queries
                 throw;
             }
         }
-
 
         public List<SelectListItem> ListofPages()
         {
@@ -150,5 +163,14 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
+        public PageModel GetPagebyPageId(int PageId)
+        {
+            var queryable = (from page in _sharpContext.PageModel
+                             where page.PageId == PageId && page.IsChildPage == false
+                             select page
+                ).FirstOrDefault();
+
+            return queryable;
+        }
     }
 }

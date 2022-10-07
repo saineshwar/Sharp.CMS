@@ -9,7 +9,7 @@ using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.Attachments;
 using Sharp.CMS.ViewModels.InnerPage;
 
-namespace Sharp.CMS.Data.NewPage.Command
+namespace Sharp.CMS.Data.InnerPages.Command
 {
     public class InnerNewPageCommand : IInnerNewPageCommand
     {

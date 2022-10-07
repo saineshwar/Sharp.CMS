@@ -82,16 +82,16 @@
 
         });
 
-        function Delete(menuId) {
+        function Delete(PageHeaderId) {
             $.confirm({
-                title: 'Delete!',
-                content: 'Do you want to Delete Menu!',
+                title: 'Alert !',
+                content: 'Do you want to Deactivate Page Header!',
                 buttons: {
                     confirm: function () {
                         $.ajax({
-                            url: "/Administration/MenuMaster/DeleteMenu",
+                            url: "/Administration/NewPageHeader/Deactivate",
                             type: "POST",
-                            data: { MenuId: menuId },
+                            data: { Id: PageHeaderId },
                             success: function (data, textStatus, xhr) {
                                 if (data.Result == "success") {
                                     location.reload();

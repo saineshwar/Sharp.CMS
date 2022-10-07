@@ -8,5 +8,6 @@ namespace Sharp.CMS.Data.NewPage.Command
     {
         bool Add(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachments);
         bool Update(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachment);
+        bool Deactivate(PageModel pageModel);
     }
 }

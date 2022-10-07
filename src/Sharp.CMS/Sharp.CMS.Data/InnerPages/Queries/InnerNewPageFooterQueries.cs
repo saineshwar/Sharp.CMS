@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.InnerPage;
 using Sharp.CMS.ViewModels.InnerPage;
 using Sharp.CMS.ViewModels.Page;
 
@@ -93,5 +94,21 @@ namespace Sharp.CMS.Data.InnerPages.Queries
                 throw;
             }
         }
+        public InnerPageFooterModel GetInnerPageFooterbyPageFooterId(int innerPageFooterId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.InnerPageFooterModel
+                    where page.InnerPageFooterId == innerPageFooterId
+                                 select page).FirstOrDefault();
+
+                return queryable;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }
