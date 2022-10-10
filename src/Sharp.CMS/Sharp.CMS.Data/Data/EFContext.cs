@@ -36,13 +36,12 @@ namespace Sharp.CMS.Data.Data
         public DbSet<PageWidgetsModel> PageWidgetsModel { get; set; }
 
 
-        public DbSet<InnerPageModel> InnerPageModel { get; set; }
+
         public DbSet<InnerPageHeaderModel> InnerPageHeaderModel { get; set; }
         public DbSet<InnerPageFooterModel> InnerPageFooterModel { get; set; }
-        public DbSet<InnerPageDetailsModel> InnerPageDetailsModel { get; set; }
-        public DbSet<InnerContainersModel> InnerContainersModel { get; set; }
+
         public DbSet<InnerPageWidgetsModel> InnerPageWidgetsModel { get; set; }
-        public DbSet<InnerAttachmentsModel> InnerAttachmentsModel { get; set; }
+
         
     }
 }

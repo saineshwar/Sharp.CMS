@@ -1,5 +1,9 @@
-﻿using System.Transactions;
+﻿using System;
+using System.Data;
+using System.Transactions;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Data.NewPage.Command;
@@ -12,10 +16,12 @@ namespace Sharp.CMS.Data.InnerPages.Command
     {
         private readonly SharpContext _sharpContext;
         private readonly ILogger<InnerNewPageHeaderCommand> _logger;
-        public InnerNewPageHeaderCommand(SharpContext sharpContext, ILogger<InnerNewPageHeaderCommand> logger)
+        private readonly IConfiguration _configuration;
+        public InnerNewPageHeaderCommand(SharpContext sharpContext, ILogger<InnerNewPageHeaderCommand> logger, IConfiguration configuration)
         {
             _sharpContext = sharpContext;
             _logger = logger;
+            _configuration = configuration;
         }
         public int Add(InnerPageHeaderModel pageHeaderModel)
         {
@@ -47,6 +53,34 @@ namespace Sharp.CMS.Data.InnerPages.Command
             {
                 _logger.LogError(ex, "InnerNewPageHeaderCommand:Delete");
                 return false;
+            }
+        }
+
+        public bool SetDefaultHeader(int? pageHeaderId)
+        {
+            using SqlConnectionManager sqlDataAccessManager = new SqlConnectionManager(_configuration);
+            try
+            {
+
+                var (connection, transaction) = sqlDataAccessManager.StartTransaction();
+                var param = new DynamicParameters();
+                param.Add("@PageHeaderId", pageHeaderId);
+                var result = connection.Execute("Usp_SetDefaultHeader", param, transaction, 0, CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    sqlDataAccessManager.Commit();
+                    return true;
+                }
+                else
+                {
+                    sqlDataAccessManager.Rollback();
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

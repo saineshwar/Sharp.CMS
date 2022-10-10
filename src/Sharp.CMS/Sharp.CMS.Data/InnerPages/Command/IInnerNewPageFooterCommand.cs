@@ -7,5 +7,6 @@ namespace Sharp.CMS.Data.InnerPages.Command
         int Add(InnerPageFooterModel pageFooterModel);
         int Update(InnerPageFooterModel pageFooterModel);
         int Deactivate(InnerPageFooterModel pageFooterModel);
+        bool SetDefaultFooter(int? pageFooterId);
     }
 }

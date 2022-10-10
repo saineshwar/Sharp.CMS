@@ -17,11 +17,11 @@
                         <th>PageName</th>
                         <th>MenuName</th>
                         <th>MenuName_LL</th>
-                        <th>PageTitle</th>
-                        <th>PageTitle_LL</th>
+                        <th>PageType</th>
+                        <th>Active</th>
                         <th>Status</th>
                         <th>Edit</th>
-                        <th>Delete</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
             </table>
@@ -97,17 +97,35 @@
                     { "data": "PageName", "name": "PageName", "autoWidth": true },
                     { "data": "MenuName_EN", "name": "MenuName_EN", "autoWidth": true },
                     { "data": "MenuName_LL", "name": "MenuName_LL", "autoWidth": true },
-                    { "data": "PageTitle_EN", "name": "PageTitle_EN", "autoWidth": true },
-                    { "data": "PageTitle_LL", "name": "PageTitle_LL", "autoWidth": true },
+           
+                    {
+                        "render": function (data, type, full, meta)
+                        {
+                            if (full.IsChildPage == "Parent") {
+                                return '<button type="button" class="btn btn-Closedx btn-sm">  Parent  </button>';
+                            }
+                            if (full.IsChildPage == "Child") {
+                                return '<button type="button" class="btn btn-lightcyanx btn-sm">  Child </button>';
+                            }
+                        }
+                    },
+                    { "data": "Active", "name": "Active", "autoWidth": true },
                     { "data": "Status", "name": "Status", "autoWidth": true },
                     {
                         "render": function (data, type, full, meta) { return '<a class="btn btn-primary" href="/Administration/NewPage/Edit/' + full.PageId + '"> Edit</a>'; }
                     },
                     {
-                        "render": function (data, type, full, meta) {
-                            return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.PageId + ');"> Delete </button>';
+                        "render": function (data, type, full, meta)
+                        {
+                            if (full.Active == "Active") {
+                                return '<button type="button" class="btn btn-success btn-sm" onclick="InActive(' + full.PageId + ');">Active</button>';
+                            }
+                            if (full.Active == "InActive") {
+                                return '<button type="button" class="btn btn-warning btn-sm" onclick="Active(' + full.PageId + ');">InActive </button>';
+                            }
                         }
                     }
+                   
                 ]
             });
 
@@ -115,7 +133,43 @@
 
         });
 
-        function Delete(PageId) {
+        function Active(PageId) {
+            $.confirm({
+                title: 'Alert !',
+                content: 'Do you want to Activate Page!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/NewPage/Deactivate",
+                            type: "POST",
+                            data: { Id: PageId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+        function InActive(PageId) {
             $.confirm({
                 title: 'Alert !',
                 content: 'Do you want to Deactivate Page!',

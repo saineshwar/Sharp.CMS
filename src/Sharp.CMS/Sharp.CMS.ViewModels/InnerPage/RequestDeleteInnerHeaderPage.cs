@@ -14,4 +14,9 @@
     {
         public int? Id { get; set; }
     }
+
+    public class RequestDefault
+    {
+        public int? Id { get; set; }
+    }
 }

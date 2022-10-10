@@ -7,5 +7,6 @@ namespace Sharp.CMS.Data.NewPage.Command
         int Add(PageWidgetsModel pageWidgets);
         int Update(PageWidgetsModel pageWidgets);
         bool Deactivate(PageWidgetsModel pageWidgets);
+        bool SetDefaultWidget(int? pageWidgetId);
     }
 }

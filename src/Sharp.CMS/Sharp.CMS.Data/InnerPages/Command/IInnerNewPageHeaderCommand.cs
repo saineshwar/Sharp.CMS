@@ -8,5 +8,6 @@ namespace Sharp.CMS.Data.InnerPages.Command
         int Add(InnerPageHeaderModel PageModel);
         int Update(InnerPageHeaderModel pageHeaderModel);
         bool Deactivate(InnerPageHeaderModel innerPageHeader);
+        bool SetDefaultHeader(int? pageHeaderId);
     }
 }

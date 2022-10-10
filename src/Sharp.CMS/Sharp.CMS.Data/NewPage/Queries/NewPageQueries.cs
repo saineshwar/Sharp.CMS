@@ -27,7 +27,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                  orderby page.PageId descending
                                  select new NewPageGrid()
                                  {
-                                     Status = page.Status == 1 ? "Active" : "InActive",
+                                     Status = page.Status == 1 ? "Draft" : "Published",
                                      PageName = page.PageName,
                                      IsNew = page.IsNew,
                                      IsPublished = page.IsPublished,
@@ -37,8 +37,9 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      PageTitle_EN = page.PageTitle_EN,
                                      PageTitle_LL = page.PageTitle_LL,
                                      OpenInNewTab = page.OpenInNewTab,
-                                     CreatedOn = page.CreatedOn
-
+                                     CreatedOn = page.CreatedOn,
+                                     IsChildPage = page.IsChildPage == true ? "Child" : "Parent",
+                                     Active = page.IsActive == true ? "Active" : "InActive",
                                  }
                     );
 
