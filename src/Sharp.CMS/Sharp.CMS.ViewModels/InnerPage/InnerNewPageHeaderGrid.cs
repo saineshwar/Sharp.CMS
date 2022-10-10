@@ -8,5 +8,6 @@ namespace Sharp.CMS.ViewModels.InnerPage
         public string PageHeaderName { get; set; }
         public string Status { get; set; }
         public DateTime? CreatedOn { get; set; }
+        public string IsDefault { get; set; }
     }
 }

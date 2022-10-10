@@ -27,7 +27,8 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      Status = page.Status == true ? "Active" : "InActive",
                                      CreatedOn = page.CreatedOn,
                                      PageWidgetName = page.PageWidgetName,
-                                     PageWidgetId = page.PageWidgetId
+                                     PageWidgetId = page.PageWidgetId,
+                                     IsDefault = page.IsDefault == true ? "Y" : "N",
                                  }
                     );
 

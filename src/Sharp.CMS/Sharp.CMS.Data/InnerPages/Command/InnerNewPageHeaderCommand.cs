@@ -65,7 +65,7 @@ namespace Sharp.CMS.Data.InnerPages.Command
                 var (connection, transaction) = sqlDataAccessManager.StartTransaction();
                 var param = new DynamicParameters();
                 param.Add("@PageHeaderId", pageHeaderId);
-                var result = connection.Execute("Usp_SetDefaultHeader", param, transaction, 0, CommandType.StoredProcedure);
+                var result = connection.Execute("Usp_SetDefaultInnerPageHeader", param, transaction, 0, CommandType.StoredProcedure);
 
                 if (result > 0)
                 {

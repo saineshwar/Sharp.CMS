@@ -47,7 +47,7 @@ namespace Sharp.CMS.Data.InnerPages.Command
                 var (connection, transaction) = sqlDataAccessManager.StartTransaction();
                 var param = new DynamicParameters();
                 param.Add("@PageFooterId", pageFooterId);
-                var result = connection.Execute("Usp_SetDefaultFooter", param, transaction, 0, CommandType.StoredProcedure);
+                var result = connection.Execute("Usp_SetDefaultInnerPageFooter", param, transaction, 0, CommandType.StoredProcedure);
 
                 if (result > 0)
                 {

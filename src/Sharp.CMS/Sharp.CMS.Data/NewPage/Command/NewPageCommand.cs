@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Transactions;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.Attachements;
@@ -14,10 +18,12 @@ namespace Sharp.CMS.Data.NewPage.Command
     {
         private readonly SharpContext _sharpContext;
         private readonly ILogger<NewContainerCommand> _logger;
-        public NewPageCommand(SharpContext sharpContext, ILogger<NewContainerCommand> logger)
+        private readonly IConfiguration _configuration;
+        public NewPageCommand(SharpContext sharpContext, ILogger<NewContainerCommand> logger, IConfiguration configuration)
         {
             _sharpContext = sharpContext;
             _logger = logger;
+            _configuration = configuration;
         }
 
         public bool Add(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachments)
@@ -129,6 +135,33 @@ namespace Sharp.CMS.Data.NewPage.Command
             {
                 _logger.LogError(ex, "NewPageCommand:Deactivate");
                 return false;
+            }
+        }
+        public bool SetDefaultHomePage(int? pageId)
+        {
+            using SqlConnectionManager sqlDataAccessManager = new SqlConnectionManager(_configuration);
+            try
+            {
+
+                var (connection, transaction) = sqlDataAccessManager.StartTransaction();
+                var param = new DynamicParameters();
+                param.Add("@PageId", pageId);
+                var result = connection.Execute("Usp_SetDefaultHomePage", param, transaction, 0, CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    sqlDataAccessManager.Commit();
+                    return true;
+                }
+                else
+                {
+                    sqlDataAccessManager.Rollback();
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
         }
     }

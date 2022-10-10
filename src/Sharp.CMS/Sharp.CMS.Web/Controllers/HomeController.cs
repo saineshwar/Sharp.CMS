@@ -6,27 +6,34 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Sharp.CMS.Data.RenderingPages.Queries;
 
 namespace Sharp.CMS.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
-        {
-            
-        }
-
+        private readonly IRenderingPageQueries _iRenderingPageQueries;
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IRenderingPageQueries renderingPageQueries)
         {
             _logger = logger;
+            _iRenderingPageQueries = renderingPageQueries;
         }
 
         public IActionResult Index(string PageName)
         {
-
-            return View();
+            if (string.IsNullOrEmpty(PageName))
+            {
+                var data = _iRenderingPageQueries.ShowHomePage("");
+                ViewBag.PageName = data.PageName;
+                return View();
+            }
+            else
+            {
+                var data = _iRenderingPageQueries.ShowHomePage(PageName);
+                ViewBag.PageName = data.PageName;
+                return View();
+            }
         }
 
         public IActionResult Privacy()

@@ -18,6 +18,6 @@ namespace Sharp.CMS.ViewModels.Page
         public string Status { get; set; }
         public string IsChildPage { get; set; }
         public string Active { get; set; }
-
+        public string IsHomePage { get; set; }
     }
 }

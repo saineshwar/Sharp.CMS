@@ -40,6 +40,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      CreatedOn = page.CreatedOn,
                                      IsChildPage = page.IsChildPage == true ? "Child" : "Parent",
                                      Active = page.IsActive == true ? "Active" : "InActive",
+                                     IsHomePage = page.IsHomePage == true ? "Y" : "N",
                                  }
                     );
 

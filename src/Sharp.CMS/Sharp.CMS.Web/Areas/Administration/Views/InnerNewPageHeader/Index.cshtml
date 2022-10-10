@@ -18,6 +18,7 @@
                         <th>Status</th>
                         <th>Edit</th>
                         <th>Delete</th>
+                        <th>Default</th>
                     </tr>
                 </thead>
             </table>
@@ -70,6 +71,11 @@
                         "targets": [4],
                         "orderable": false,
                         "searchable": false
+                    },
+                    {
+                        "targets": [5],
+                        "orderable": false,
+                        "searchable": false
                     }
 
                 ],
@@ -83,6 +89,16 @@
                     {
                         "render": function (data, type, full, meta) {
                             return ' <button type="button" class="btn btn-danger" onclick="Delete(' + full.InnerPageHeaderId + ');"> Delete </button>';
+                        }
+                    },
+                    {
+                        "render": function (data, type, full, meta) {
+                            if (full.IsDefault == "Y") {
+                                return '<button type="button" class="btn btn-success btn-sm" onclick="SetDefaultHeader(' + full.InnerPageHeaderId + ');">Active</button>';
+                            }
+                            if (full.IsDefault == "N") {
+                                return '<button type="button" class="btn btn-warning btn-sm" onclick="SetDefaultHeader(' + full.InnerPageHeaderId + ');">InActive </button>';
+                            }
                         }
                     }
                 ]
@@ -129,6 +145,43 @@
             });
         }
 
+
+        function SetDefaultHeader(pageHeaderId) {
+            $.confirm({
+                title: 'Alert !',
+                content: 'Do you want to Set Default Header!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/InnerNewPageHeader/SetDefaultHeader",
+                            type: "POST",
+                            data: { Id: pageHeaderId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
 
     </script>
 

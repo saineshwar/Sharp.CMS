@@ -143,7 +143,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
 
         [HttpPost]
-        public IActionResult GridAllPagesHeader()
+        public IActionResult GridAllPagesFooters()
         {
             try
             {

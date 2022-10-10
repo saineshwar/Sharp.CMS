@@ -30,5 +30,7 @@ namespace Sharp.CMS.Models.Page
         public bool IsActive { get; set; }
         public bool IsChildPage { get; set; }
         public int? ParentPageId { get; set; }
+        public bool IsHomePage { get; set; }
+
     }
 }

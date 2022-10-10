@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="MenuOrdering\Command\" />
+    <Folder Include="RenderingPages\Queries\" />
   </ItemGroup>
 
 </Project>

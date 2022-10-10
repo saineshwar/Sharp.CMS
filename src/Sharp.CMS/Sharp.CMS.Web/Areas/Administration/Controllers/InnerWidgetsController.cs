@@ -219,5 +219,30 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return Json(new { Result = "failed", Message = "Cannot Delete" });
             }
         }
+
+        public JsonResult SetDefaultWidget(RequestDefault requestDefault)
+        {
+            try
+            {
+                if (requestDefault.Id == null)
+                {
+                    return Json(new { Result = "failed", Message = "Something Went Wrong" });
+                }
+                var result = _iInnerWidgetsCommand.SetDefaultWidget(requestDefault.Id);
+                if (result)
+                {
+                    _notificationService.SuccessNotification("Message", "The Default Inner Widget Set successfully!");
+                    return Json(new { Result = "success" });
+                }
+                else
+                {
+                    return Json(new { Result = "failed", Message = "Cannot Delete" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Result = "failed", Message = "Cannot Delete" });
+            }
+        }
     }
 }

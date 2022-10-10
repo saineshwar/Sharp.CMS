@@ -19,5 +19,6 @@ namespace Sharp.CMS.Models.InnerPage
         public DateTime? ModifiedOn { get; set; }
         public int? ModifiedBy { get; set; }
         public bool Status { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

@@ -465,5 +465,31 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return Json(new { Result = "failed", Message = "Cannot Delete" });
             }
         }
+
+        public JsonResult SetHomePage(RequestDelete requestDelete)
+        {
+            try
+            {
+                if (requestDelete.Id == null)
+                {
+                    return Json(new { Result = "failed", Message = "Something Went Wrong" });
+                }
+
+                var result = _iNewPageCommand.SetDefaultHomePage(requestDelete.Id);
+                if (result)
+                {
+                    _notificationService.SuccessNotification("Message", "HomePage Setted Successfully!");
+                    return Json(new { Result = "success" });
+                }
+                else
+                {
+                    return Json(new { Result = "failed", Message = "Cannot Delete" });
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { Result = "failed", Message = "Cannot Delete" });
+            }
+        }
     }
 }

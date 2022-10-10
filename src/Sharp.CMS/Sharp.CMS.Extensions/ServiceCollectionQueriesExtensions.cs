@@ -9,6 +9,7 @@ using Sharp.CMS.Data.MenuMaster.Queries;
 using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.NewPage.Queries;
 using Sharp.CMS.Data.Notices.Queries;
+using Sharp.CMS.Data.RenderingPages.Queries;
 using Sharp.CMS.Data.RoleMaster.Queries;
 using Sharp.CMS.Data.UserMaster.Queries;
 
@@ -35,7 +36,10 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IInnerNewPageHeaderQueries, InnerNewPageHeaderQueries>();
             services.AddTransient<IInnerNewPageFooterQueries, InnerNewPageFooterQueries>();
             services.AddTransient<IInnerWidgetsQueries, InnerWidgetsQueries>();
+            services.AddTransient<IRenderingPageQueries, RenderingPageQueries>();
             
+
+
             return services;
         }
     }
