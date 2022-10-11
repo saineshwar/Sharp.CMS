@@ -26,12 +26,14 @@ namespace Sharp.CMS.Web.Controllers
             {
                 var data = _iRenderingPageQueries.ShowHomePage("");
                 ViewBag.PageName = data.PageName;
+                ViewBag.PageTitle = data.PageTitle_EN;
                 return View();
             }
             else
             {
                 var data = _iRenderingPageQueries.ShowHomePage(PageName);
                 ViewBag.PageName = data.PageName;
+                ViewBag.PageTitle = data.PageTitle_EN;
                 return View();
             }
         }

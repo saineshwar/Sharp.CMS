@@ -31,6 +31,8 @@ namespace Sharp.CMS.Models.Page
         public bool IsChildPage { get; set; }
         public int? ParentPageId { get; set; }
         public bool IsHomePage { get; set; }
+        public bool IsSubChildPage { get; set; }
+        
 
     }
 }
