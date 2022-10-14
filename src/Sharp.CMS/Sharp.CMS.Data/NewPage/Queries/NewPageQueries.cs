@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.VisualBasic;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.Page;
 using Sharp.CMS.ViewModels.MenuMaster;
@@ -128,7 +129,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                                      PageDetailsId = pageDetail.PageDetailsId,
                                      ParentPageId = page.ParentPageId == null ? string.Empty : Convert.ToString(page.ParentPageId),
                                      IsChildPage = page.IsChildPage,
-                                     
+
                                  }).FirstOrDefault();
 
                 return queryable;
@@ -165,6 +166,32 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
+        public List<SelectListItem> ListofChildPage(int parentId)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.PageModel
+                                 where page.IsChildPage == true && page.ParentPageId == parentId
+                                 select new SelectListItem
+                                 {
+                                     Value = page.PageId.ToString(),
+                                     Text = page.PageName
+                                 }).ToList();
+
+                queryable.Insert(0, new SelectListItem()
+                {
+                    Value = "",
+                    Text = "-----Select-----"
+                });
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public PageModel GetPagebyPageId(int PageId)
         {
             var queryable = (from page in _sharpContext.PageModel
@@ -173,6 +200,11 @@ namespace Sharp.CMS.Data.NewPage.Queries
                 ).FirstOrDefault();
 
             return queryable;
+        }
+
+        public List<SelectListItem> ListofChildPage()
+        {
+            throw new NotImplementedException();
         }
     }
 }

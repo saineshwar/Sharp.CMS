@@ -13,5 +13,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
         EditPageViewModel GetPageDetailsbyPageId(int PageId);
         List<SelectListItem> ListofPages();
         PageModel GetPagebyPageId(int PageId);
+        List<SelectListItem> ListofChildPage();
+        List<SelectListItem> ListofChildPage(int parentId);
     }
 }

@@ -72,5 +72,10 @@ namespace Sharp.CMS.ViewModels.Page
         public string ParentPageId { get; set; }
         public List<SelectListItem> ListofPages { get; set; }
         public bool IsChildPage { get; set; }
+
+        [Display(Name = "Child Page")]
+        public string ChildPageId { get; set; }
+        public List<SelectListItem> ListofChildPages { get; set; }
+
     }
 }  

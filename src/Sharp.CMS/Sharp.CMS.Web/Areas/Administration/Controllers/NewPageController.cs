@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.ViewModels.InnerPage;
 
 namespace Sharp.CMS.Web.Areas.Administration.Controllers
@@ -52,7 +53,15 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             var pageViewModel = new PageViewModel()
             {
                 ListofStatus = _commonMastersQueries.GetStatusList(),
-                ListofPages = _iNewPageQueries.ListofPages()
+                ListofPages = _iNewPageQueries.ListofPages(),
+                ListofChildPages = new List<SelectListItem>()
+                {
+                    new SelectListItem()
+                    {
+                        Value = "",
+                        Text = "-----Select-----"
+                    }
+                }
             };
             return View(pageViewModel);
         }
@@ -62,6 +71,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
             pageViewModel.ListofPages = _iNewPageQueries.ListofPages();
+            
 
             if (ModelState.IsValid)
             {
@@ -81,6 +91,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.Status = pageViewModel.StatusId;
 
                 pageModel.IsChildPage = !string.IsNullOrEmpty(pageViewModel.ParentPageId);
+                pageModel.IsSubChildPage = !string.IsNullOrEmpty(pageViewModel.ChildPageId);
 
                 pageModel.PageDetails = new PageDetailsModel()
                 {
@@ -491,5 +502,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 return Json(new { Result = "failed", Message = "Cannot Delete" });
             }
         }
+
+
     }
 }
