@@ -37,8 +37,8 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IInnerNewPageFooterQueries, InnerNewPageFooterQueries>();
             services.AddTransient<IInnerWidgetsQueries, InnerWidgetsQueries>();
             services.AddTransient<IRenderingPageQueries, RenderingPageQueries>();
+   
             
-
 
             return services;
         }

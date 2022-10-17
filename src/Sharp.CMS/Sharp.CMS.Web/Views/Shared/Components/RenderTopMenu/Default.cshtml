@@ -1,6 +1,68 @@
-﻿<footer class="main-footer">
-    <div class="float-right d-none d-sm-inline">
-        SharpCMS
+﻿@using Sharp.CMS.Data.RenderingPages.Queries
+@model List<Sharp.CMS.ViewModels.RenderPage.RenderMainPageDetails>
+@inject IRenderingMenus IRenderingMenus
+
+<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <ul class="navbar-nav flex-grow-1">
+
+        @foreach (var menuparent in Model)
+        {
+            if (!IRenderingMenus.CheckHasFirstChild(menuparent.PageId))
+            {
+                <li class="nav-item">
+                    <a class="nav-link text-dark" href="/@menuparent.PageName">@menuparent.MenuNameEN</a>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="/@menuparent.PageName" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @menuparent.MenuNameEN
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+
+                        @foreach (var menuchild in IRenderingMenus.GetChildMenus(menuparent.PageId))
+                        {
+                            if (IRenderingMenus.GetChildMenus(menuparent.PageId).Count() == 1)
+                            {
+
+                                <li>
+                                    <a class="nav-link text-dark" href="/@menuchild.PageName">@menuchild.MenuNameEN</a>
+                                </li>
+
+                            }
+                            else
+                            {
+
+                                <li class="dropdown-submenu">
+                                    <a class="dropdown-item dropdown-toggle" href="#">@menuchild.MenuNameEN</a>
+                                    
+                                    @if (IRenderingMenus.GetSubChildMenus(menuchild.PageId).Any())
+                                    {
+                                        <ul class="dropdown-menu">
+                                            @foreach (var menusubchild in IRenderingMenus.GetSubChildMenus(menuchild.PageId))
+                                            {
+
+                                                <li>
+                                                    <a class="dropdown-item" href="/@menusubchild.PageName">@menusubchild.MenuNameEN</a>
+                                                </li>
+                                            
+                                        
+                                       
+                                            }
+                                        </ul>
+                                    }
+                                   
+                                </li>
+                            }
+
+                        }
+                    </ul>
+
+
+                </li>
+
+            }
+        }
+        </ul>
     </div>
-    <strong>Copyright &copy; 2014-2022 <a href="javascript:void(0);">SharpCMS</a>.</strong> All rights reserved.
-</footer>

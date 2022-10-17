@@ -13,7 +13,7 @@ using Sharp.CMS.ViewModels.RenderPage;
 
 namespace Sharp.CMS.Data.RenderingPages.Queries
 {
-    public class RenderingMenus
+    public class RenderingMenus : IRenderingMenus
     {
         private readonly IConfiguration _configuration;
         private readonly IMemoryCache _cache;
@@ -22,7 +22,6 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
             _configuration = configuration;
             _cache = cache;
         }
-
 
         public List<RenderMainPageDetails> GetParentMenus()
         {
@@ -51,7 +50,6 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
             return menuCategory;
         }
 
-
         public List<RenderMainPageDetails> GetChildMenus(int parentId)
         {
             var key = $"{AllMemoryMenuCacheKeys.ChildMenuKey}";
@@ -75,6 +73,13 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
             else
             {
                 menuslist = _cache.Get(key) as List<RenderMainPageDetails>;
+
+
+                var data = (from querydata in menuslist
+                    where querydata.ParentPageId == parentId
+                    select querydata).ToList();
+
+                return data;
             }
 
             return menuslist;
@@ -82,7 +87,7 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
 
         public List<RenderMainPageDetails> GetSubChildMenus(int childId)
         {
-            var key = $"{AllMemoryMenuCacheKeys.ChildMenuKey}";
+            var key = $"{AllMemoryMenuCacheKeys.SubChildMenuKey}";
             List<RenderMainPageDetails> menuslist;
             if (_cache.Get(key) == null)
             {
@@ -99,13 +104,33 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
                 };
 
                 menuslist = _cache.Set<List<RenderMainPageDetails>>(key, results, cacheExpirationOptions);
+                return menuslist;
             }
             else
             {
                 menuslist = _cache.Get(key) as List<RenderMainPageDetails>;
+
+                var data = (from querydata in menuslist
+                    where querydata.ChildPageId == childId
+                    select querydata).ToList();
+
+                return data;
             }
 
-            return menuslist;
+      
+        }
+
+
+
+        public bool CheckHasFirstChild(int parentId)
+        {
+
+            using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+            var param = new DynamicParameters();
+            param.Add("@ParentId", parentId);
+            var results = con.Query<bool>("Usp_CheckHasFirstChildMenu", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+
+            return results;
         }
     }
 }

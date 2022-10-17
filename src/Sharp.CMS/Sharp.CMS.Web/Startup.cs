@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Sharp.CMS.Common;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Data.RenderingPages.Queries;
 using Sharp.CMS.Extensions;
 using Sharp.CMS.Web.Notification;
 
@@ -42,7 +43,7 @@ namespace Sharp.CMS.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddControllersWithViews();
-
+            services.AddTransient<IRenderingMenus, RenderingMenus>();
             services.AddAutoMapper(typeof(Startup).Assembly);
 
 
