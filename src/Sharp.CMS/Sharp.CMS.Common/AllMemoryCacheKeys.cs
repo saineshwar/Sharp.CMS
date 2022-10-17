@@ -22,4 +22,11 @@
         public const string DesignationKey = "Portal.DesignationKey";
         public const string PortalEmailKey = "Portal.EmailKey";
     }
+
+    public static class AllMemoryMenuCacheKeys
+    {
+        public const string ParentMenuKey = "Portal.ParentMenu";
+        public const string ChildMenuKey = "Portal.ChildMenu";
+        public const string SubChildMenuKey = "Portal.SubChildMenu";
+    }
 }

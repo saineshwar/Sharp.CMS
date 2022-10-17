@@ -53,15 +53,6 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             var pageViewModel = new PageViewModel()
             {
                 ListofStatus = _commonMastersQueries.GetStatusList(),
-                ListofPages = _iNewPageQueries.ListofPages(),
-                ListofChildPages = new List<SelectListItem>()
-                {
-                    new SelectListItem()
-                    {
-                        Value = "",
-                        Text = "-----Select-----"
-                    }
-                }
             };
             return View(pageViewModel);
         }
@@ -70,12 +61,11 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         public async Task<IActionResult> Create(PageViewModel pageViewModel)
         {
             pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
-            pageViewModel.ListofPages = _iNewPageQueries.ListofPages();
-            
+
 
             if (ModelState.IsValid)
             {
-                if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName, string.IsNullOrEmpty(pageViewModel.ParentPageId) ? null : Convert.ToInt32(pageViewModel.ParentPageId)))
+                if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName, string.IsNullOrEmpty(pageViewModel.HiddenParentPageId) ? null : Convert.ToInt32(pageViewModel.HiddenParentPageId)))
                 {
                     _notificationService.DangerNotification("Message", "Page Name Entered already Exists.");
                     return View(pageViewModel);
@@ -90,8 +80,18 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.CreatedBy = user;
                 pageModel.Status = pageViewModel.StatusId;
 
-                pageModel.IsChildPage = !string.IsNullOrEmpty(pageViewModel.ParentPageId);
-                pageModel.IsSubChildPage = !string.IsNullOrEmpty(pageViewModel.ChildPageId);
+                if (!string.IsNullOrEmpty(pageViewModel.HiddenParentPageId))
+                {
+                    pageModel.ParentPageId = Convert.ToInt32(pageViewModel.HiddenParentPageId);
+                }
+
+                if (!string.IsNullOrEmpty(pageViewModel.HiddenChildPageId))
+                {
+                    pageModel.ChildPageId = Convert.ToInt32(pageViewModel.HiddenChildPageId);
+                }
+
+                pageModel.IsChildPage = !string.IsNullOrEmpty(pageViewModel.HiddenParentPageId);
+                pageModel.IsSubChildPage = !string.IsNullOrEmpty(pageViewModel.HiddenChildPageId);
 
                 pageModel.PageDetails = new PageDetailsModel()
                 {
@@ -503,6 +503,16 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             }
         }
 
+        public ActionResult GetParentPage(string pagename)
+        {
+            var parentPage = _iNewPageQueries.GetAutoCompleteParentPage(pagename);
+            return Json(parentPage);
+        }
 
+        public ActionResult GetChildPage(string childpagename, string parentpageid)
+        {
+            var childpage = _iNewPageQueries.GetAutoCompleteChildPage(childpagename, parentpageid);
+            return Json(childpage);
+        }
     }
 }

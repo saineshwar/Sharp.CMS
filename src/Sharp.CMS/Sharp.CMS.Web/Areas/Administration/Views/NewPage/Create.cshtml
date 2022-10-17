@@ -17,24 +17,26 @@
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label class="mandatory" asp-for="ParentPageId"></label>
-                        <select asp-for="ParentPageId" class="form-control"
-                                asp-items="@(new SelectList(Model.ListofPages, "Value", "Text"))">
-                        </select>
-                        <span class="text-danger" asp-validation-for="ParentPageId"></span>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label class="mandatory" asp-for="ChildPageId"></label>
-                        <select asp-for="ChildPageId" class="form-control"
-                                asp-items="@(new SelectList(Model.ListofChildPages, "Value", "Text"))">
-                        </select>
-                        <span class="text-danger" asp-validation-for="ChildPageId"></span>
-                    </div>
-                    <div class="form-group col-md-3">
                         <label class="mandatory" asp-for="PageName"></label>
-                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control"/>
+                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control" />
                         <span class="text-danger" asp-validation-for="PageName"></span>
                     </div>
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label class="mandatory" asp-for="ParentPageName"></label>
+                        <input asp-for="ParentPageName" placeholder="Enter Name" class="form-control" />
+                        <input type="hidden" asp-for="HiddenParentPageId" />
+                        <span class="text-danger" asp-validation-for="HiddenParentPageId"></span>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label class="mandatory" asp-for="ChildPageName"></label>
+                        <input asp-for="ChildPageName" placeholder="Enter Name" class="form-control" />
+                        <input type="hidden" asp-for="HiddenChildPageId" />
+                        <span class="text-danger" asp-validation-for="HiddenChildPageId"></span>
+                    </div>
+
                 </div>
                 <hr />
                 <div class="form-row">
@@ -96,20 +98,20 @@
 
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaDescriptionLl"></label>
-                        <textarea asp-for="MetaDescriptionLl" placeholder="Enter Meta Description" class="form-control" ></textarea>
+                        <textarea asp-for="MetaDescriptionLl" placeholder="Enter Meta Description" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="MetaDescriptionLl"></span>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaKeywordsEN"></label>
-                        <textarea asp-for="MetaKeywordsEN" placeholder="Meta Keywords English" class="form-control" ></textarea>
+                        <textarea asp-for="MetaKeywordsEN" placeholder="Meta Keywords English" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="MetaKeywordsEN"></span>
                     </div>
 
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="MetaKeywordsLl"></label>
-                        <textarea asp-for="MetaKeywordsLl" placeholder="Meta Keywords Local Language" class="form-control" ></textarea>
+                        <textarea asp-for="MetaKeywordsLl" placeholder="Meta Keywords Local Language" class="form-control"></textarea>
                         <span class="text-danger" asp-validation-for="MetaKeywordsLl"></span>
                     </div>
                 </div>
@@ -137,7 +139,7 @@
                         <input multiple="multiple" id="ContentFiles" class="multi" accept="gif|jpg|png|pdf" data-maxfile="5120" name="ContentFiles" type="file" />
                     </div>
                 </div>
-                
+
                 <hr />
                 <div class="form-row">
 
@@ -238,10 +240,8 @@
 
     $(document).ready(function () {
 
-        $("#btnsubmit").click(function ()
-        {
-            if ($('#newPageform').valid())
-            {
+        $("#btnsubmit").click(function () {
+            if ($('#newPageform').valid()) {
                 var containerDescriptionEn = CKEDITOR.instances.ContainerDescriptionEn.getData();
                 var containerDescriptionLl = CKEDITOR.instances.ContainerDescriptionLl.getData();
 
@@ -290,19 +290,15 @@
         });
 
 
-        $("#PageName").blur(function ()
-        {
-            if ($("#PageName").val() != "")
-            {
+        $("#PageName").blur(function () {
+            if ($("#PageName").val() != "") {
                 $.ajax({
                     type: "POST",
                     url: "/Administration/NewPage/CheckTitleExists",
                     data: { PageName: $("#PageName").val(), ParentPageId: $("#ParentPageId").val() },
                     dataType: "json",
-                    success: function (data, textStatus, xhr)
-                    {
-                        if (data.result == "Y")
-                        {
+                    success: function (data, textStatus, xhr) {
+                        if (data.result == "Y") {
                             $.alert({
                                 title: 'Validation!',
                                 content: 'PageTitle Already Exits.',
@@ -328,10 +324,78 @@
 
             }
 
-        
+
         });
 
+        $(document).ready(function () {
+            $("#ParentPageName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Administration/NewPage/GetParentPage",
+                        type: "GET",
+                        dataType: "json",
+                        data: { pagename: request.term },
+                        success: function (data) {
+                            response($.map(data,
+                                function (item) {
+                                    return { label: item.Text, value: item.Value };
+                                }));
+                        }
+                    });
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                select: function (e, i) {
+                    $("#ParentPageName").val(i.item.label);
+                    $("#HiddenParentPageId").val(i.item.value);
+                    return false;
+                },
+                change: function (event, ui) {
+                    if (ui.item == null || ui.item == undefined) {
+                        $("#ParentPageName").val("");
+                    }
+                },
+                minLength: 2
+            });
 
+            $("#ChildPageName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Administration/NewPage/GetChildPage",
+                        type: "GET",
+                        dataType: "json",
+                        data: { childpagename: request.term, parentpageid: $("#HiddenParentPageId").val() },
+                        success: function (data) {
+                            response($.map(data,
+                                function (item) {
+                                    return { label: item.Text, value: item.Value };
+                                }));
+                        }
+                    });
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                select: function (e, i) {
+                    $("#ChildPageName").val(i.item.label);
+                    $("#HiddenChildPageId").val(i.item.value);
+                    return false;
+                },
+                change: function (event, ui) {
+                    if (ui.item == null || ui.item == undefined) {
+                        $("#ChildPageName").val("");
+                    }
+                },
+                minLength: 2
+            });
+        });
 
     });
 

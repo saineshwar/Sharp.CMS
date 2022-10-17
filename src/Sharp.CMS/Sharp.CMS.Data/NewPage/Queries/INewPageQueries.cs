@@ -15,5 +15,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
         PageModel GetPagebyPageId(int PageId);
         List<SelectListItem> ListofChildPage();
         List<SelectListItem> ListofChildPage(int parentId);
+        List<SelectListItem> GetAutoCompleteParentPage(string parentpage);
+        List<SelectListItem> GetAutoCompleteChildPage(string childPageName, string parentpageId);
     }
 }

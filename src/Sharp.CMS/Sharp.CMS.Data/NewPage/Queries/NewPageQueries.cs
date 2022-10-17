@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using Dapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.Page;
@@ -14,9 +18,11 @@ namespace Sharp.CMS.Data.NewPage.Queries
     public class NewPageQueries : INewPageQueries
     {
         private readonly SharpContext _sharpContext;
-        public NewPageQueries(SharpContext sharpContext)
+        private readonly IConfiguration _configuration;
+        public NewPageQueries(SharpContext sharpContext, IConfiguration configuration)
         {
             _sharpContext = sharpContext;
+            _configuration = configuration;
         }
 
         public IQueryable<NewPageGrid> ShowAllPages(string sortColumn, string sortColumnDir, string search)
@@ -205,6 +211,43 @@ namespace Sharp.CMS.Data.NewPage.Queries
         public List<SelectListItem> ListofChildPage()
         {
             throw new NotImplementedException();
+        }
+
+        public List<SelectListItem> GetAutoCompleteParentPage(string parentpage)
+        {
+            try
+            {
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+                param.Add("@ParentPageName", parentpage);
+                return con.Query<SelectListItem>("Usp_GetParentPageName", param, null, false, 0,
+                    CommandType.StoredProcedure).ToList();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public List<SelectListItem> GetAutoCompleteChildPage(string childPageName, string parentpageId)
+        {
+            try
+            {
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+                param.Add("@ChildPageName", childPageName);
+                param.Add("@ParentPageId", parentpageId);
+                return con.Query<SelectListItem>("Usp_GetChildPageName", param, null, false, 0,
+                    CommandType.StoredProcedure).ToList();
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }
