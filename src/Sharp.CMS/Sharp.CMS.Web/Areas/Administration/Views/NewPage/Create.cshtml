@@ -15,14 +15,8 @@
 
             <div class="card-body register-card-body">
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-                <div class="form-row">
-                    <div class="form-group col-md-3">
-                        <label class="mandatory" asp-for="PageName"></label>
-                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control" />
-                        <span class="text-danger" asp-validation-for="PageName"></span>
-                    </div>
-                </div>
-                <hr />
+                
+                
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label class="mandatory" asp-for="ParentPageName"></label>
@@ -39,6 +33,16 @@
 
                 </div>
                 <hr />
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label class="mandatory" asp-for="PageName"></label>
+                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control" />
+                        <span class="text-danger" asp-validation-for="PageName"></span>
+                    </div>
+                </div>
+                <hr />
+               
+    
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="Permalink"></label>
@@ -327,79 +331,79 @@
 
         });
 
-        $(document).ready(function () {
-            $("#ParentPageName").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "/Administration/NewPage/GetParentPage",
-                        type: "GET",
-                        dataType: "json",
-                        data: { pagename: request.term },
-                        success: function (data) {
-                            response($.map(data,
-                                function (item) {
-                                    return { label: item.Text, value: item.Value };
-                                }));
-                        }
-                    });
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                select: function (e, i) {
-                    $("#ParentPageName").val(i.item.label);
-                    $("#HiddenParentPageId").val(i.item.value);
-                    return false;
-                },
-                change: function (event, ui) {
-                    if (ui.item == null || ui.item == undefined) {
-                        $("#ParentPageName").val("");
-                    }
-                },
-                minLength: 2
-            });
-
-            $("#ChildPageName").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "/Administration/NewPage/GetChildPage",
-                        type: "GET",
-                        dataType: "json",
-                        data: { childpagename: request.term, parentpageid: $("#HiddenParentPageId").val() },
-                        success: function (data) {
-                            response($.map(data,
-                                function (item) {
-                                    return { label: item.Text, value: item.Value };
-                                }));
-                        }
-                    });
-                },
-                error: function (response) {
-                    alert(response.responseText);
-                },
-                failure: function (response) {
-                    alert(response.responseText);
-                },
-                select: function (e, i) {
-                    $("#ChildPageName").val(i.item.label);
-                    $("#HiddenChildPageId").val(i.item.value);
-                    return false;
-                },
-                change: function (event, ui) {
-                    if (ui.item == null || ui.item == undefined) {
-                        $("#ChildPageName").val("");
-                    }
-                },
-                minLength: 2
-            });
-        });
+       
 
     });
 
 
+    $(document).ready(function () {
+        $("#ParentPageName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Administration/NewPage/GetParentPage",
+                    type: "GET",
+                    dataType: "json",
+                    data: { pagename: request.term },
+                    success: function (data) {
+                        response($.map(data,
+                            function (item) {
+                                return { label: item.Text, value: item.Value };
+                            }));
+                    }
+                });
+            },
+            error: function (response) {
+                alert(response.responseText);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            select: function (e, i) {
+                $("#ParentPageName").val(i.item.label);
+                $("#HiddenParentPageId").val(i.item.value);
+                return false;
+            },
+            change: function (event, ui) {
+                if (ui.item == null || ui.item == undefined) {
+                    $("#ParentPageName").val("");
+                }
+            },
+            minLength: 2
+        });
 
+        $("#ChildPageName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Administration/NewPage/GetChildPage",
+                    type: "GET",
+                    dataType: "json",
+                    data: { childpagename: request.term, parentpageid: $("#HiddenParentPageId").val() },
+                    success: function (data) {
+                        response($.map(data,
+                            function (item) {
+                                return { label: item.Text, value: item.Value };
+                            }));
+                    }
+                });
+            },
+            error: function (response) {
+                alert(response.responseText);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            select: function (e, i) {
+                $("#ChildPageName").val(i.item.label);
+                $("#HiddenChildPageId").val(i.item.value);
+                return false;
+            },
+            change: function (event, ui) {
+                if (ui.item == null || ui.item == undefined) {
+                    $("#ChildPageName").val("");
+                }
+            },
+            minLength: 2
+        });
+    });
 
 </script>

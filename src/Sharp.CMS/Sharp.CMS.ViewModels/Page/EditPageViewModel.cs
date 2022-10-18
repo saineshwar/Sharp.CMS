@@ -81,9 +81,13 @@ namespace Sharp.CMS.ViewModels.Page
         public List<DisplayAttachmentsViewModel> ListofAttachments { get; set; }
 
         [Display(Name = "Parent Page")]
-        public string ParentPageId { get; set; }
-        public List<SelectListItem> ListofPages { get; set; }
+        public string ParentPageName { get; set; }
+        public string HiddenParentPageId { get; set; }
         public bool IsChildPage { get; set; }
+
+        [Display(Name = "Child Page")]
+        public string ChildPageName { get; set; }
+        public string HiddenChildPageId { get; set; }
 
     }
 }

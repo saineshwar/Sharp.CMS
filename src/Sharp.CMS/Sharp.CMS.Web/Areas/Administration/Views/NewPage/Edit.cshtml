@@ -20,18 +20,28 @@
                 <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label class="mandatory" asp-for="ParentPageId"></label>
-                        <select asp-for="ParentPageId" class="form-control"
-                                asp-items="@(new SelectList(Model.ListofPages, "Value", "Text"))">
-                        </select>
-                        <span class="text-danger" asp-validation-for="ParentPageId"></span>
+                        <label class="mandatory" asp-for="ParentPageName"></label>
+                        <input asp-for="ParentPageName" placeholder="Enter Name" class="form-control" />
+                        <input type="hidden" asp-for="HiddenParentPageId" />
+                        <span class="text-danger" asp-validation-for="HiddenParentPageId"></span>
                     </div>
                     <div class="form-group col-md-3">
+                        <label class="mandatory" asp-for="ChildPageName"></label>
+                        <input asp-for="ChildPageName" placeholder="Enter Name" class="form-control" />
+                        <input type="hidden" asp-for="HiddenChildPageId" />
+                        <span class="text-danger" asp-validation-for="HiddenChildPageId"></span>
+                    </div>
+
+                </div>
+                <hr />
+                <div class="form-row">
+                    <div class="form-group col-md-3">
                         <label class="mandatory" asp-for="PageName"></label>
-                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control"/>
+                        <input asp-for="PageName" placeholder="Enter PageName" class="form-control" />
                         <span class="text-danger" asp-validation-for="PageName"></span>
                     </div>
                 </div>
+                <hr />
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="mandatory" asp-for="Permalink"></label>
@@ -279,8 +289,7 @@
     $(document).ready(function () {
 
         $("#btnsubmit").click(function () {
-            if ($('#newPageform').valid())
-            {
+            if ($('#newPageform').valid()) {
                 var containerDescriptionEn = CKEDITOR.instances.ContainerDescriptionEn.getData();
                 var containerDescriptionLl = CKEDITOR.instances.ContainerDescriptionLl.getData();
 
@@ -388,5 +397,73 @@
         alert(message);
     };
 
+    $(document).ready(function () {
+        $("#ParentPageName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Administration/NewPage/GetParentPage",
+                    type: "GET",
+                    dataType: "json",
+                    data: { pagename: request.term },
+                    success: function (data) {
+                        response($.map(data,
+                            function (item) {
+                                return { label: item.Text, value: item.Value };
+                            }));
+                    }
+                });
+            },
+            error: function (response) {
+                alert(response.responseText);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            select: function (e, i) {
+                $("#ParentPageName").val(i.item.label);
+                $("#HiddenParentPageId").val(i.item.value);
+                return false;
+            },
+            change: function (event, ui) {
+                if (ui.item == null || ui.item == undefined) {
+                    $("#ParentPageName").val("");
+                }
+            },
+            minLength: 2
+        });
 
+        $("#ChildPageName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Administration/NewPage/GetChildPage",
+                    type: "GET",
+                    dataType: "json",
+                    data: { childpagename: request.term, parentpageid: $("#HiddenParentPageId").val() },
+                    success: function (data) {
+                        response($.map(data,
+                            function (item) {
+                                return { label: item.Text, value: item.Value };
+                            }));
+                    }
+                });
+            },
+            error: function (response) {
+                alert(response.responseText);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            select: function (e, i) {
+                $("#ChildPageName").val(i.item.label);
+                $("#HiddenChildPageId").val(i.item.value);
+                return false;
+            },
+            change: function (event, ui) {
+                if (ui.item == null || ui.item == undefined) {
+                    $("#ChildPageName").val("");
+                }
+            },
+            minLength: 2
+        });
+    });
 </script>

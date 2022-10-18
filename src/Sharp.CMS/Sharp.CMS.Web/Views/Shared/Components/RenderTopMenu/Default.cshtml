@@ -9,51 +9,142 @@
         {
             if (!IRenderingMenus.CheckHasFirstChild(menuparent.PageId))
             {
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="/@menuparent.PageName">@menuparent.MenuNameEN</a>
-                </li>
+
+                string data = "";
+                if (menuparent.OpenInNewTab)
+                {
+                    data = "target='_blank'";
+                }
+
+                if (!string.IsNullOrEmpty(menuparent.Permalink))
+                {
+
+                    
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" @data href="@menuparent.Permalink">@menuparent.MenuNameEN</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" @data href="/@menuparent.PageName">@menuparent.MenuNameEN</a>
+                    </li>
+                }
+
             }
             else
             {
+
+
+                string data = "";
+                if (menuparent.OpenInNewTab)
+                {
+                    data = "target='_blank'";
+                }
+
+
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/@menuparent.PageName" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" @data href="/@menuparent.PageName" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @menuparent.MenuNameEN
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
                         @foreach (var menuchild in IRenderingMenus.GetChildMenus(menuparent.PageId))
                         {
+                            string childdata = "";
+                            if (menuchild.OpenInNewTab)
+                            {
+                                childdata = "target='_blank'";
+                            }
+
                             if (IRenderingMenus.GetChildMenus(menuparent.PageId).Count() == 1)
                             {
 
-                                <li>
-                                    <a class="nav-link text-dark" href="/@menuchild.PageName">@menuchild.MenuNameEN</a>
-                                </li>
+                                if (!string.IsNullOrEmpty(menuchild.Permalink))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" @childdata href="@menuchild.Permalink">@menuchild.MenuNameEN</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    
+                                    <li>
+                                        <a class="nav-link text-dark" @childdata href="/@menuchild.PageName">@menuchild.MenuNameEN</a>
+                                    </li>
+                                }
 
                             }
                             else
                             {
-
-                                <li class="dropdown-submenu">
-                                    <a class="dropdown-item dropdown-toggle" href="#">@menuchild.MenuNameEN</a>
-                                    
-                                    @if (IRenderingMenus.GetSubChildMenus(menuchild.PageId).Any())
+                                if (!IRenderingMenus.CheckHasSubChildMenu(menuchild.PageId))
+                                {
+                                    if (!string.IsNullOrEmpty(menuchild.Permalink))
                                     {
-                                        <ul class="dropdown-menu">
-                                            @foreach (var menusubchild in IRenderingMenus.GetSubChildMenus(menuchild.PageId))
-                                            {
-
-                                                <li>
-                                                    <a class="dropdown-item" href="/@menusubchild.PageName">@menusubchild.MenuNameEN</a>
-                                                </li>
-                                            
-                                        
-                                       
-                                            }
-                                        </ul>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" @childdata href="@menuchild.Permalink">@menuchild.MenuNameEN</a>
+                                        </li>
                                     }
-                                   
-                                </li>
+                                    else
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" @childdata href="/@menuchild.PageName">@menuchild.MenuNameEN</a>
+                                        </li>
+                                    }
+
+                                }
+
+                                else
+                                {
+                                    <li class="dropdown-submenu">
+
+
+                                        @if (IRenderingMenus.GetSubChildMenus(menuchild.PageId).Any())
+                                        {
+
+                                            <a class="dropdown-item dropdown-toggle" href="#">@menuchild.MenuNameEN</a>
+
+                                        
+
+                                            <ul class="dropdown-menu">
+                                                @foreach (var menusubchild in IRenderingMenus.GetSubChildMenus(menuchild.PageId))
+                                                {
+
+                                                    string subchilddata = "";
+                                                    if (menusubchild.OpenInNewTab)
+                                                    {
+                                                        subchilddata = "target='_blank'";
+                                                    }
+
+
+                                                    if (!string.IsNullOrEmpty(menusubchild.Permalink))
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a class="nav-link text-dark" @subchilddata href="@menusubchild.Permalink">@menusubchild.MenuNameEN</a>
+                                                        </li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li>
+                                                            <a class="dropdown-item" @subchilddata href="/@menusubchild.PageName">@menusubchild.MenuNameEN</a>
+                                                        </li>
+
+                                                    }
+                                             
+
+
+                                                }
+                                            </ul>
+                                        }
+
+                                    </li>
+                                }
+
+
+
+
+
                             }
 
                         }
@@ -64,5 +155,5 @@
 
             }
         }
-        </ul>
-    </div>
+    </ul>
+</div>

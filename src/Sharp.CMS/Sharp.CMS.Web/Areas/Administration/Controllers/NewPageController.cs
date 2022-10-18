@@ -62,7 +62,6 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
 
-
             if (ModelState.IsValid)
             {
                 if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName, string.IsNullOrEmpty(pageViewModel.HiddenParentPageId) ? null : Convert.ToInt32(pageViewModel.HiddenParentPageId)))
@@ -80,6 +79,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.CreatedBy = user;
                 pageModel.Status = pageViewModel.StatusId;
 
+
+                pageModel.IsPublished = pageViewModel.StatusId == 2;
+
+
                 if (!string.IsNullOrEmpty(pageViewModel.HiddenParentPageId))
                 {
                     pageModel.ParentPageId = Convert.ToInt32(pageViewModel.HiddenParentPageId);
@@ -93,17 +96,14 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.IsChildPage = !string.IsNullOrEmpty(pageViewModel.HiddenParentPageId);
                 pageModel.IsSubChildPage = !string.IsNullOrEmpty(pageViewModel.HiddenChildPageId);
 
-                pageModel.PageDetails = new PageDetailsModel()
-                {
-                    PageDetailsId = 0,
-                    MetaDescription_EN = pageViewModel.MetaDescriptionEN,
-                    MetaDescription_LL = pageViewModel.MetaDescriptionLl,
-                    MetaKeywords_EN = pageViewModel.MetaKeywordsEN,
-                    MetaKeywords_LL = pageViewModel.MetaKeywordsLl,
-                    PageHeading_EN = pageViewModel.PageHeading,
-                    PageHeading_LL = pageViewModel.PageHeadingLl,
-
-                };
+                pageModel.PageDetails = new PageDetailsModel();
+                pageModel.PageDetails.PageDetailsId = 0;
+                pageModel.PageDetails.MetaDescription_EN = pageViewModel.MetaDescriptionEN;
+                pageModel.PageDetails.MetaDescription_LL = pageViewModel.MetaDescriptionLl;
+                pageModel.PageDetails.MetaKeywords_EN = pageViewModel.MetaKeywordsEN;
+                pageModel.PageDetails.MetaKeywords_LL = pageViewModel.MetaKeywordsLl;
+                pageModel.PageDetails.PageHeading_EN = pageViewModel.PageHeading;
+                pageModel.PageDetails.PageHeading_LL = pageViewModel.PageHeadingLl;
 
 
                 if (!string.IsNullOrEmpty(pageViewModel.Permalink))
@@ -212,7 +212,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             editmodel.ListofStatus = _commonMastersQueries.GetStatusList();
             var listofattachment = _inewContainerQueries.GetListofAttachmentsbyPageId(id.Value);
             editmodel.ListofAttachments = listofattachment.Count > 0 ? listofattachment : new List<DisplayAttachmentsViewModel>();
-            editmodel.ListofPages = _iNewPageQueries.ListofPages();
+         
             return View(editmodel);
         }
 
@@ -347,6 +347,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         pagecontainerModel.Status = pageViewModel.IsActive;
                         pagecontainerModel.PageId = editmodel.PageId;
 
+                      
                         // ReSharper disable once CollectionNeverQueried.Local
                         var listofattachments = new List<AttachmentsViewModel>();
                         #region Files

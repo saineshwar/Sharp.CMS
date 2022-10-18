@@ -105,40 +105,12 @@ namespace Sharp.CMS.Data.NewPage.Queries
         {
             try
             {
-                var queryable = (from page in _sharpContext.PageModel
-                                 join pageDetail in _sharpContext.PageDetailsModel on page.PageId equals pageDetail.PageId
-                                 join containers in _sharpContext.ContainersModel on page.PageId equals containers.PageId into containersGroup
-                                 from containersleft in containersGroup.DefaultIfEmpty()
-                                 where page.PageId == PageId
-                                 select new EditPageViewModel()
-                                 {
-                                     PageId = page.PageId,
-                                     Permalink = page.Permalink,
-                                     PageTitleEn = page.PageTitle_EN,
-                                     PageTitleLl = page.PageTitle_LL,
-                                     IsNew = page.IsNew,
-                                     MenuNameEn = page.MenuName_EN,
-                                     MenuNameLl = page.MenuName_LL,
-                                     OpenInNewTab = page.OpenInNewTab,
-                                     PageName = page.PageName,
-                                     MetaDescriptionEN = pageDetail.MetaDescription_EN,
-                                     MetaDescriptionLl = pageDetail.MetaDescription_LL,
-                                     MetaKeywordsEN = pageDetail.MetaKeywords_EN,
-                                     MetaKeywordsLl = pageDetail.MetaKeywords_LL,
-                                     PageHeading = pageDetail.PageHeading_EN,
-                                     PageHeadingLl = pageDetail.PageHeading_LL,
-                                     StatusId = page.Status,
-                                     ContainerDescriptionLl = containersleft.ContainerDescription_Ll,
-                                     ContainerDescriptionEn = containersleft.ContainerDescription_En,
-                                     IsActive = page.IsActive,
-                                     ContainersId = containersleft.ContainersId,
-                                     PageDetailsId = pageDetail.PageDetailsId,
-                                     ParentPageId = page.ParentPageId == null ? string.Empty : Convert.ToString(page.ParentPageId),
-                                     IsChildPage = page.IsChildPage,
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+                param.Add("@PageId", PageId);
+                return con.Query<EditPageViewModel>("Usp_GetPageDetails", param, null, false, 0,
+                    CommandType.StoredProcedure).FirstOrDefault();
 
-                                 }).FirstOrDefault();
-
-                return queryable;
             }
             catch (Exception)
             {

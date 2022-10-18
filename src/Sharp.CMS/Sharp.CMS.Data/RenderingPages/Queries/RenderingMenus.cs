@@ -132,5 +132,17 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
 
             return results;
         }
+
+
+        public bool CheckHasSubChildMenu(int childId)
+        {
+
+            using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+            var param = new DynamicParameters();
+            param.Add("@ChildId", childId);
+            var results = con.Query<bool>("Usp_CheckHasSubChildMenu", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+
+            return results;
+        }
     }
 }

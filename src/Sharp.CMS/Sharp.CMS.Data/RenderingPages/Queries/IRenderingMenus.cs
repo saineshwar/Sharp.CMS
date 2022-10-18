@@ -12,5 +12,6 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
         List<RenderMainPageDetails> GetSubChildMenus(int childId);
 
         bool CheckHasFirstChild(int parentId);
+        bool CheckHasSubChildMenu(int childId);
     }
 }
