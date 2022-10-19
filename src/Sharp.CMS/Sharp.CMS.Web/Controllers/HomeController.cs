@@ -24,16 +24,57 @@ namespace Sharp.CMS.Web.Controllers
         {
             if (string.IsNullOrEmpty(PageName))
             {
-                var data = _iRenderingPageQueries.ShowHomePage("");
-                ViewBag.PageName = data.PageName;
-                ViewBag.PageTitle = data.PageTitle_EN;
+                var homePagedata = _iRenderingPageQueries.ShowHomePage("");
+                ViewBag.PageName = homePagedata.PageName;
+                ViewBag.PageTitle = homePagedata.PageTitle_EN;
                 return View();
             }
             else
             {
-                var data = _iRenderingPageQueries.ShowHomePage(PageName);
-                ViewBag.PageName = data.PageName;
-                ViewBag.PageTitle = data.PageTitle_EN;
+                var homePagedata = _iRenderingPageQueries.ShowHomePage(PageName);
+
+                if (homePagedata != null)
+                {
+                    ViewBag.PageName = homePagedata.PageName;
+                    ViewBag.PageTitle = homePagedata.PageTitle_EN;
+                    
+                    var homePagedetailsdata = _iRenderingPageQueries.ShowPageDetails(homePagedata.PageId);
+                    if (homePagedetailsdata != null)
+                    {
+                        ViewBag.PageDetails_PageHeader_English = homePagedetailsdata.PageHeading_EN;
+                        ViewBag.PageDetails_PageHeader_Other = homePagedetailsdata.PageHeading_LL;
+                        ViewBag.PageDetails_MetaDescription_EN = homePagedetailsdata.MetaDescription_EN;
+                        ViewBag.PageDetails_MetaDescription_LL = homePagedetailsdata.MetaDescription_LL;
+                        ViewBag.PageDetails_MetaKeywords_EN = homePagedetailsdata.MetaKeywords_EN;
+                        ViewBag.PageDetails_MetaKeywords_LL = homePagedetailsdata.MetaKeywords_LL;
+                    }
+
+                    var PageHeaderdetailsdata = _iRenderingPageQueries.ShowPageheaderDetails();
+                    if (PageHeaderdetailsdata != null)
+                    {
+                        ViewBag.PageHeader_PageHeaderName = PageHeaderdetailsdata.PageHeaderName;
+                        ViewBag.PageHeader_PageHeaderDetails_EN = PageHeaderdetailsdata.PageHeaderDetails_EN;
+                        ViewBag.PageHeader_PageHeaderDetails_LL = PageHeaderdetailsdata.PageHeaderDetails_LL;
+                    }
+
+                    var PageFooterdetailsdata = _iRenderingPageQueries.ShowPageFooterDetails();
+                    if (PageFooterdetailsdata != null)
+                    {
+                        ViewBag.PageFooter_PageFooterName = PageFooterdetailsdata.PageFooterName;
+                        ViewBag.PageFooter_PageFooterDetails_EN = PageFooterdetailsdata.PageFooterDetails_EN;
+                        ViewBag.PageFooter_PageFooterDetails_LL = PageFooterdetailsdata.PageFooterDetails_LL;
+                    }
+
+                    var PageContainerdetailsdata = _iRenderingPageQueries.ShowContainersDetails(homePagedata.PageId);
+                    if (PageContainerdetailsdata != null)
+                    {
+                        ViewBag.PageContainer_ContainerName = PageContainerdetailsdata.ContainerName;
+                        ViewBag.PageContainer_ContainerDescription_En = PageContainerdetailsdata.ContainerDescription_En;
+                        ViewBag.PageContainer_ContainerDescription_Ll = PageContainerdetailsdata.ContainerDescription_Ll;
+                    }
+
+                }
+
                 return View();
             }
         }

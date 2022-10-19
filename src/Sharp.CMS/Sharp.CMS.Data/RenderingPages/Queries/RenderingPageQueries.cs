@@ -30,8 +30,77 @@ namespace Sharp.CMS.Data.RenderingPages.Queries
                 using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
                 var param = new DynamicParameters();
                 param.Add("@Pagename", pagename);
-                var userProfile = con.Query<RenderMainPageDetails>("Usp_Render_GetHomePage", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
-                return userProfile;
+                var data = con.Query<RenderMainPageDetails>("Usp_Render_GetHomePage", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+                return data;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public RenderPageDetails ShowPageDetails(int pageId)
+        {
+            try
+            {
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+                param.Add("@PageId", pageId);
+                var data = con.Query<RenderPageDetails>("Usp_Render_GetPageDetails", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+                return data;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public RenderPageHeaderDetails ShowPageheaderDetails()
+        {
+            try
+            {
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+           
+                var data = con.Query<RenderPageHeaderDetails>("Usp_Render_GetPageHeader", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+                return data;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public RenderPageFooterDetails ShowPageFooterDetails()
+        {
+            try
+            {
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+            
+                var data = con.Query<RenderPageFooterDetails>("Usp_Render_GetPageFooter", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+                return data;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        public RenderContainersDetails ShowContainersDetails(int pageId)
+        {
+            try
+            {
+                using SqlConnection con = new SqlConnection(_configuration.GetConnectionString("DatabaseConnection"));
+                var param = new DynamicParameters();
+                param.Add("@PageId", pageId);
+                var data = con.Query<RenderContainersDetails>("Usp_Render_GetContainers", param, null, false, 0, CommandType.StoredProcedure).FirstOrDefault();
+                return data;
 
             }
             catch (Exception)
