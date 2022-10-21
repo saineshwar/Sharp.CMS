@@ -89,5 +89,7 @@ namespace Sharp.CMS.ViewModels.Page
         public string ChildPageName { get; set; }
         public string HiddenChildPageId { get; set; }
 
+        public bool IsHomePage { get; set; }
+        public bool IsSubChildPage { get; set; }
     }
 }

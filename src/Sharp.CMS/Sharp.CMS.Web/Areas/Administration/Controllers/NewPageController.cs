@@ -234,6 +234,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     pageModel.ModifiedOn = currentdate;
                     pageModel.ModifiedBy = user;
                     pageModel.Status = pageViewModel.StatusId;
+                    pageModel.IsHomePage =editmodel.IsHomePage;
                     pageModel.PageDetails = new PageDetailsModel()
                     {
                         MetaDescription_EN = pageViewModel.MetaDescriptionEN,
@@ -242,7 +243,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         MetaKeywords_LL = pageViewModel.MetaKeywordsLl,
                         PageHeading_EN = pageViewModel.PageHeading,
                         PageHeading_LL = pageViewModel.PageHeadingLl,
-                        PageDetailsId = editmodel.PageDetailsId
+                        PageDetailsId = editmodel.PageDetailsId,
+
                     };
 
 
