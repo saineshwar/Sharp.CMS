@@ -12,10 +12,11 @@ namespace Sharp.CMS.Data.NewPage.Queries
         bool CheckPageNameExists(string pagename, int? pageid);
         EditPageViewModel GetPageDetailsbyPageId(int PageId);
         List<SelectListItem> ListofPages();
-        PageModel GetPagebyPageId(int PageId);
+        PageModel GetPagebyPageId(int pageId);
         List<SelectListItem> ListofChildPage();
         List<SelectListItem> ListofChildPage(int parentId);
         List<SelectListItem> GetAutoCompleteParentPage(string parentpage);
         List<SelectListItem> GetAutoCompleteChildPage(string childPageName, string parentpageId);
+
     }
 }

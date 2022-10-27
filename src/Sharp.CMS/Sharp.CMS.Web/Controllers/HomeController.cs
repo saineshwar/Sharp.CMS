@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Sharp.CMS.Data.NewPage.Command;
 using Sharp.CMS.Data.RenderingPages.Queries;
+using Sharp.CMS.ViewModels.RenderPage;
 
 namespace Sharp.CMS.Web.Controllers
 {
@@ -14,17 +16,31 @@ namespace Sharp.CMS.Web.Controllers
     {
         private readonly IRenderingPageQueries _iRenderingPageQueries;
         private readonly ILogger<HomeController> _logger;
-        public HomeController(ILogger<HomeController> logger, IRenderingPageQueries renderingPageQueries)
+        private readonly INewPageCommand _newPageCommand;
+        public HomeController(ILogger<HomeController> logger, IRenderingPageQueries renderingPageQueries, INewPageCommand newPageCommand)
         {
             _logger = logger;
             _iRenderingPageQueries = renderingPageQueries;
+            _newPageCommand = newPageCommand;
         }
 
-        public IActionResult Index(string PageName)
+        public IActionResult Index(string pageName)
         {
-            if (string.IsNullOrEmpty(PageName))
+            if (string.IsNullOrEmpty(pageName))
             {
-                var homePagedata = _iRenderingPageQueries.ShowHomePage("");
+                var pageisCahed = _iRenderingPageQueries.GetIsPageCached(pageName);
+                RenderMainPageDetails homePagedata;
+
+                if (pageisCahed == false)
+                {
+                    homePagedata = _iRenderingPageQueries.ShowHomePage("", false);
+                    _newPageCommand.UpdateSetNewCache(homePagedata.PageId);
+                }
+                else
+                {
+                    homePagedata = _iRenderingPageQueries.ShowHomePage("", true);
+                }
+
                 if (homePagedata != null)
                 {
                     ViewBag.PageName = homePagedata.PageName;
@@ -41,28 +57,28 @@ namespace Sharp.CMS.Web.Controllers
                         ViewBag.PageDetails_MetaKeywords_LL = homePagedetailsdata.MetaKeywords_LL;
                     }
 
-                    var PageHeaderdetailsdata = _iRenderingPageQueries.ShowPageheaderDetails();
-                    if (PageHeaderdetailsdata != null)
+                    var pageHeaderdetailsdata = _iRenderingPageQueries.ShowPageheaderDetails();
+                    if (pageHeaderdetailsdata != null)
                     {
-                        ViewBag.PageHeader_PageHeaderName = PageHeaderdetailsdata.PageHeaderName;
-                        ViewBag.PageHeader_PageHeaderDetails_EN = PageHeaderdetailsdata.PageHeaderDetails_EN;
-                        ViewBag.PageHeader_PageHeaderDetails_LL = PageHeaderdetailsdata.PageHeaderDetails_LL;
+                        ViewBag.PageHeader_PageHeaderName = pageHeaderdetailsdata.PageHeaderName;
+                        ViewBag.PageHeader_PageHeaderDetails_EN = pageHeaderdetailsdata.PageHeaderDetails_EN;
+                        ViewBag.PageHeader_PageHeaderDetails_LL = pageHeaderdetailsdata.PageHeaderDetails_LL;
                     }
 
-                    var PageFooterdetailsdata = _iRenderingPageQueries.ShowPageFooterDetails();
-                    if (PageFooterdetailsdata != null)
+                    var pageFooterdetailsdata = _iRenderingPageQueries.ShowPageFooterDetails();
+                    if (pageFooterdetailsdata != null)
                     {
-                        ViewBag.PageFooter_PageFooterName = PageFooterdetailsdata.PageFooterName;
-                        ViewBag.PageFooter_PageFooterDetails_EN = PageFooterdetailsdata.PageFooterDetails_EN;
-                        ViewBag.PageFooter_PageFooterDetails_LL = PageFooterdetailsdata.PageFooterDetails_LL;
+                        ViewBag.PageFooter_PageFooterName = pageFooterdetailsdata.PageFooterName;
+                        ViewBag.PageFooter_PageFooterDetails_EN = pageFooterdetailsdata.PageFooterDetails_EN;
+                        ViewBag.PageFooter_PageFooterDetails_LL = pageFooterdetailsdata.PageFooterDetails_LL;
                     }
 
-                    var PageContainerdetailsdata = _iRenderingPageQueries.ShowContainersDetails(homePagedata.PageId);
-                    if (PageContainerdetailsdata != null)
+                    var pageContainerdetailsdata = _iRenderingPageQueries.ShowContainersDetails(homePagedata.PageId);
+                    if (pageContainerdetailsdata != null)
                     {
-                        ViewBag.PageContainer_ContainerName = PageContainerdetailsdata.ContainerName;
-                        ViewBag.PageContainer_ContainerDescription_En = PageContainerdetailsdata.ContainerDescription_En;
-                        ViewBag.PageContainer_ContainerDescription_Ll = PageContainerdetailsdata.ContainerDescription_Ll;
+                        ViewBag.PageContainer_ContainerName = pageContainerdetailsdata.ContainerName;
+                        ViewBag.PageContainer_ContainerDescription_En = pageContainerdetailsdata.ContainerDescription_En;
+                        ViewBag.PageContainer_ContainerDescription_Ll = pageContainerdetailsdata.ContainerDescription_Ll;
                     }
 
                 }
@@ -70,14 +86,38 @@ namespace Sharp.CMS.Web.Controllers
             }
             else
             {
-                var homePagedata = _iRenderingPageQueries.ShowHomePage(PageName);
 
-                if (homePagedata != null)
+                if (!_iRenderingPageQueries.IsPageExits(pageName))
                 {
-                    ViewBag.PageName = homePagedata.PageName;
-                    ViewBag.PageTitle = homePagedata.PageTitle_EN;
+                    return RedirectToAction("Index", "PageNotFound");
+                }
+
+                RenderMainPageDetails renderdata;
+                var pageisCahed = _iRenderingPageQueries.GetIsPageCached(pageName);
+                if (pageisCahed == false)
+                {
+                   
+                    renderdata = _iRenderingPageQueries.ShowHomePage(pageName, false); 
+                    _newPageCommand.UpdateSetNewCache(renderdata.PageId);
+                }
+                else
+                {
+                    renderdata = _iRenderingPageQueries.ShowHomePage(pageName, true);
+                }
+
+                if (renderdata != null)
+                {
                     
-                    var homePagedetailsdata = _iRenderingPageQueries.ShowPageDetails(homePagedata.PageId);
+                    if (renderdata.IsChildPage || renderdata.IsSubChildPage)
+                    {
+                        ViewBag.InnerPage = "1";
+                    }
+
+
+                    ViewBag.PageName = renderdata.PageName;
+                    ViewBag.PageTitle = renderdata.PageTitle_EN;
+
+                    var homePagedetailsdata = _iRenderingPageQueries.ShowPageDetails(renderdata.PageId);
                     if (homePagedetailsdata != null)
                     {
                         ViewBag.PageDetails_PageHeader_English = homePagedetailsdata.PageHeading_EN;
@@ -88,31 +128,32 @@ namespace Sharp.CMS.Web.Controllers
                         ViewBag.PageDetails_MetaKeywords_LL = homePagedetailsdata.MetaKeywords_LL;
                     }
 
-                    var PageHeaderdetailsdata = _iRenderingPageQueries.ShowPageheaderDetails();
-                    if (PageHeaderdetailsdata != null)
+                    var pageHeaderdetailsdata = _iRenderingPageQueries.ShowPageheaderDetails();
+                    if (pageHeaderdetailsdata != null)
                     {
-                        ViewBag.PageHeader_PageHeaderName = PageHeaderdetailsdata.PageHeaderName;
-                        ViewBag.PageHeader_PageHeaderDetails_EN = PageHeaderdetailsdata.PageHeaderDetails_EN;
-                        ViewBag.PageHeader_PageHeaderDetails_LL = PageHeaderdetailsdata.PageHeaderDetails_LL;
+                        ViewBag.PageHeader_PageHeaderName = pageHeaderdetailsdata.PageHeaderName;
+                        ViewBag.PageHeader_PageHeaderDetails_EN = pageHeaderdetailsdata.PageHeaderDetails_EN;
+                        ViewBag.PageHeader_PageHeaderDetails_LL = pageHeaderdetailsdata.PageHeaderDetails_LL;
                     }
 
-                    var PageFooterdetailsdata = _iRenderingPageQueries.ShowPageFooterDetails();
-                    if (PageFooterdetailsdata != null)
+                    var pageFooterdetailsdata = _iRenderingPageQueries.ShowPageFooterDetails();
+                    if (pageFooterdetailsdata != null)
                     {
-                        ViewBag.PageFooter_PageFooterName = PageFooterdetailsdata.PageFooterName;
-                        ViewBag.PageFooter_PageFooterDetails_EN = PageFooterdetailsdata.PageFooterDetails_EN;
-                        ViewBag.PageFooter_PageFooterDetails_LL = PageFooterdetailsdata.PageFooterDetails_LL;
+                        ViewBag.PageFooter_PageFooterName = pageFooterdetailsdata.PageFooterName;
+                        ViewBag.PageFooter_PageFooterDetails_EN = pageFooterdetailsdata.PageFooterDetails_EN;
+                        ViewBag.PageFooter_PageFooterDetails_LL = pageFooterdetailsdata.PageFooterDetails_LL;
                     }
 
-                    var PageContainerdetailsdata = _iRenderingPageQueries.ShowContainersDetails(homePagedata.PageId);
-                    if (PageContainerdetailsdata != null)
+                    var pageContainerdetailsdata = _iRenderingPageQueries.ShowContainersDetails(renderdata.PageId);
+                    if (pageContainerdetailsdata != null)
                     {
-                        ViewBag.PageContainer_ContainerName = PageContainerdetailsdata.ContainerName;
-                        ViewBag.PageContainer_ContainerDescription_En = PageContainerdetailsdata.ContainerDescription_En;
-                        ViewBag.PageContainer_ContainerDescription_Ll = PageContainerdetailsdata.ContainerDescription_Ll;
+                        ViewBag.PageContainer_ContainerName = pageContainerdetailsdata.ContainerName;
+                        ViewBag.PageContainer_ContainerDescription_En = pageContainerdetailsdata.ContainerDescription_En;
+                        ViewBag.PageContainer_ContainerDescription_Ll = pageContainerdetailsdata.ContainerDescription_Ll;
                     }
 
                 }
+
 
                 return View();
             }

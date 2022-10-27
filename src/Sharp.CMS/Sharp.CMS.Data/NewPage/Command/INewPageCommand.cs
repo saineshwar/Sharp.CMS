@@ -10,5 +10,6 @@ namespace Sharp.CMS.Data.NewPage.Command
         bool Update(PageModel pageModel, ContainersModel containersModel, List<AttachmentsViewModel> listofAttachment);
         bool Deactivate(PageModel pageModel);
         bool SetDefaultHomePage(int? pageId);
+        bool UpdateSetNewCache(int? pageId);
     }
 }

@@ -16,6 +16,9 @@ namespace Sharp.CMS.ViewModels.RenderPage
         public bool IsNew { get; set; }
         public int? ParentPageId { get; set; }
         public int? ChildPageId { get; set; }
-
+        public bool IsCached { get; set; }
+        public bool IsChildPage { get; set; }
+        public bool IsSubChildPage { get; set; }
+        public bool IsHomePage { get; set; }
     }
 }

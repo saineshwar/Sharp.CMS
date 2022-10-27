@@ -91,5 +91,7 @@ namespace Sharp.CMS.ViewModels.Page
 
         public bool IsHomePage { get; set; }
         public bool IsSubChildPage { get; set; }
+        public bool IsCached { get; set; }
+        
     }
 }

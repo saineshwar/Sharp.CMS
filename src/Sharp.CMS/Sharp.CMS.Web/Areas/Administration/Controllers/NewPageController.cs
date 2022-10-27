@@ -64,7 +64,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
             if (ModelState.IsValid)
             {
-                if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName, string.IsNullOrEmpty(pageViewModel.HiddenParentPageId) ? null : Convert.ToInt32(pageViewModel.HiddenParentPageId)))
+                if (_iNewPageQueries.CheckPageNameExists(pageViewModel.PageName, string.IsNullOrEmpty(pageViewModel.HiddenParentPageId) ? (int?) null : Convert.ToInt32(pageViewModel.HiddenParentPageId)))
                 {
                     _notificationService.DangerNotification("Message", "Page Name Entered already Exists.");
                     return View(pageViewModel);
@@ -78,8 +78,8 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.PageId = 0;
                 pageModel.CreatedBy = user;
                 pageModel.Status = pageViewModel.StatusId;
-
-
+                pageModel.PageName = pageViewModel.PageName = pageViewModel.PageName.Replace(" ", "_");
+                pageModel.IsCached = false;
                 pageModel.IsPublished = pageViewModel.StatusId == 2;
 
 
@@ -235,6 +235,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     pageModel.ModifiedBy = user;
                     pageModel.Status = pageViewModel.StatusId;
                     pageModel.IsHomePage =editmodel.IsHomePage;
+                    pageModel.IsCached = false;
                     pageModel.PageDetails = new PageDetailsModel()
                     {
                         MetaDescription_EN = pageViewModel.MetaDescriptionEN,
@@ -328,6 +329,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         pageModel.ModifiedOn = currentdate;
                         pageModel.ModifiedBy = user;
                         pageModel.Status = pageViewModel.StatusId;
+                        pageModel.IsHomePage = editmodel.IsHomePage;
                         pageModel.PageDetails = new PageDetailsModel()
                         {
                             MetaDescription_EN = pageViewModel.MetaDescriptionEN,

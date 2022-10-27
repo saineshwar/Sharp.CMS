@@ -141,6 +141,33 @@ namespace Sharp.CMS.Web
 
             app.UseStaticFiles();
 
+            //app.Use(async (context, next) =>
+            //{
+            //    string path = context.Request.Path;
+
+            //    if (path.EndsWith(".css") || path.EndsWith(".js"))
+            //    {
+
+            //        //Set css and js files to be cached for 7 days
+            //        TimeSpan maxAge = new TimeSpan(7, 0, 0, 0);     //7 days
+            //        context.Response.Headers.Append("Cache-Control", "max-age=" + maxAge.TotalSeconds.ToString("0"));
+
+            //    }
+            //    else if (path.EndsWith(".gif") || path.EndsWith(".jpg") || path.EndsWith(".png"))
+            //    {
+            //        //custom headers for images goes here if needed
+
+            //    }
+            //    else
+            //    {
+            //        //Request for views fall here.
+            //        context.Response.Headers.Append("Cache-Control", "no-cache");
+            //        context.Response.Headers.Append("Cache-Control", "private, no-store");
+
+            //    }
+            //    await next();
+            //});
+
             app.UseRouting();
 
             app.UseAuthorization();

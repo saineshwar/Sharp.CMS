@@ -170,10 +170,10 @@ namespace Sharp.CMS.Data.NewPage.Queries
             }
         }
 
-        public PageModel GetPagebyPageId(int PageId)
+        public PageModel GetPagebyPageId(int pageId)
         {
             var queryable = (from page in _sharpContext.PageModel
-                             where page.PageId == PageId && page.IsChildPage == false
+                             where page.PageId == pageId && page.IsChildPage == false
                              select page
                 ).FirstOrDefault();
 
@@ -221,5 +221,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
                 throw;
             }
         }
+
+     
     }
 }

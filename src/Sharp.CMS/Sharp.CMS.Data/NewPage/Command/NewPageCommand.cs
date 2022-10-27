@@ -164,5 +164,33 @@ namespace Sharp.CMS.Data.NewPage.Command
                 throw;
             }
         }
+
+        public bool UpdateSetNewCache(int? pageId)
+        {
+            using SqlConnectionManager sqlDataAccessManager = new SqlConnectionManager(_configuration);
+            try
+            {
+
+                var (connection, transaction) = sqlDataAccessManager.StartTransaction();
+                var param = new DynamicParameters();
+                param.Add("@PageId", pageId);
+                var result = connection.Execute("Usp_UpdateNewCache", param, transaction, 0, CommandType.StoredProcedure);
+
+                if (result > 0)
+                {
+                    sqlDataAccessManager.Commit();
+                    return true;
+                }
+                else
+                {
+                    sqlDataAccessManager.Rollback();
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

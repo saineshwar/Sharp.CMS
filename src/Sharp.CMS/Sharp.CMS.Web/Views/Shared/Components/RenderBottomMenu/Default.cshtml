@@ -1,0 +1,42 @@
+﻿@using Sharp.CMS.Data.RenderingPages.Queries
+@model List<Sharp.CMS.ViewModels.RenderPage.RenderMainPageDetails>
+@inject IRenderingMenus IRenderingMenus
+
+
+        <div class="row text-center text-xs-center text-sm-left text-md-left">
+            <div class="col-xs-12 col-sm-4 col-md-4">
+                <ul>
+
+                    @foreach (var menuparent in Model)
+                    {
+                        
+
+                            string data = "";
+                            if (menuparent.OpenInNewTab)
+                            {
+                                data = "target='_blank'";
+                            }
+
+                            if (!string.IsNullOrEmpty(menuparent.Permalink))
+                            {
+
+
+
+                                <li>
+                                    <a @data href="@menuparent.Permalink">@menuparent.MenuNameEN</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a @data href="/@menuparent.PageName">@menuparent.MenuNameEN</a>
+                                </li>
+                            }
+
+                        
+                       
+                    }
+                </ul>
+            </div>
+        </div>
+   

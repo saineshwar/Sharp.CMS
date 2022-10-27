@@ -1,6 +1,16 @@
-﻿
-<footer class="border-top footer text-muted">
+﻿@using Sharp.CMS.Web.Views.Shared.Components.RenderBottomMenu
+
+
+<footer class="page-footer">
     <div class="container">
-       @Html.Raw(ViewBag.PageFooter_PageFooterDetails_EN)
+        <div class="col-md-12">
+            @Html.Raw(ViewBag.PageFooter_PageFooterDetails_EN)
+        </div>
+        <hr />
+        <div class="col-md-12">
+            @(await Component.InvokeAsync<RenderBottomMenuViewComponent>())
+        </div>
     </div>
 </footer>
+
+
