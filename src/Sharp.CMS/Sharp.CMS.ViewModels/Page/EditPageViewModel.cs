@@ -41,7 +41,7 @@ namespace Sharp.CMS.ViewModels.Page
 
         [Display(Name = "Page Heading (English)")]
         [Required(ErrorMessage = "Page Heading (English) Required")]
-        public string PageHeading { get; set; }
+        public string PageHeadingEn { get; set; }
 
         [Display(Name = "Page Heading (Marathi)")]
         [Required(ErrorMessage = "Page Heading (Marathi) Required")]

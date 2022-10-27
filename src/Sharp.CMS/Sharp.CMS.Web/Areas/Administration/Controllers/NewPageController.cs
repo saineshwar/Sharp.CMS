@@ -242,7 +242,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         MetaDescription_LL = pageViewModel.MetaDescriptionLl,
                         MetaKeywords_EN = pageViewModel.MetaKeywordsEN,
                         MetaKeywords_LL = pageViewModel.MetaKeywordsLl,
-                        PageHeading_EN = pageViewModel.PageHeading,
+                        PageHeading_EN = pageViewModel.PageHeadingEn,
                         PageHeading_LL = pageViewModel.PageHeadingLl,
                         PageDetailsId = editmodel.PageDetailsId,
 
@@ -336,7 +336,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                             MetaDescription_LL = pageViewModel.MetaDescriptionLl,
                             MetaKeywords_EN = pageViewModel.MetaKeywordsEN,
                             MetaKeywords_LL = pageViewModel.MetaKeywordsLl,
-                            PageHeading_EN = pageViewModel.PageHeading,
+                            PageHeading_EN = pageViewModel.PageHeadingEn,
                             PageHeading_LL = pageViewModel.PageHeadingLl,
                             PageDetailsId = editmodel.PageDetailsId
                         };
