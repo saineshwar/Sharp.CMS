@@ -176,6 +176,7 @@
   <ItemGroup>
     <Folder Include="Areas\Administration\Data\" />
     <Folder Include="Areas\Administration\Models\" />
+    <Folder Include="wwwroot\js\NewFolder\" />
     <Folder Include="wwwroot\Media\Content\" />
   </ItemGroup>
 

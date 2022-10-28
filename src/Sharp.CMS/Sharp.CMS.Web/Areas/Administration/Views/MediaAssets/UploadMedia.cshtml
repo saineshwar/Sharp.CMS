@@ -1,7 +1,6 @@
 ﻿
-
-<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+<link href="~/js/dropzone/dist/dropzone.css" rel="stylesheet" />
+<script src="~/js/dropzone/dist/dropzone.js"></script>
 
 <script>
     Dropzone.autoDiscover = false;
@@ -100,19 +99,3 @@
     </div>
 </div>
 
-<script>
-    var folder = "/Media/Content";
-
-    $.ajax({
-        url: folder,
-        success: function (data)
-        {
-            $(data).find("a").attr("href", function (i, val)
-            {
-                if (val.match(/\.(jpe?g|png|gif)$/)) {
-                    $("showimages").append("<img src='" + folder + val + "'>");
-                }
-            });
-        }
-    });
-</script>
