@@ -1,0 +1,118 @@
+﻿
+
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+<script>
+    Dropzone.autoDiscover = false;
+    $(function () {
+        var dz = null;
+        $("#demo-upload").dropzone({
+            autoProcessQueue: false,
+            paramName: "Media Upload",
+            maxFilesize: 5, //mb
+            maxThumbnailFilesize: 1, //mb
+            maxFiles: 5,
+            parallelUploads: 5,
+            acceptedFiles: ".jpeg,.png,.jpg",
+            uploadMultiple: true,
+            addRemoveLinks: true,
+            //resizeWidth:128,
+            init: function () {
+                dz = this;
+                $("#uploadbutton").click(function () {
+                    dz.processQueue();
+                    $(this).attr("disabled", "disabled");
+                });
+            },
+            success: function (file) {
+                var preview = $(file.previewElement);
+                preview.addClass("dz-success text-success");
+                setTimeout(function () {
+                    dz.removeFile(file);
+                    $("#refreshbutton").click();
+                }, 2000);
+
+
+
+            },
+            queuecomplete: function () {
+                $("#refreshbutton").click();
+                $("#uploadbutton").removeAttr("disabled");
+                $.alert({
+                    title: 'Message!',
+                    content: 'Files Uploaded Successfully!',
+                    type: 'green'
+                });
+            },
+            dictDefaultMessage: "You can drag and drop your images here.",
+            dictRemoveFile: "File Remove"
+        });
+        $("#refreshbutton").prepend('<i id="loading" class="fa fa-refresh fa-spin" style="display:none;"></i>&nbsp;')
+        refreshProductPicture();
+    });
+    function refreshProductPicture() {
+        $("#refreshbutton").click();
+    }
+</script>
+
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Media Uploads</h3>
+        </div>
+
+        <div class="card-body register-card-body">
+            <div class="form-row">
+                <div class="col-md-12" id="dropzone">
+
+                    <form asp-controller="MediaAssets" autocomplete="off" asp-antiforgery="true" class="dropzone" id="demo-upload" enctype="multipart/form-data" asp-action="UploadMedia" method="post">
+
+
+                        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                        <div class="form-row">
+
+
+
+                        </div>
+
+
+
+
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-12" id="showimages">
+
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="button" id="uploadbutton" class="btn btn-success">Upload Media</button>
+            <button type="button" id="refreshbutton" class="btn btn-primary">Refresh</button>
+            <a asp-area="Administration" class="btn btn-danger" asp-controller="MediaAssets" asp-action="UploadMedia">Clear</a>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var folder = "/Media/Content";
+
+    $.ajax({
+        url: folder,
+        success: function (data)
+        {
+            $(data).find("a").attr("href", function (i, val)
+            {
+                if (val.match(/\.(jpe?g|png|gif)$/)) {
+                    $("showimages").append("<img src='" + folder + val + "'>");
+                }
+            });
+        }
+    });
+</script>
