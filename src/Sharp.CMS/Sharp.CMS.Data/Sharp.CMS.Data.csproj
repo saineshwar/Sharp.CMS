@@ -20,6 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="MediaTypes\Command\" />
+    <Folder Include="MediaTypes\Queries\" />
     <Folder Include="MenuOrdering\Command\" />
   </ItemGroup>
 
