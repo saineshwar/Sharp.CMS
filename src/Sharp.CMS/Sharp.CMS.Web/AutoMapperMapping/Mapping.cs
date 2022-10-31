@@ -51,6 +51,7 @@ namespace Sharp.CMS.Web.AutoMapperMapping
             CreateMap<InnerPageWidgetsViewModel, InnerPageWidgetsModel>();
             CreateMap<InnerEditWidgetsViewModel, InnerPageWidgetsModel>();
 
+
         }
     }
 }

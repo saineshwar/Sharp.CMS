@@ -2,6 +2,7 @@
 using Sharp.CMS.Models.Attachements;
 using Sharp.CMS.Models.Audit;
 using Sharp.CMS.Models.InnerPage;
+using Sharp.CMS.Models.Medias;
 using Sharp.CMS.Models.MenuCategory;
 using Sharp.CMS.Models.MenuMaster;
 using Sharp.CMS.Models.Notices;
@@ -34,14 +35,12 @@ namespace Sharp.CMS.Data.Data
         public DbSet<ContainersModel> ContainersModel { get; set; }
         public DbSet<AttachmentsModel> AttachmentsModel { get; set; }
         public DbSet<PageWidgetsModel> PageWidgetsModel { get; set; }
-
-
-
         public DbSet<InnerPageHeaderModel> InnerPageHeaderModel { get; set; }
         public DbSet<InnerPageFooterModel> InnerPageFooterModel { get; set; }
-
         public DbSet<InnerPageWidgetsModel> InnerPageWidgetsModel { get; set; }
-
+        public DbSet<MediaHistoryModel> MediaHistoryModel { get; set; }
         
+
+
     }
 }

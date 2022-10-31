@@ -1,7 +1,9 @@
-﻿namespace Sharp.CMS.Data.MediaAssets.Command
+﻿using Sharp.CMS.Models.Medias;
+
+namespace Sharp.CMS.Data.MediaAssets.Command
 {
-    public class IMediaHistoryCommand
+    public interface IMediaHistoryCommand
     {
-        
+        int Add(MediaHistoryModel mediaHistory);
     }
 }

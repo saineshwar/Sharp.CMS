@@ -1,8 +1,9 @@
 ﻿using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.Medias;
 
 namespace Sharp.CMS.Data.MediaAssets.Command
 {
-    public class MediaHistoryCommand
+    public class MediaHistoryCommand : IMediaHistoryCommand
     {
         private readonly SharpContext _sharpContext;
         public MediaHistoryCommand(SharpContext SharpContext)
@@ -10,10 +11,10 @@ namespace Sharp.CMS.Data.MediaAssets.Command
             _sharpContext = SharpContext;
         }
 
-        //public int Add(MenuCategoryModel category)
-        //{
-        //    _sharpContext.MenuCategorys.Add(category);
-        //    return _sharpContext.SaveChanges();
-        //}
+        public int Add(MediaHistoryModel mediaHistory)
+        {
+            _sharpContext.MediaHistoryModel.Add(mediaHistory);
+            return _sharpContext.SaveChanges();
+        }
     }
 }

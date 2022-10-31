@@ -13,7 +13,7 @@
             maxThumbnailFilesize: 1, //mb
             maxFiles: 5,
             parallelUploads: 5,
-            acceptedFiles: ".jpeg,.png,.jpg",
+            acceptedFiles: ".jpeg,.png,.jpg,.pdf",
             uploadMultiple: true,
             addRemoveLinks: true,
             //resizeWidth:128,
@@ -38,11 +38,9 @@
             queuecomplete: function () {
                 $("#refreshbutton").click();
                 $("#uploadbutton").removeAttr("disabled");
-                $.alert({
-                    title: 'Message!',
-                    content: 'Files Uploaded Successfully!',
-                    type: 'green'
-                });
+                alert('Files Uploaded Successfully!');
+
+                window.location.reload();
             },
             dictDefaultMessage: "You can drag and drop your images here.",
             dictRemoveFile: "File Remove"
@@ -55,6 +53,96 @@
     }
 </script>
 
+@await Html.PartialAsync("~/Views/Shared/_DatatablesScripts.cshtml")
+@Html.Hidden("item-to-delete", "", new { @id = "item-to-delete" })
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#CommonDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "order": [[0, "desc"]],
+                "ajax": {
+                    "url": "/Administration/MediaAssets/GridAllUploadedMedia",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    }, {
+                        "targets": [2],
+                        "orderable": false,
+                        "searchable": false
+                    }, {
+                        "targets": [3],
+                        "orderable": false,
+                        "searchable": false
+                    }
+
+                ],
+                "columns": [
+                    { "data": "MediaHistoryId", "name": "MediaHistoryId", "autoWidth": true },
+                    { "data": "FileName", "name": "FileName", "autoWidth": true },
+                    { "data": "FilePath", "name": "FilePath", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return moment(full.CreatedOn).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                    }
+                ]
+            });
+
+
+
+        });
+
+        function Delete(menuCategoryId) {
+            $.confirm({
+                title: 'Delete!',
+                content: 'Do you want to Delete Menu Category!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/MenuCategory/DeleteMenuCategory",
+                            type: "POST",
+                            data: { MenuCategoryId: menuCategoryId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+
+}
 
 <div class="col-md-12">
     <div class="card">
@@ -99,3 +187,23 @@
     </div>
 </div>
 
+<div class="col-md-12">
+    <div class="card card-default">
+        <div class="card-header">
+            <h3 class="card-title">All</h3>
+        </div>
+        <div class="card-body">
+            <table id="CommonDataTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>MediaHistoryId</th>
+                        <th>FileName</th>
+                        <th>FilePath</th>
+                        <th>CreatedOn</th>
+
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>

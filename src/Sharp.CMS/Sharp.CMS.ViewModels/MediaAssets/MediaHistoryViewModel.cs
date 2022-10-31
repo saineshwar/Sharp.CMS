@@ -1,13 +1,9 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Sharp.CMS.Models.Medias
+namespace Sharp.CMS.ViewModels.MediaAssets
 {
-    [Table("MediaHistory")]
-    public class MediaHistoryModel
+    public class MediaHistoryViewModel
     {
-        [Key]
         public int MediaHistoryId { get; set; }
         public string FileName { get; set; }
         public string FilePath { get; set; }

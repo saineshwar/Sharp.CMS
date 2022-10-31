@@ -4,6 +4,7 @@ using Sharp.CMS.Data.Audit.Queries;
 using Sharp.CMS.Data.CommonMasters.Queries;
 using Sharp.CMS.Data.InnerPages.Command;
 using Sharp.CMS.Data.InnerPages.Queries;
+using Sharp.CMS.Data.MediaAssets.Queries;
 using Sharp.CMS.Data.MenuCategory.Queries;
 using Sharp.CMS.Data.MenuMaster.Queries;
 using Sharp.CMS.Data.NewPage.Command;
@@ -37,7 +38,7 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IInnerNewPageFooterQueries, InnerNewPageFooterQueries>();
             services.AddTransient<IInnerWidgetsQueries, InnerWidgetsQueries>();
             services.AddTransient<IRenderingPageQueries, RenderingPageQueries>();
-   
+            services.AddTransient<IMediaAssetsQueries, MediaAssetsQueries>();
             
 
             return services;
