@@ -41,7 +41,7 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IInnerNewPageFooterCommand, InnerNewPageFooterCommand>();
             services.AddTransient<IInnerWidgetsCommand, InnerWidgetsCommand>();
             services.AddTransient<IMediaHistoryCommand, MediaHistoryCommand>();
-
+            services.AddTransient<IAlbumCommand, AlbumCommand>();
 
             
 

@@ -7,7 +7,7 @@
 
         </div>
         <div class="card-footer">
-           
+
             <button type="button" id="btnAddAlbum" class="btn btn-success">Add Album</button>
             <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPageFooter" asp-action="Create">Clear</a>
             <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPageFooter" asp-action="Index">List</a>
@@ -42,79 +42,94 @@
 
 <script>
     $(document).ready(function () {
-    $("#btnAddAlbum").click(function () {
+        $("#btnAddAlbum").click(function () {
 
-        if ($("#BugDetailViewModel_BugId").val() != "") {
-            var jsonObject =
-            {
-                BugId: $("#BugDetailViewModel_BugId").val()
-            };
+            if ($("#BugDetailViewModel_BugId").val() != "") {
+                var jsonObject =
+                {
+                    BugId: $("#BugDetailViewModel_BugId").val()
+                };
 
-            $("#loader").show();
+                $("#loader").show();
 
-            $.ajax({
-                type: "POST",
-                url: "/Administration/Album/GetAlbumView",
-                dataType: "html",
-                data: jsonObject,
+                $.ajax({
+                    type: "POST",
+                    url: "/Administration/Album/GetAlbumView",
+                    dataType: "html",
+                    data: jsonObject,
 
-                success: function (data, textStatus, xhr) {
-                    if (data.length != 0) {
+                    success: function (data, textStatus, xhr) {
+                        if (data.length != 0) {
 
-                        $("#AlbumDetails").html(data);
-                        $("#modal-lg").modal('show');
+                            $("#AlbumDetails").html(data);
+                            $("#modal-lg").modal('show');
 
-                        $("#loader").hide();
+                            $("#loader").hide();
+                        }
+                    },
+                    error: function (xhr, status, err) {
+                        if (xhr.status == 400) {
+                            DisplayModelStateErrors(xhr.responseJSON.ModelState);
+                        }
                     }
-                },
-                error: function (xhr, status, err) {
-                    if (xhr.status == 400) {
-                        DisplayModelStateErrors(xhr.responseJSON.ModelState);
+                });
+
+            }
+
+        });
+
+
+        $(document).on("click", "#btnsubmit", function (event) {
+            if ($("#AlbumName").val() == "") {
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Enter Album Name',
+                    type: 'red'
+                });
+            }
+            else if ($("#AlbumNameLL").val() == "") {
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Enter Album Name in Other',
+                    type: 'red'
+                });
+
+            }
+            else {
+
+
+                var jsonObject =
+                {
+                    AlbumName: $("#AlbumName").val(),
+                    AlbumNameLL: $("#AlbumNameLL").val(),
+                    IsActive: $("input:checkbox:checked").val()
+
+                };
+
+                $("#loader").show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Administration/Album/Create",
+                    dataType: "html",
+                    data: jsonObject,
+
+                    success: function (data, textStatus, xhr)
+                    {
+                        if (data.Result == "success")
+                        {
+                            window.location.reload();
+                        }
+                    },
+                    error: function (xhr, status, err) {
+                        if (xhr.status == 400) {
+                            DisplayModelStateErrors(xhr.responseJSON.ModelState);
+                        }
                     }
-                }
-            });
+                });
 
-        }
-
-    });
-
-
-        $(document).on("click", "#btnsubmit", function(event){
-        if ($("#AlbumName").val() != "" && $("#AlbumNameLL").val() != "") {
-            var jsonObject =
-            {
-                AlbumName: $("#AlbumName").val(),
-                AlbumNameLL: $("#AlbumNameLL").val(),
-                IsActive: $("input:checkbox:checked").val()
-
-            };
-
-            $("#loader").show();
-
-            $.ajax({
-                type: "POST",
-                url: "/Administration/Album/Create",
-                dataType: "html",
-                data: jsonObject,
-
-                success: function (data, textStatus, xhr) {
-                    if (data.length != 0) {
-
-                        $("#AlbumDetails").html(data);
-                        $("#modal-lg").modal('show');
-
-                        $("#loader").hide();
-                    }
-                },
-                error: function (xhr, status, err) {
-                    if (xhr.status == 400) {
-                        DisplayModelStateErrors(xhr.responseJSON.ModelState);
-                    }
-                }
-            });
-
-        }
-    });
+            }
+        });
 
 
 
