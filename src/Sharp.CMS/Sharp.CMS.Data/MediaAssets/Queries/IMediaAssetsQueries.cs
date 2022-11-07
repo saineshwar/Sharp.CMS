@@ -7,5 +7,6 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
     {
 
         IQueryable<MediaHistoryViewModel> ShowAllUploadedPhotos(string sortColumn, string sortColumnDir, string search);
+        IQueryable<GridAlbumViewModel> ShowAllAlbums(string sortColumn, string sortColumnDir, string search);
     }
 }

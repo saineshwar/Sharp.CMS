@@ -52,5 +52,45 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
                 throw;
             }
         }
+
+        public IQueryable<GridAlbumViewModel> ShowAllAlbums(string sortColumn, string sortColumnDir, string search)
+        {
+            try
+            {
+                var queryable = (from page in _sharpContext.AlbumModel
+
+                        orderby page.AlbumId descending
+                        select new GridAlbumViewModel()
+                        {
+                            IsActive = page.IsActive == true ? "Active" : "InActive",
+                            AlbumNameLL = page.AlbumNameLL,
+                            AlbumName = page.AlbumName,
+                            AlbumId = page.AlbumId,
+                            AlbumImagePath = page.AlbumImagePath
+                        }
+                    );
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
+                {
+                    queryable = queryable.OrderBy(sortColumn + " " + sortColumnDir);
+                }
+                else
+                {
+                    queryable = queryable.OrderByDescending(x => x.AlbumId);
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    queryable = queryable.Where(m => m.AlbumName.Contains(search));
+                }
+
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

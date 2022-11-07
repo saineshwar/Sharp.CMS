@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using Sharp.CMS.Common;
 using Sharp.CMS.Data.MediaAssets.Command;
+using Sharp.CMS.Data.MediaAssets.Queries;
 using Sharp.CMS.Models.Medias;
 using Sharp.CMS.Models.UserMaster;
 using Sharp.CMS.ViewModels.MediaAssets;
@@ -23,10 +24,12 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
     {
         private readonly IAlbumCommand _IAlbumCommand;
         private readonly IMapper _mapper;
-        public AlbumController(IAlbumCommand albumCommand, IMapper mapper)
+        private readonly IMediaAssetsQueries _IMediaAssetsQueries;
+        public AlbumController(IAlbumCommand albumCommand, IMapper mapper, IMediaAssetsQueries mediaAssetsQueries)
         {
             _IAlbumCommand = albumCommand;
             _mapper = mapper;
+            _IMediaAssetsQueries = mediaAssetsQueries;
         }
         [HttpGet]
         public IActionResult Create()
@@ -50,12 +53,14 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 album.AlbumId = 0;
                 album.CreatedOn = DateTime.Now;
                 album.CreatedBy = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
+                album.AlbumImagePath = $"/Album/{albumView.AlbumName}";
                 var data = _IAlbumCommand.Add(album);
 
                 if (data)
                 {
 
-                    var physicalPath = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root;
+                    var physicalPath =
+                        $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album{albumView.AlbumName}";
 
                     if (!Directory.Exists(physicalPath))
                     {
@@ -74,5 +79,34 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
             return View();
         }
+
+        [HttpPost]
+        public IActionResult GridAllAlbums()
+        {
+            try
+            {
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                var start = Request.Form["start"].FirstOrDefault();
+                var length = Request.Form["length"].FirstOrDefault();
+                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+                var records = _IMediaAssetsQueries.ShowAllAlbums(sortColumn, sortColumnDirection, searchValue);
+                recordsTotal = records.Count();
+                var data = records.Skip(skip).Take(pageSize).ToList();
+                var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+                return Ok(jsonData);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+
     }
 }

@@ -1,85 +1,229 @@
-﻿<div class="col-md-12">
+﻿
+@model Sharp.CMS.ViewModels.MediaAssets.AlbumViewModel
+@{
+    ViewBag.PageName = "Album";
+}
+
+<div class="col-md-12">
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Add New Album</h3>
-        </div>
-        <div class="card-body register-card-body">
+        <form asp-controller="Album" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Create" method="post">
+            <div class="card-header">
+                <h3 class="card-title">Add New Album</h3>
+            </div>
+            <div class="card-body register-card-body">
+                <div class="col-md-12">
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label class="mandatory" asp-for="AlbumName"></label>
+                            <input asp-for="AlbumName" placeholder="Enter Album Name" class="form-control" />
+                            <span class="text-danger" asp-validation-for="AlbumName"></span>
+                        </div>
 
-        </div>
-        <div class="card-footer">
+                        <div class="form-group col-md-4">
+                            <label class="mandatory" asp-for="AlbumNameLL"></label>
+                            <input asp-for="AlbumNameLL" placeholder="Enter Album Name" class="form-control" />
+                            <span class="text-danger" asp-validation-for="AlbumNameLL"></span>
+                        </div>
 
-            <button type="button" id="btnAddAlbum" class="btn btn-success">Add Album</button>
-            <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPageFooter" asp-action="Create">Clear</a>
-            <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPageFooter" asp-action="Index">List</a>
+                        <div class="form-group col-md-4">
+                            <div class="form-check">
+                                <input type="checkbox" asp-for="IsActive" class="form-check-input" />
+                                <label class="form-check-label" asp-for="IsActive">Active</label>
+                                <span class="text-danger" asp-validation-for="IsActive"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" id="btnAddAlbum" class="btn btn-success">Add Album</button>
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPageFooter" asp-action="Create">Clear</a>
+                <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPageFooter" asp-action="Index">List</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<div class="col-md-12">
+    <div class="card card-default">
+
+        <div class="card-body">
+            <table id="CustomDataTable" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>AlbumId</th>
+                        <th>AlbumName</th>
+                        <th>Path</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
 
 
-<div class="modal fade" id="modal-lg" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">
+@await Html.PartialAsync("~/Views/Shared/_DatatablesScripts.cshtml")
+@Html.Hidden("item-to-delete", "", new { @id = "item-to-delete" })
 
-                    <i class="fas fa-history"></i> Add Album
-                </h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div id="AlbumDetails" style="height:350px;overflow-y:auto;" class="modal-body">
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#CustomDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "order": [[0, "desc"]],
+                "filter": true,
+                "ajax": {
+                    "url": "/Administration/Album/GridAllAlbums",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [1],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [2],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [3],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [4],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [5],
+                        "orderable": false,
+                        "searchable": false
+                    }
 
-            </div>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
+
+
+                ],
+                "columns": [
+                    { "data": "AlbumId", "name": "AlbumId", "autoWidth": true },
+                    { "data": "AlbumName", "name": "AlbumName", "autoWidth": true },
+                    { "data": "AlbumImagePath", "name": "AlbumImagePath", "autoWidth": true },
+                    { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary btn-sm" href="/Administration/InnerWidgets/Edit/' + full.AlbumId + '"> Edit</a>'; }
+                    },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return ' <button type="button" class="btn btn-danger btn-sm" onclick="Delete(' + full.AlbumId + ');"> Delete </button>';
+                        }
+                    }
+                   
+                ]
+            });
+
+
+
+        });
+
+        function Delete(InnerPageWidgetId) {
+            $.confirm({
+                title: 'Delete!',
+                nt: 'Do you want to Deactivate Widget!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/InnerWidgets/Deactivate",
+                            type: "POST",
+                            data: { Id: InnerPageWidgetId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+        function SetDefaultWidget(pageWidgetId) {
+            $.confirm({
+                title: 'Alert !',
+                content: 'Do you want to Set Default Inner Widget!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/InnerWidgets/SetDefaultWidget",
+                            type: "POST",
+                            data: { Id: pageWidgetId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+    </script>
+
+
+}
+
 
 <script>
     $(document).ready(function () {
         $("#btnAddAlbum").click(function () {
-
-            if ($("#BugDetailViewModel_BugId").val() != "") {
-                var jsonObject =
-                {
-                    BugId: $("#BugDetailViewModel_BugId").val()
-                };
-
-                $("#loader").show();
-
-                $.ajax({
-                    type: "POST",
-                    url: "/Administration/Album/GetAlbumView",
-                    dataType: "html",
-                    data: jsonObject,
-
-                    success: function (data, textStatus, xhr) {
-                        if (data.length != 0) {
-
-                            $("#AlbumDetails").html(data);
-                            $("#modal-lg").modal('show');
-
-                            $("#loader").hide();
-                        }
-                    },
-                    error: function (xhr, status, err) {
-                        if (xhr.status == 400) {
-                            DisplayModelStateErrors(xhr.responseJSON.ModelState);
-                        }
-                    }
-                });
-
-            }
-
-        });
-
-
-        $(document).on("click", "#btnsubmit", function (event) {
             if ($("#AlbumName").val() == "") {
                 $.alert({
                     title: 'Validation!',
@@ -111,13 +255,10 @@
                 $.ajax({
                     type: "POST",
                     url: "/Administration/Album/Create",
-                    dataType: "html",
                     data: jsonObject,
 
-                    success: function (data, textStatus, xhr)
-                    {
-                        if (data.Result == "success")
-                        {
+                    success: function (data, textStatus, xhr) {
+                        if (data.Result == "success") {
                             window.location.reload();
                         }
                     },
@@ -129,7 +270,12 @@
                 });
 
             }
+
+
         });
+
+
+
 
 
 
