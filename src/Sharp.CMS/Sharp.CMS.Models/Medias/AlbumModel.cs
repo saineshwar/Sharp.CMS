@@ -11,6 +11,7 @@ namespace Sharp.CMS.Models.Medias
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AlbumId { get; set; }
         public int MediaTypeId { get; set; }
+        public string Album { get; set; }
         public string AlbumName { get; set; }
         public string AlbumNameLL { get; set; }
         public string AlbumImagePath { get; set; }

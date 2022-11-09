@@ -24,24 +24,26 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
     {
         private readonly IAlbumCommand _IAlbumCommand;
         private readonly IMapper _mapper;
+        private readonly IAlbumQueries _IAlbumQueries;
         private readonly IMediaAssetsQueries _IMediaAssetsQueries;
-        public AlbumController(IAlbumCommand albumCommand, IMapper mapper, IMediaAssetsQueries mediaAssetsQueries)
+        public AlbumController(IAlbumCommand albumCommand, IMapper mapper, IAlbumQueries albumQueries, IMediaAssetsQueries mediaAssetsQueries)
         {
             _IAlbumCommand = albumCommand;
             _mapper = mapper;
+            _IAlbumQueries = albumQueries;
             _IMediaAssetsQueries = mediaAssetsQueries;
         }
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            var albumViewModel = new AlbumViewModel()
+            {
+                ListofMediaType = _IMediaAssetsQueries.ListofMediaTypes()
+            };
+
+            return View(albumViewModel);
         }
 
-        [HttpPost]
-        public IActionResult GetAlbumView(IFormFile filedata)
-        {
-            return PartialView("_Album");
-        }
 
         [HttpPost]
         public IActionResult Create(AlbumViewModel albumView)
@@ -49,11 +51,18 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
             if (ModelState.IsValid)
             {
+                if (_IAlbumQueries.IsAlbumNameExists(albumView.Album))
+                {
+                    return Json(new { Result = "errorMessage", Message = "Album Name Already Exists" });
+                }
+
                 var album = _mapper.Map<AlbumModel>(albumView);
                 album.AlbumId = 0;
                 album.CreatedOn = DateTime.Now;
                 album.CreatedBy = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
                 album.AlbumImagePath = $"/Album/{albumView.AlbumName}";
+                album.MediaTypeId = Convert.ToInt32(albumView.MediaTypeId);
+                album.Album = albumView.Album;
                 var data = _IAlbumCommand.Add(album);
 
                 if (data)
@@ -75,9 +84,9 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 }
             }
 
+            albumView.ListofMediaType = _IMediaAssetsQueries.ListofMediaTypes();
 
-
-            return View();
+            return View(albumView);
         }
 
         [HttpPost]
@@ -94,7 +103,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                var records = _IMediaAssetsQueries.ShowAllAlbums(sortColumn, sortColumnDirection, searchValue);
+                var records = _IAlbumQueries.ShowAllAlbums(sortColumn, sortColumnDirection, searchValue);
                 recordsTotal = records.Count();
                 var data = records.Skip(skip).Take(pageSize).ToList();
                 var jsonData = new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };

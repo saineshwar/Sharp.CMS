@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.ViewModels.MediaAssets;
 
 namespace Sharp.CMS.Data.MediaAssets.Queries
@@ -7,6 +9,6 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
     {
 
         IQueryable<MediaHistoryViewModel> ShowAllUploadedPhotos(string sortColumn, string sortColumnDir, string search);
-        IQueryable<GridAlbumViewModel> ShowAllAlbums(string sortColumn, string sortColumnDir, string search);
+        List<SelectListItem> ListofMediaTypes();
     }
 }

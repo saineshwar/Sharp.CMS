@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.ViewModels.MenuCategory;
 using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.ViewModels.MediaAssets;
 
 namespace Sharp.CMS.Data.MediaAssets.Queries
@@ -21,14 +23,14 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
             {
                 var queryabledata = (from mediaHistory in _sharpContext.MediaHistoryModel
 
-                                           select new MediaHistoryViewModel()
-                                           {
-                                               MediaHistoryId = mediaHistory.MediaHistoryId,
-                                               FileName = mediaHistory.FileName,
-                                               FilePath = mediaHistory.FilePath,
-                                               CreatedOn = mediaHistory.CreatedOn,
-                                               CreatedBy = mediaHistory.CreatedBy
-                                           }
+                                     select new MediaHistoryViewModel()
+                                     {
+                                         MediaHistoryId = mediaHistory.MediaHistoryId,
+                                         FileName = mediaHistory.FileName,
+                                         FilePath = mediaHistory.FilePath,
+                                         CreatedOn = mediaHistory.CreatedOn,
+                                         CreatedBy = mediaHistory.CreatedBy
+                                     }
                     );
 
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
@@ -53,37 +55,22 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
             }
         }
 
-        public IQueryable<GridAlbumViewModel> ShowAllAlbums(string sortColumn, string sortColumnDir, string search)
+        public List<SelectListItem> ListofMediaTypes()
         {
             try
             {
-                var queryable = (from page in _sharpContext.AlbumModel
+                var queryable = (from page in _sharpContext.MediaTypesModel
+                    select new SelectListItem
+                                 {
+                                     Value = page.MediaTypeId.ToString(),
+                                     Text = page.MediaTypeName
+                                 }).ToList();
 
-                        orderby page.AlbumId descending
-                        select new GridAlbumViewModel()
-                        {
-                            IsActive = page.IsActive == true ? "Active" : "InActive",
-                            AlbumNameLL = page.AlbumNameLL,
-                            AlbumName = page.AlbumName,
-                            AlbumId = page.AlbumId,
-                            AlbumImagePath = page.AlbumImagePath
-                        }
-                    );
-
-                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
+                queryable.Insert(0, new SelectListItem()
                 {
-                    queryable = queryable.OrderBy(sortColumn + " " + sortColumnDir);
-                }
-                else
-                {
-                    queryable = queryable.OrderByDescending(x => x.AlbumId);
-                }
-
-                if (!string.IsNullOrEmpty(search))
-                {
-                    queryable = queryable.Where(m => m.AlbumName.Contains(search));
-                }
-
+                    Value = "",
+                    Text = "-----Select-----"
+                });
                 return queryable;
 
             }

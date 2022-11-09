@@ -7,7 +7,7 @@ namespace Sharp.CMS.Models.Medias
     public class MediaTypesModel
     {
         [Key]
-        public string MediaTypeId { get; set; }
+        public int MediaTypeId { get; set; }
         public string MediaTypeName { get; set; }
         public bool IsActive { get; set; }
     }

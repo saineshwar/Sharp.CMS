@@ -39,8 +39,8 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IInnerWidgetsQueries, InnerWidgetsQueries>();
             services.AddTransient<IRenderingPageQueries, RenderingPageQueries>();
             services.AddTransient<IMediaAssetsQueries, MediaAssetsQueries>();
+            services.AddTransient<IAlbumQueries, AlbumQueries>();
             
-
             return services;
         }
     }

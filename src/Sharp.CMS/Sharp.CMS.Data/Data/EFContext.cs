@@ -40,6 +40,6 @@ namespace Sharp.CMS.Data.Data
         public DbSet<InnerPageWidgetsModel> InnerPageWidgetsModel { get; set; }
         public DbSet<MediaHistoryModel> MediaHistoryModel { get; set; }
         public DbSet<AlbumModel> AlbumModel { get; set; }
-
+        public DbSet<MediaTypesModel> MediaTypesModel { get; set; }
     }
 }
