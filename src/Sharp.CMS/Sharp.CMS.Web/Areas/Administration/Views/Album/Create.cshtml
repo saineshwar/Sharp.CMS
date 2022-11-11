@@ -7,6 +7,7 @@
 <div class="col-md-12">
     <div class="card">
         <form asp-controller="Album" autocomplete="off" asp-antiforgery="true" id="newform" asp-action="Create" method="post">
+            <input asp-for="AlbumId" type="hidden" />
             <div class="card-header">
                 <h3 class="card-title">Add New Album</h3>
             </div>
@@ -23,39 +24,41 @@
 
                         </div>
 
-                            <div class="form-group col-md-3">
-                                <label class="mandatory" asp-for="Album"></label>
-                                <input asp-for="Album" placeholder="Enter Album Folder Name" class="form-control" />
-                                <span class="text-danger" asp-validation-for="Album"></span>
+                        <div class="form-group col-md-3">
+                            <label class="mandatory" asp-for="Album"></label>
+                            <input asp-for="Album" placeholder="Enter Album Folder Name" class="form-control" />
+                            <span class="text-danger" asp-validation-for="Album"></span>
 
 
-                            </div>
-                            <div class="form-group col-md-3">
-                                <label class="mandatory" asp-for="AlbumName"></label>
-                                <input asp-for="AlbumName" placeholder="Enter Album Name" class="form-control" />
-                                <span class="text-danger" asp-validation-for="AlbumName"></span>
-                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label class="mandatory" asp-for="AlbumName"></label>
+                            <input asp-for="AlbumName" placeholder="Enter Album Name" class="form-control" />
+                            <span class="text-danger" asp-validation-for="AlbumName"></span>
+                        </div>
 
-                            <div class="form-group col-md-3">
-                                <label class="mandatory" asp-for="AlbumNameLL"></label>
-                                <input asp-for="AlbumNameLL" placeholder="Enter Album Name" class="form-control" />
-                                <span class="text-danger" asp-validation-for="AlbumNameLL"></span>
-                            </div>
+                        <div class="form-group col-md-3">
+                            <label class="mandatory" asp-for="AlbumNameLL"></label>
+                            <input asp-for="AlbumNameLL" placeholder="Enter Album Name" class="form-control" />
+                            <span class="text-danger" asp-validation-for="AlbumNameLL"></span>
+                        </div>
 
-                            <div class="form-group col-md-3">
-                                <div class="form-check">
-                                    <input type="checkbox" asp-for="IsActive" class="form-check-input" />
-                                    <label class="form-check-label" asp-for="IsActive">Active</label>
-                                    <span class="text-danger" asp-validation-for="IsActive"></span>
-                                </div>
+                        <div class="form-group col-md-3">
+                            <div class="form-check">
+                                <input type="checkbox" asp-for="IsActive" class="form-check-input" />
+                                <label class="form-check-label" asp-for="IsActive">Active</label>
+                                <span class="text-danger" asp-validation-for="IsActive"></span>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
             <div class="card-footer">
                 <button type="button" id="btnAddAlbum" class="btn btn-success">Add Album</button>
-                <a asp-area="Administration" class="btn btn-danger" asp-controller="NewPageFooter" asp-action="Create">Clear</a>
-                <a asp-area="Administration" class="btn btn-primary" asp-controller="NewPageFooter" asp-action="Index">List</a>
+                <button type="button" id="btnUpdateAlbum" class="btn btn-success">Update Album</button>
+
+                <a asp-area="Administration" class="btn btn-danger" asp-controller="Album" asp-action="Create">Clear</a>
+
             </div>
 
         </form>
@@ -91,6 +94,11 @@
 @section scripts{
     <script>
         $(document).ready(function () {
+
+            $("#btnUpdateAlbum").hide();
+            $("#btnAddAlbum").show();
+
+
             $('#CustomDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
@@ -142,7 +150,9 @@
                     { "data": "AlbumImagePath", "name": "AlbumImagePath", "autoWidth": true },
                     { "data": "IsActive", "name": "IsActive", "autoWidth": true },
                     {
-                        "render": function (data, type, full, meta) { return '<a class="btn btn-primary btn-sm" href="/Administration/InnerWidgets/Edit/' + full.AlbumId + '"> Edit</a>'; }
+                        "render": function (data, type, full, meta) {
+                            return ' <button type="button" class="btn btn-primary btn-sm" onclick="Edit(' + full.AlbumId + ');"> Edit </button>';
+                        }
                     },
                     {
                         "render": function (data, type, full, meta) {
@@ -194,6 +204,47 @@
             });
         }
 
+        function Edit(albumId) {
+            $.ajax({
+                url: "/Administration/Album/GetAlbumbyId",
+                type: "POST",
+                data: { albumId: albumId },
+                success: function (data, textStatus, xhr) {
+                    if (data.AlbumId == "") {
+                        $.alert('Something Went Wrong');
+                    }
+
+                    $("#MediaTypeId").prop('disabled', 'disabled');
+
+                    $("#btnUpdateAlbum").show();
+                    $("#btnAddAlbum").hide();
+
+                    $("#AlbumName").val(data.AlbumName);
+                    $("#AlbumNameLL").val(data.AlbumNameLL);
+                    $("#MediaTypeId").val(data.MediaTypeId);
+                    $("#AlbumId").val(data.AlbumId);
+                    $("#Album").val(data.Album);
+
+                    if (data.IsActive == '1') {
+                        $("#IsActive").prop('checked', true);
+                    } else {
+                        $("#IsActive").prop('checked', false);
+                    }
+                },
+                error: function (xhr, status, err) {
+                    if (xhr.status == 401) {
+                        alert('Error');
+                        window.location.href = "/Portal/Logout";
+                    }
+                    if (xhr.status == 500) {
+                        alert('Error');
+                        window.location.href = "/Portal/Logout";
+                    }
+                }
+            });
+        }
+
+
         function SetDefaultWidget(pageWidgetId) {
             $.confirm({
                 title: 'Alert !',
@@ -240,7 +291,26 @@
 <script>
     $(document).ready(function () {
         $("#btnAddAlbum").click(function () {
-            if ($("#AlbumName").val() == "") {
+            if ($("#MediaTypeId").val() == "") {
+                $("#loader").hide();
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Select MediaType',
+                    type: 'red'
+                });
+
+            }
+            else if ($("#Album").val() == "") {
+                $("#loader").hide();
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Enter Album Folder Name',
+                    type: 'red'
+                });
+
+            }
+            else if ($("#AlbumName").val() == "") {
+                $("#loader").hide();
                 $.alert({
                     title: 'Validation!',
                     content: 'Enter Album Name',
@@ -248,6 +318,7 @@
                 });
             }
             else if ($("#AlbumNameLL").val() == "") {
+                $("#loader").hide();
                 $.alert({
                     title: 'Validation!',
                     content: 'Enter Album Name in Other',
@@ -262,8 +333,9 @@
                 {
                     AlbumName: $("#AlbumName").val(),
                     AlbumNameLL: $("#AlbumNameLL").val(),
-                    IsActive: $("input:checkbox:checked").val()
-
+                    IsActive: $("input:checkbox:checked").val(),
+                    Album: $("#Album").val(),
+                    MediaTypeId: $("#MediaTypeId").val()
                 };
 
                 $("#loader").show();
@@ -273,9 +345,132 @@
                     url: "/Administration/Album/Create",
                     data: jsonObject,
 
-                    success: function (data, textStatus, xhr) {
-                        if (data.Result == "success") {
+                    success: function (data, textStatus, xhr)
+                    {
+                        if (data.Result == "success")
+                        {
                             window.location.reload();
+                        }
+
+                        if (data.Result == "errorMessage")
+                        {
+                            $.alert({
+                                title: 'Validation!',
+                                content: data.Message,
+                                type: 'red'
+                            });
+                        }
+                        if (data.Result == "failed")
+                        {
+                            $.alert({
+                                title: 'Validation!',
+                                content: 'Something Went Wrong',
+                                type: 'red'
+                            });
+                        }
+                        
+
+
+                    },
+                    error: function (xhr, status, err) {
+                        if (xhr.status == 400) {
+                            DisplayModelStateErrors(xhr.responseJSON.ModelState);
+                        }
+                    }
+                });
+
+            }
+
+        });
+
+
+        $("#btnUpdateAlbum").click(function ()
+        {
+            if ($("#MediaTypeId").val() == "") {
+                $("#loader").hide();
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Select MediaType',
+                    type: 'red'
+                });
+
+            }
+            else if ($("#Album").val() == "") {
+                $("#loader").hide();
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Enter Album Folder Name',
+                    type: 'red'
+                });
+
+            }
+            else if ($("#AlbumName").val() == "") {
+                $("#loader").hide();
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Enter Album Name',
+                    type: 'red'
+                });
+            }
+            else if ($("#AlbumNameLL").val() == "")
+            {
+                $("#loader").hide();
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Enter Album Name in Other',
+                    type: 'red'
+                });
+
+            }
+            else if ($("#AlbumId").val() == "") {
+                $("#loader").hide();
+                $.alert({
+                    title: 'Validation!',
+                    content: 'Something Went Wrong. Reload Page and try again.',
+                    type: 'red'
+                });
+
+            }
+            else {
+
+
+                var jsonObject =
+                {
+                    AlbumName: $("#AlbumName").val(),
+                    AlbumNameLL: $("#AlbumNameLL").val(),
+                    IsActive: $("input:checkbox:checked").val(),
+                    Album: $("#Album").val(),
+                    MediaTypeId: $("#MediaTypeId").val(),
+                    AlbumId: $("#AlbumId").val()
+                };
+
+                $("#loader").show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Administration/Album/Edit",
+                    data: jsonObject,
+
+                    success: function (data, textStatus, xhr) {
+                        if (data.Result == "success")
+                        {
+                            window.location.reload();
+                        }
+                        if (data.Result == "errorMessage")
+                        {
+                            $.alert({
+                                title: 'Validation!',
+                                content: data.Message,
+                                type: 'red'
+                            });
+                        }
+                        if (data.Result == "failed")
+                        {
+                            $.alert({
+                                title: 'Validation!',
+                                content: 'Something Went Wrong',
+                                type: 'red'
+                            });
                         }
                     },
                     error: function (xhr, status, err) {
@@ -287,11 +482,7 @@
 
             }
 
-
         });
-
-
-
 
 
 

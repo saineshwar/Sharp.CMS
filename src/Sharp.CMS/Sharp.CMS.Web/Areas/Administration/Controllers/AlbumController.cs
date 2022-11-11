@@ -60,7 +60,25 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 album.AlbumId = 0;
                 album.CreatedOn = DateTime.Now;
                 album.CreatedBy = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
-                album.AlbumImagePath = $"/Album/{albumView.AlbumName}";
+
+                var directoryname = "";
+                if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Audio)
+                {
+                    album.AlbumImagePath = $"/Album/Audio/{albumView.AlbumName}";
+                    directoryname = "Audio";
+                }
+                else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Photo)
+                {
+                    album.AlbumImagePath = $"/Album/Photo/{albumView.AlbumName}";
+                    directoryname = "Photo";
+                }
+                else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Video)
+                {
+                    album.AlbumImagePath = $"/Album/Video/{albumView.AlbumName}";
+                    directoryname = "Video";
+                }
+
+                
                 album.MediaTypeId = Convert.ToInt32(albumView.MediaTypeId);
                 album.Album = albumView.Album;
                 var data = _IAlbumCommand.Add(album);
@@ -68,8 +86,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 if (data)
                 {
 
-                    var physicalPath =
-                        $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album{albumView.AlbumName}";
+                    var physicalPath = $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\{albumView.Album}";
 
                     if (!Directory.Exists(physicalPath))
                     {
@@ -115,7 +132,110 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
             }
         }
 
+        public IActionResult GetAlbumbyId(int? albumId)
+        {
 
+            if (albumId != null)
+            {
+                var data = _IAlbumQueries.GetAlbumbyAlbumId(albumId.Value);
+                return Json(data);
+            }
+            else
+            {
+                return Json(new AlbumModel());
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult Edit(AlbumViewModel albumView)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (albumView.AlbumId != null)
+                {
+                    var editalbum = _IAlbumQueries.GetAlbum(albumView.AlbumId.Value);
+                    if (editalbum == null)
+                    {
+                        return Json(new { Result = "errorMessage", Message = "Something Went Wrong!" });
+                    }
+
+                    if (editalbum.Album != albumView.Album)
+                    {
+                        if (_IAlbumQueries.IsAlbumNameExists(albumView.Album))
+                        {
+                            return Json(new { Result = "errorMessage", Message = "Album Name Already Exists" });
+                        }
+                    }
+                    
+                    if (albumView.AlbumId == null)
+                    {
+                        return Json(new { Result = "errorMessage", Message = "Something Went Wrong!" });
+                    }
+
+                    
+                    var oldalbum = editalbum.Album;
+
+                    editalbum.ModifiedOn = DateTime.Now;
+                    editalbum.CreatedBy = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
+
+                    var directoryname = "";
+                    if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Audio)
+                    {
+                        editalbum.AlbumImagePath = $"/Album/Audio/{albumView.AlbumName}";
+                        directoryname = "Audio";
+                    }
+                    else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Photo)
+                    {
+                        editalbum.AlbumImagePath = $"/Album/Photo/{albumView.AlbumName}";
+                        directoryname = "Photo";
+                    }
+                    else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Video)
+                    {
+                        editalbum.AlbumImagePath = $"/Album/Video/{albumView.AlbumName}";
+                        directoryname = "Video";
+                    }
+
+                    editalbum.MediaTypeId = Convert.ToInt32(albumView.MediaTypeId);
+                    editalbum.AlbumName = albumView.AlbumName;
+                    editalbum.Album = albumView.Album;
+                    editalbum.AlbumNameLL = albumView.AlbumNameLL;
+                    editalbum.IsActive = albumView.IsActive;
+
+                    var data = _IAlbumCommand.Update(editalbum);
+
+                    if (data)
+                    {
+
+                        var physicalPath =
+                            $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\{albumView.Album}";
+
+                        if (!Directory.Exists(physicalPath))
+                        {
+                            var oldphysicalPath =
+                                $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\{oldalbum}";
+
+                            Directory.Move(oldphysicalPath, physicalPath);
+                        }
+
+                        return Json(new { Result = "success" });
+                    }
+                    else
+                    {
+                        return Json(new { Result = "failed" });
+                    }
+                }
+                else
+                {
+                    return Json(new { Result = "failed" });
+                }
+            }
+            else
+            {
+                return Json(new { Result = "failed" });
+            }
+        }
 
     }
 }

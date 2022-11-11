@@ -5,5 +5,6 @@ namespace Sharp.CMS.Data.MediaAssets.Command
     public interface IAlbumCommand
     {
         bool Add(AlbumModel albumModel);
+        bool Update(AlbumModel albumModel);
     }
 }

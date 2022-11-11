@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using Sharp.CMS.Data.Data;
+using Sharp.CMS.Models.Medias;
 using Sharp.CMS.ViewModels.MediaAssets;
 
 namespace Sharp.CMS.Data.MediaAssets.Queries
@@ -63,6 +64,49 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
                              select album).Count();
 
             return queryable > 0;
+        }
+
+        public AlbumDataViewModel GetAlbumbyAlbumId(int AlbumId)
+        {
+            try
+            {
+                var queryable = (from album in _sharpContext.AlbumModel
+                                 where album.AlbumId == AlbumId
+                                 orderby album.AlbumId descending
+                                 select new AlbumDataViewModel()
+                                 {
+                                     IsActive = album.IsActive == true ? "1" : "0",
+                                     Album = album.Album,
+                                     AlbumId = album.AlbumId,
+                                     AlbumImagePath = album.AlbumImagePath,
+                                     AlbumName = album.AlbumName,
+                                     AlbumNameLL = album.AlbumNameLL,
+                                     MediaTypeId = album.MediaTypeId
+                                 }).FirstOrDefault();
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public AlbumModel GetAlbum(int AlbumId)
+        {
+            try
+            {
+                var queryable = (from album in _sharpContext.AlbumModel
+                                 where album.AlbumId == AlbumId
+                                 orderby album.AlbumId descending
+                                 select album).FirstOrDefault();
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

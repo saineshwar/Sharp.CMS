@@ -79,5 +79,7 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
                 throw;
             }
         }
+
+       
     }
 }

@@ -6,7 +6,7 @@ namespace Sharp.CMS.ViewModels.MediaAssets
 {
     public class AlbumViewModel
     {
-        public int AlbumId { get; set; }
+        public int? AlbumId { get; set; }
         [Display(Name = "AlbumName")]
         public string AlbumName { get; set; }
 
