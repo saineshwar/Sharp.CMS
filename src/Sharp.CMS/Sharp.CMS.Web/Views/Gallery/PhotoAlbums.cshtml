@@ -1,0 +1,42 @@
+﻿@using Sharp.CMS.Data.MediaAssets.Queries
+@model List<Sharp.CMS.Models.Medias.AlbumModel>
+@inject IMediaAssetsQueries IMediaAssetsQueries
+@{
+    ViewBag.PageName = "Menu Category";
+    Layout = ViewBag.InnerPage == "1" ? "_InnerPageLayout" : "_Layout";
+}
+
+<style>
+    div.gallery {
+        margin: 5px;
+        border: 1px solid #ccc;
+        float: left;
+        width: 250px;
+    }
+</style>
+
+<div class="form-row">
+    @foreach (var data in Model)
+    {
+        var albumdata = IMediaAssetsQueries.GetAlbumDetailsByAlbumId(data.AlbumId);
+        
+            @if (albumdata != null)
+            {
+
+                <div class="col-md-3">
+                    <div class="card gallery">
+                        <img class="card-img-bottom" src="@albumdata.VirtualPath" alt="Card image" width="600" height="400">
+                        <div class="card-body">
+
+
+                            <a href="#" class="btn btn-primary">@albumdata.AlbumName</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            }
+       
+    }
+</div>
+

@@ -5,6 +5,7 @@ using Sharp.CMS.Data.Data;
 using Sharp.CMS.ViewModels.MenuCategory;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Sharp.CMS.Models.Albums;
 using Sharp.CMS.ViewModels.MediaAssets;
 
 namespace Sharp.CMS.Data.MediaAssets.Queries
@@ -60,7 +61,7 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
             try
             {
                 var queryable = (from page in _sharpContext.MediaTypesModel
-                    select new SelectListItem
+                                 select new SelectListItem
                                  {
                                      Value = page.MediaTypeId.ToString(),
                                      Text = page.MediaTypeName
@@ -80,6 +81,84 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
             }
         }
 
-       
+        public IQueryable<GridViewAlbumUploadViewModel> ShowAllAlbums(string sortColumn, string sortColumnDir, string search, int? albumId)
+        {
+            try
+            {
+                var queryable = (from albumupload in _sharpContext.AlbumUploadModel
+                                 join user in _sharpContext.UserMasters on albumupload.CreatedBy equals user.UserId
+                                 join album in _sharpContext.AlbumModel on albumupload.AlbumId equals album.AlbumId
+                                 orderby albumupload.AlbumId descending
+                                 select new GridViewAlbumUploadViewModel()
+                                 {
+                                     IsActive = albumupload.IsActive == true ? "Active" : "InActive",
+                                     AlbumUploadId = albumupload.AlbumUploadId,
+                                     AlbumName = album.AlbumName,
+                                     VirtualPath = albumupload.VirtualPath,
+                                     AlbumId = albumupload.AlbumId,
+                                     CreatedBy = $"{user.FirstName}{user.LastName}",
+                                     CreatedOn = albumupload.CreatedOn,
+                                     FileName = albumupload.FileName
+                                 }
+                    );
+
+                if (albumId != null)
+                {
+                    queryable = queryable.Where(p => p.AlbumId == albumId);
+                }
+
+                if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDir)))
+                {
+                    queryable = queryable.OrderBy(sortColumn + " " + sortColumnDir);
+                }
+                else
+                {
+                    queryable = queryable.OrderByDescending(x => x.AlbumId);
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    queryable = queryable.Where(m => m.AlbumName.Contains(search));
+                }
+
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public GridViewAlbumUploadViewModel GetAlbumDetailsByAlbumId(int? albumId)
+        {
+            try
+            {
+                var queryable = (from albumupload in _sharpContext.AlbumUploadModel
+                    where albumupload.AlbumId == albumId
+                    join user in _sharpContext.UserMasters on albumupload.CreatedBy equals user.UserId
+                    join album in _sharpContext.AlbumModel on albumupload.AlbumId equals album.AlbumId
+                    orderby albumupload.AlbumId descending
+                    select new GridViewAlbumUploadViewModel()
+                    {
+                        IsActive = albumupload.IsActive == true ? "Active" : "InActive",
+                        AlbumUploadId = albumupload.AlbumUploadId,
+                        AlbumName = album.AlbumName,
+                        VirtualPath = albumupload.VirtualPath,
+                        AlbumId = albumupload.AlbumId,
+                        CreatedBy = $"{user.FirstName}{user.LastName}",
+                        CreatedOn = albumupload.CreatedOn,
+                        FileName = albumupload.FileName
+                    }).FirstOrDefault();
+
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     }
 }

@@ -1,0 +1,271 @@
+﻿@model Sharp.CMS.ViewModels.MediaAssets.UploadMediaViewModel
+
+<link href="~/js/dropzone/dist/dropzone.css" rel="stylesheet" />
+<script src="~/js/dropzone/dist/dropzone.js"></script>
+
+<script>
+    $(function () {
+        Dropzone.autoDiscover = false;
+
+        var dz = null;
+        Dropzone.options.uploadForm.dropzone =
+        {
+            autoProcessQueue: false,
+            paramName: "Media Upload",
+            maxFilesize: 5, //mb
+            maxThumbnailFilesize: 1, //mb
+            maxFiles: 5,
+            parallelUploads: 5,
+            acceptedFiles: ".jpeg,.png,.jpg,.pdf",
+            uploadMultiple: true,
+            addRemoveLinks: true,
+            //resizeWidth:128,
+            init: function () {
+                dz = this;
+                $("#uploadbutton").click(function () {
+                    if ($("#AlbumId").val() == '') {
+                        $.alert("Select Album to Upload Files!");
+
+                    } else if (dz.files.length == 0) {
+                        $.alert("No Files to Upload!");
+
+                    } else {
+                        $("#HiddenAlbumId").val($("#AlbumId").val());
+
+
+                        var fileInput = document.getElementById('Thumbnail');
+
+
+                        $("#Thumbnailfile").val(fileInput.files[0]);
+
+                        dz.processQueue();
+                        $(this).attr("disabled", "disabled");
+                    }
+
+
+                });
+            },
+            success: function (file) {
+                var preview = $(file.previewElement);
+                preview.addClass("dz-success text-success");
+                setTimeout(function () {
+                    dz.removeFile(file);
+                    $("#refreshbutton").click();
+                },
+                    2000);
+
+
+            },
+            queuecomplete: function (file, res) {
+                //$("#refreshbutton").click();
+                //$("#uploadbutton").removeAttr("disabled");
+
+
+                window.location.reload();
+            },
+            dictDefaultMessage: "You can drag and drop your images here.",
+            dictRemoveFile: "File Remove"
+        };
+    });
+    $("#refreshbutton").prepend('<i id="loading" class="fa fa-refresh fa-spin" style="display:none;"></i>&nbsp;');
+    refreshProductPicture();
+
+
+    function refreshProductPicture() {
+        $("#refreshbutton").click();
+    }
+</script>
+
+@await Html.PartialAsync("~/Views/Shared/_DatatablesScripts.cshtml")
+@Html.Hidden("item-to-delete", "", new { @id = "item-to-delete" })
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#CommonDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "order": [[0, "desc"]],
+                "ajax": {
+                    "url": "/Administration/MediaAssets/GridAllUploadedMedia",
+                    "type": "POST",
+                    "datatype": "json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    }, {
+                        "targets": [2],
+                        "orderable": false,
+                        "searchable": false
+                    }, {
+                        "targets": [3],
+                        "orderable": false,
+                        "searchable": false
+                    }
+
+                ],
+                "columns": [
+                    { "data": "MediaHistoryId", "name": "MediaHistoryId", "autoWidth": true },
+                    { "data": "FileName", "name": "FileName", "autoWidth": true },
+                    { "data": "FilePath", "name": "FilePath", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return moment(full.CreatedOn).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                    }
+                ]
+            });
+
+
+
+        });
+
+        function Delete(menuCategoryId) {
+            $.confirm({
+                title: 'Delete!',
+                content: 'Do you want to Delete Menu Category!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/MenuCategory/DeleteMenuCategory",
+                            type: "POST",
+                            data: { MenuCategoryId: menuCategoryId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+
+    </script>
+
+
+}
+
+<div class="col-md-12">
+    <div class="card">
+
+        <div class="card-header">
+            <h3 class="card-title">Media Uploads</h3>
+        </div>
+
+        <div class="card-body register-card-body">
+            <div class="col-md-12">
+
+
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+
+                @if (!string.IsNullOrEmpty(Convert.ToString(TempData["MessageSuccess"])))
+                {
+                    <div class="alert alert-success alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Success!</strong> @TempData["MessageSuccess"]
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Convert.ToString(TempData["MessageError"])))
+                {
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Success!</strong> @TempData["MessageError"]
+                    </div>
+                }
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <div class="previews"></div>
+                    </div>
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="mandatory" asp-for="AlbumId"></label>
+                        <select asp-for="AlbumId" class="form-control"
+                                asp-items="@(new SelectList(Model.ListofAlbum, "Value", "Text"))">
+                        </select>
+                        <span class="text-danger" asp-validation-for="AlbumId"></span>
+                    </div>
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+
+                        <input type="file" name="Thumbnail" id="Thumbnail" />
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="card">
+
+        <div class="card-header">
+            <h3 class="card-title">Media Uploads</h3>
+        </div>
+
+        <div class="card-body register-card-body">
+            <div class="col-md-12" id="dropzone">
+
+                <form asp-controller="MediaAssets" autocomplete="off" asp-antiforgery="true" id="upload-form" class="dropzone" enctype="multipart/form-data" asp-action="AlbumUpload" method="post">
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+
+
+
+                    <input asp-for="HiddenAlbumId" type="hidden" />
+                    <input asp-for="Thumbnailfile" type="hidden" />
+
+
+
+
+                </form>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <button type="button" id="uploadbutton" class="btn btn-success">Upload Media</button>
+                    <a asp-area="Administration" class="btn btn-danger" asp-controller="MediaAssets" asp-action="AlbumUpload">Clear</a>
+                    <a asp-area="Administration" class="btn btn-warning" asp-controller="MediaAssets" asp-action="AllUploadedAlbum">All Uploaded Album </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+

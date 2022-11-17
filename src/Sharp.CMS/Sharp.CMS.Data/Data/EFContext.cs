@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sharp.CMS.Models.Albums;
 using Sharp.CMS.Models.Attachements;
 using Sharp.CMS.Models.Audit;
 using Sharp.CMS.Models.InnerPage;
@@ -41,5 +42,7 @@ namespace Sharp.CMS.Data.Data
         public DbSet<MediaHistoryModel> MediaHistoryModel { get; set; }
         public DbSet<AlbumModel> AlbumModel { get; set; }
         public DbSet<MediaTypesModel> MediaTypesModel { get; set; }
+        public DbSet<AlbumUploadModel> AlbumUploadModel { get; set; }
+        
     }
 }

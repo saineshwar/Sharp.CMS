@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sharp.CMS.Data.Albums.Command;
 using Sharp.CMS.Data.Audit.Command;
 using Sharp.CMS.Data.InnerPages.Command;
 using Sharp.CMS.Data.MediaAssets.Command;
@@ -42,8 +43,10 @@ namespace Sharp.CMS.Extensions
             services.AddTransient<IInnerWidgetsCommand, InnerWidgetsCommand>();
             services.AddTransient<IMediaHistoryCommand, MediaHistoryCommand>();
             services.AddTransient<IAlbumCommand, AlbumCommand>();
-
+            services.AddTransient<IAlbumUploadCommand, AlbumUploadCommand>();
             
+
+
 
 
             return services;

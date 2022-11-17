@@ -1,0 +1,164 @@
+﻿@model Sharp.CMS.ViewModels.MediaAssets.UploadMediaViewModel
+
+@await Html.PartialAsync("~/Views/Shared/_DatatablesScripts.cshtml")
+@Html.Hidden("item-to-delete", "", new { @id = "item-to-delete" })
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+           
+
+   
+
+            $('#AlbumId').change(function() {
+                bindgrid();
+            });
+
+        });
+
+        function Delete(menuCategoryId) {
+            $.confirm({
+                title: 'Delete!',
+                content: 'Do you want to Delete Menu Category!',
+                buttons: {
+                    confirm: function () {
+                        $.ajax({
+                            url: "/Administration/MenuCategory/DeleteMenuCategory",
+                            type: "POST",
+                            data: { MenuCategoryId: menuCategoryId },
+                            success: function (data, textStatus, xhr) {
+                                if (data.Result == "success") {
+                                    location.reload();
+                                }
+                                if (data.Result == "failed") {
+                                    $.alert('Something Went Wrong');
+                                }
+                            },
+                            error: function (xhr, status, err) {
+                                if (xhr.status == 401) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                                if (xhr.status == 500) {
+                                    alert('Error');
+                                    window.location.href = "/Portal/Logout";
+                                }
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert('Canceled!');
+                    }
+                }
+            });
+        }
+
+        function bindgrid() {
+            $('#CommonDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "destroy":true,
+                "ajax": {
+                    "url": "/Administration/MediaAssets/GridAllAlbumUploads",
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": {
+                        "albumId": $("#AlbumId").val()
+                    }
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    }, {
+                        "targets": [1],
+                        "orderable": false,
+                        "searchable": false
+                    }, {
+                        "targets": [2],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [3],
+                        "orderable": false,
+                        "searchable": false
+                    },
+                    {
+                        "targets": [4],
+                        "orderable": false,
+                        "searchable": false
+                    }
+
+                ],
+                "columns": [
+                    { "data": "AlbumUploadId", "name": "AlbumUploadId", "autoWidth": true },
+                    { "data": "AlbumName", "name": "AlbumName", "autoWidth": true },
+                    { "data": "VirtualPath", "name": "VirtualPath", "autoWidth": true },
+                    { "data": "FileName", "name": "FileName", "autoWidth": true },
+                    { "data": "IsActive", "name": "IsActive", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return moment(full.CreatedOn).format("YYYY-MM-DD HH:mm:ss");
+                        }
+                    },
+                    { "data": "CreatedBy", "name": "CreatedBy", "autoWidth": true }
+                ]
+            });
+        }
+    </script>
+
+
+}
+
+<div class="col-md-12">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Media Uploads</h3>
+        </div>
+
+        <div class="card-body register-card-body">
+            
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label class="mandatory" asp-for="AlbumId"></label>
+                    <select asp-for="AlbumId" class="form-control"
+                            asp-items="@(new SelectList(Model.ListofAlbum, "Value", "Text"))">
+                    </select>
+                    <span class="text-danger" asp-validation-for="AlbumId"></span>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-12" id="dropzone">
+                    <table id="CommonDataTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>AlbumUploadId</th>
+                                <th>AlbumName</th>
+                                <th>VirtualPath</th>
+                                <th>FileName</th>
+                                
+                                <th>IsActive</th>
+                                <th>CreatedOn</th>
+                                <th>CreatedBy</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="card-footer">
+            <button type="button" id="uploadbutton" class="btn btn-success">Upload Media</button>
+            <button type="button" id="refreshbutton" class="btn btn-primary">Refresh</button>
+            <a asp-area="Administration" class="btn btn-danger" asp-controller="MediaAssets" asp-action="UploadMedia">Clear</a>
+
+        </div>
+    </div>
+</div>
+

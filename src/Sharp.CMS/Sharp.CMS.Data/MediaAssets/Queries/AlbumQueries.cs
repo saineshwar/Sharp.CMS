@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.Medias;
 using Sharp.CMS.ViewModels.MediaAssets;
@@ -108,5 +110,50 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
                 throw;
             }
         }
+
+        public List<SelectListItem> GetAllAlbum()
+        {
+            try
+            {
+                var queryable = (from album in _sharpContext.AlbumModel
+                                 where album.IsActive == true
+                                 orderby album.AlbumId descending
+                                 select new SelectListItem()
+                                 {
+                                     Value = album.AlbumId.ToString(),
+                                     Text = album.Album
+                                 }).ToList();
+                queryable.Insert(0, new SelectListItem()
+                {
+                    Value = "",
+                    Text = "-----Select-----"
+                });
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public List<AlbumModel> GetAllActiveAlbum()
+        {
+            try
+            {
+                var queryable = (from album in _sharpContext.AlbumModel
+                                 where album.IsActive == true
+                                 orderby album.AlbumId descending
+                                 select album).ToList();
+                return queryable;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
     }
 }
