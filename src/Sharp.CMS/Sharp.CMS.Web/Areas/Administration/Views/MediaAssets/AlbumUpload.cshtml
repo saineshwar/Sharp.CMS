@@ -1,15 +1,21 @@
 ﻿@model Sharp.CMS.ViewModels.MediaAssets.UploadMediaViewModel
 
-<link href="~/js/dropzone/dist/dropzone.css" rel="stylesheet" />
-<script src="~/js/dropzone/dist/dropzone.js"></script>
 
+<link href="~/js/dropzonev6/dropzone.css" rel="stylesheet" />
+<script src="~/js/dropzonev6/dropzone-min.js"></script>
 <script>
-    $(function () {
-        Dropzone.autoDiscover = false;
 
+
+
+    Dropzone.autoDiscover = false;
+    $(function ()
+    {
         var dz = null;
-        Dropzone.options.uploadForm.dropzone =
-        {
+
+        myDropzone = new Dropzone("div#demoupload",
+            {
+
+                url: "/Administration/MediaAssets/AlbumUpload",
             autoProcessQueue: false,
             paramName: "Media Upload",
             maxFilesize: 5, //mb
@@ -19,29 +25,49 @@
             acceptedFiles: ".jpeg,.png,.jpg,.pdf",
             uploadMultiple: true,
             addRemoveLinks: true,
-            //resizeWidth:128,
-            init: function () {
+            init: function ()
+            {
                 dz = this;
-                $("#uploadbutton").click(function () {
-                    if ($("#AlbumId").val() == '') {
-                        $.alert("Select Album to Upload Files!");
-
-                    } else if (dz.files.length == 0) {
-                        $.alert("No Files to Upload!");
-
-                    } else {
-                        $("#HiddenAlbumId").val($("#AlbumId").val());
-
-
-                        var fileInput = document.getElementById('Thumbnail');
-
-
-                        $("#Thumbnailfile").val(fileInput.files[0]);
-
+                $("#uploadbutton").click(function ()
+                {
+                    if ($("#AlbumId").val() == '')
+                    {
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'Select Album to Upload Files!',
+                            type: 'red'
+                        });
+                    }
+                    else if (dz.files.length == 0)
+                    {
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'No Files to Upload !',
+                            type: 'red'
+                        });
+                    }
+                    else if ($('#Thumbnail').get(0).files.length === 0)
+                    {
+                        $.alert({
+                            title: 'Validation!',
+                            content: 'No Thumbnail to Upload !',
+                            type: 'red'
+                        });
+                    }
+                    else
+                    {
+                       
                         dz.processQueue();
                         $(this).attr("disabled", "disabled");
                     }
 
+
+
+                });
+
+                this.on('sending', function (file, xhr, formData)
+                {
+                  
 
                 });
             },
@@ -51,8 +77,8 @@
                 setTimeout(function () {
                     dz.removeFile(file);
                     $("#refreshbutton").click();
-                },
-                    2000);
+                }, 2000);
+
 
 
             },
@@ -65,15 +91,29 @@
             },
             dictDefaultMessage: "You can drag and drop your images here.",
             dictRemoveFile: "File Remove"
-        };
-    });
-    $("#refreshbutton").prepend('<i id="loading" class="fa fa-refresh fa-spin" style="display:none;"></i>&nbsp;');
-    refreshProductPicture();
+            });
 
+        myDropzone.on("sending", function (file, xhr, formData)
+        {
+            // Will send the filesize along with the file as POST data.
+            formData.append("filesize", file.size);
+            var myFile = $("#Thumbnail")[0].files[0];
+            formData.append("Thumbnailfile", myFile);
+            formData.append("AlbumId", $("#AlbumId").val());
+
+        });
+
+        $("#refreshbutton").prepend('<i id="loading" class="fa fa-refresh fa-spin" style="display:none;"></i>&nbsp;');
+        refreshProductPicture();
+    });
 
     function refreshProductPicture() {
         $("#refreshbutton").click();
     }
+
+    
+
+
 </script>
 
 @await Html.PartialAsync("~/Views/Shared/_DatatablesScripts.cshtml")
@@ -163,22 +203,22 @@
 
 
     </script>
+    
 
 
 }
 
 <div class="col-md-12">
+    
+
     <div class="card">
 
         <div class="card-header">
-            <h3 class="card-title">Media Uploads</h3>
+            <h3 class="card-title">Album Upload</h3>
         </div>
 
         <div class="card-body register-card-body">
             <div class="col-md-12">
-
-
-                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
 
 
                 @if (!string.IsNullOrEmpty(Convert.ToString(TempData["MessageSuccess"])))
@@ -197,11 +237,10 @@
                     </div>
                 }
 
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <div class="previews"></div>
-                    </div>
-                </div>
+            <form asp-controller="MediaAssets" autocomplete="off" asp-antiforgery="true" id="frmalbum" enctype="multipart/form-data" asp-action="AlbumUpload" method="post">
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+                <input asp-for="Thumbnailfile" type="hidden" />
 
 
                 <div class="form-row">
@@ -213,50 +252,24 @@
                         <span class="text-danger" asp-validation-for="AlbumId"></span>
                     </div>
                 </div>
-
-
+              
                 <div class="form-row">
-                    <div class="form-group col-md-4">
-
-                        <input type="file" name="Thumbnail" id="Thumbnail" />
+                    <div class="form-group col-md-12">
+                        <label class="mandatory">Upload files</label>
+                        <div id="demoupload" class="dropzone"></div>
                     </div>
                 </div>
 
-
-            </div>
-        </div>
-
-
-    </div>
-
-    <div class="card">
-
-        <div class="card-header">
-            <h3 class="card-title">Media Uploads</h3>
-        </div>
-
-        <div class="card-body register-card-body">
-            <div class="col-md-12" id="dropzone">
-
-                <form asp-controller="MediaAssets" autocomplete="off" asp-antiforgery="true" id="upload-form" class="dropzone" enctype="multipart/form-data" asp-action="AlbumUpload" method="post">
-                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            </form>
 
 
 
-
-                    <input asp-for="HiddenAlbumId" type="hidden" />
-                    <input asp-for="Thumbnailfile" type="hidden" />
-
-
-
-
-                </form>
             </div>
         </div>
         <div class="card-footer">
             <div class="form-row">
                 <div class="form-group col-md-4">
-                    <button type="button" id="uploadbutton" class="btn btn-success">Upload Media</button>
+                    <button type="button" id="uploadbutton" class="btn btn-success">Upload</button>
                     <a asp-area="Administration" class="btn btn-danger" asp-controller="MediaAssets" asp-action="AlbumUpload">Clear</a>
                     <a asp-area="Administration" class="btn btn-warning" asp-controller="MediaAssets" asp-action="AllUploadedAlbum">All Uploaded Album </a>
                 </div>

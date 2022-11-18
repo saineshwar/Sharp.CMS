@@ -96,8 +96,9 @@
                 "columns": [
                     { "data": "AlbumUploadId", "name": "AlbumUploadId", "autoWidth": true },
                     { "data": "AlbumName", "name": "AlbumName", "autoWidth": true },
-                    { "data": "VirtualPath", "name": "VirtualPath", "autoWidth": true },
                     { "data": "FileName", "name": "FileName", "autoWidth": true },
+                    { "data": "VirtualPath", "name": "VirtualPath", "autoWidth": true },
+                   
                     { "data": "IsActive", "name": "IsActive", "autoWidth": true },
                     {
                         "render": function (data, type, full, meta) {
@@ -116,7 +117,7 @@
 <div class="col-md-12">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Media Uploads</h3>
+            <h3 class="card-title">All Album Upload</h3>
         </div>
 
         <div class="card-body register-card-body">
@@ -137,8 +138,9 @@
                             <tr>
                                 <th>AlbumUploadId</th>
                                 <th>AlbumName</th>
-                                <th>VirtualPath</th>
                                 <th>FileName</th>
+                                <th>VirtualPath</th>
+                             
                                 
                                 <th>IsActive</th>
                                 <th>CreatedOn</th>
@@ -154,9 +156,9 @@
 
         </div>
         <div class="card-footer">
-            <button type="button" id="uploadbutton" class="btn btn-success">Upload Media</button>
-            <button type="button" id="refreshbutton" class="btn btn-primary">Refresh</button>
-            <a asp-area="Administration" class="btn btn-danger" asp-controller="MediaAssets" asp-action="UploadMedia">Clear</a>
+     
+            <a asp-area="Administration" class="btn btn-default" asp-controller="MediaAssets" asp-action="AlbumUpload">Back to Album Uploads
+            </a>
 
         </div>
     </div>

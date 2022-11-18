@@ -15,6 +15,9 @@ namespace Sharp.CMS.Models.Medias
         public string AlbumName { get; set; }
         public string AlbumNameLL { get; set; }
         public string AlbumImagePath { get; set; }
+        public string ThumbnailPath { get; set; }
+        public string ThumbnailFileName { get; set; }
+        public string ThumbnailFileExtension { get; set; }
         public bool IsActive { get; set; }
         public DateTime? CreatedOn { get; set; }
         public int? CreatedBy { get; set; }

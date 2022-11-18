@@ -133,7 +133,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
 
             var files = HttpContext.Request.Form.Files;
-            if (string.IsNullOrEmpty(uploadMedia.HiddenAlbumId))
+            if (string.IsNullOrEmpty(uploadMedia.AlbumId))
             {
                 TempData["MessageError"] = "Select Album to Upload Files!";
                 return Json(new { Result = "failed" });
@@ -156,7 +156,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         //Getting file Extension
                         var fileExtension = Path.GetExtension(fileName);
 
-                        var albumdetails = _iAlbumQueries.GetAlbum(Convert.ToInt32(uploadMedia.HiddenAlbumId));
+                        var albumdetails = _iAlbumQueries.GetAlbum(Convert.ToInt32(uploadMedia.AlbumId));
 
                         var albumUpload = new AlbumUploadModel();
                         var directoryname = "";
@@ -189,7 +189,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
                         albumUpload.AlbumUploadId = 0;
                         albumUpload.FileName = fileName;
-                        albumUpload.AlbumId = Convert.ToInt32(uploadMedia.HiddenAlbumId);
+                        albumUpload.AlbumId = Convert.ToInt32(uploadMedia.AlbumId);
                         albumUpload.CreatedBy = HttpContext.Session.GetInt32(AllSessionKeys.UserId);
                         albumUpload.CreatedOn = DateTime.Now;
                         albumUpload.FileExtension = fileExtension;

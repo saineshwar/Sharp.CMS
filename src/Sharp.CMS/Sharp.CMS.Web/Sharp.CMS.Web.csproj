@@ -177,7 +177,6 @@
     <Folder Include="Areas\Administration\Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="wwwroot\Album\Testx\" />
-    <Folder Include="wwwroot\js\NewFolder\" />
     <Folder Include="wwwroot\Media\Content\" />
     <Folder Include="wwwroot\Media\Album\" />
     <Folder Include="wwwroot\Video\" />

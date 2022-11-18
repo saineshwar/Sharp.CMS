@@ -118,7 +118,7 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
 
                 if (!string.IsNullOrEmpty(search))
                 {
-                    queryable = queryable.Where(m => m.AlbumName.Contains(search));
+                    queryable = queryable.Where(m => m.FileName.Contains(search));
                 }
 
                 return queryable;

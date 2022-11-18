@@ -56,6 +56,26 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     return Json(new { Result = "errorMessage", Message = "Album Name Already Exists" });
                 }
 
+                var files = HttpContext.Request.Form.Files;
+                var fileName = string.Empty;
+                var fileExtension = string.Empty;
+                if (files.Any())
+                {
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 0)
+                        {
+                            //Getting FileName
+                            fileName = Path.GetFileName(file.FileName);
+
+                            //Getting file Extension
+                             fileExtension = Path.GetExtension(fileName);
+                        }
+                    }
+                }
+
+
+
                 var album = _mapper.Map<AlbumModel>(albumView);
                 album.AlbumId = 0;
                 album.CreatedOn = DateTime.Now;
@@ -65,22 +85,29 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Audio)
                 {
                     album.AlbumImagePath = $"/Album/Audio/{albumView.AlbumName}";
+                    album.ThumbnailPath = $"/Album/Audio/Thumbnail/{fileName}";
                     directoryname = "Audio";
                 }
                 else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Photo)
                 {
                     album.AlbumImagePath = $"/Album/Photo/{albumView.AlbumName}";
+                    album.ThumbnailPath = $"/Album/Photo/Thumbnail/{fileName}";
                     directoryname = "Photo";
                 }
                 else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Video)
                 {
                     album.AlbumImagePath = $"/Album/Video/{albumView.AlbumName}";
+                    album.ThumbnailPath = $"/Album/Video/Thumbnail/{fileName}";
                     directoryname = "Video";
                 }
 
-                
+
                 album.MediaTypeId = Convert.ToInt32(albumView.MediaTypeId);
                 album.Album = albumView.Album;
+                album.ThumbnailFileName = fileName;
+                album.ThumbnailFileExtension = fileExtension;
+
+
                 var data = _IAlbumCommand.Add(album);
 
                 if (data)
@@ -92,6 +119,15 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     {
                         Directory.CreateDirectory(physicalPath);
                     }
+
+                    var thumbnailphysicalPath = $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\Thumbnail\\{fileName}";
+
+                    if (!Directory.Exists(thumbnailphysicalPath))
+                    {
+                        Directory.CreateDirectory(thumbnailphysicalPath);
+                    }
+
+
 
                     return Json(new { Result = "success" });
                 }
@@ -168,13 +204,13 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                             return Json(new { Result = "errorMessage", Message = "Album Name Already Exists" });
                         }
                     }
-                    
+
                     if (albumView.AlbumId == null)
                     {
                         return Json(new { Result = "errorMessage", Message = "Something Went Wrong!" });
                     }
 
-                    
+
                     var oldalbum = editalbum.Album;
 
                     editalbum.ModifiedOn = DateTime.Now;
