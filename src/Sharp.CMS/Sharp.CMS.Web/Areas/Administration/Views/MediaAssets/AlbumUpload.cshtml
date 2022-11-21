@@ -46,14 +46,6 @@
                             type: 'red'
                         });
                     }
-                    else if ($('#Thumbnail').get(0).files.length === 0)
-                    {
-                        $.alert({
-                            title: 'Validation!',
-                            content: 'No Thumbnail to Upload !',
-                            type: 'red'
-                        });
-                    }
                     else
                     {
                        
@@ -95,10 +87,6 @@
 
         myDropzone.on("sending", function (file, xhr, formData)
         {
-            // Will send the filesize along with the file as POST data.
-            formData.append("filesize", file.size);
-            var myFile = $("#Thumbnail")[0].files[0];
-            formData.append("Thumbnailfile", myFile);
             formData.append("AlbumId", $("#AlbumId").val());
 
         });

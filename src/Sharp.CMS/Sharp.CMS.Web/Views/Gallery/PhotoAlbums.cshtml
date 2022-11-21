@@ -6,14 +6,7 @@
     Layout = ViewBag.InnerPage == "1" ? "_InnerPageLayout" : "_Layout";
 }
 
-<style>
-    div.gallery {
-        margin: 5px;
-        border: 1px solid #ccc;
-        float: left;
-        width: 250px;
-    }
-</style>
+
 
 <div class="form-row">
     @foreach (var data in Model)
@@ -24,8 +17,8 @@
             {
 
                 <div class="col-md-3">
-                    <div class="card gallery">
-                        <img class="card-img-bottom" src="@albumdata.VirtualPath" alt="Card image" width="600" height="400">
+                    <div class="card">
+                        <img class="card-img-bottom" src="@albumdata.ThumbnailPath" alt="Card image" width="300" height="300">
                         <div class="card-body">
 
 

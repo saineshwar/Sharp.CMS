@@ -23,8 +23,16 @@ namespace Sharp.CMS.Web.Controllers
 
 
         [HttpGet]
-        public IActionResult Photos()
+        public IActionResult Photos(string album)
         {
+            if (!string.IsNullOrEmpty(album))
+            {
+                if (_IAlbumQueries.IsAlbumNameExists(album))
+                {
+                    
+                }
+            }
+
             return View();
         }
 

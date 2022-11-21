@@ -130,7 +130,7 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
             }
         }
 
-        public GridViewAlbumUploadViewModel GetAlbumDetailsByAlbumId(int? albumId)
+        public ShowAlbumViewModel GetAlbumDetailsByAlbumId(int? albumId)
         {
             try
             {
@@ -139,16 +139,17 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
                     join user in _sharpContext.UserMasters on albumupload.CreatedBy equals user.UserId
                     join album in _sharpContext.AlbumModel on albumupload.AlbumId equals album.AlbumId
                     orderby albumupload.AlbumId descending
-                    select new GridViewAlbumUploadViewModel()
+                    select new ShowAlbumViewModel()
                     {
                         IsActive = albumupload.IsActive == true ? "Active" : "InActive",
                         AlbumUploadId = albumupload.AlbumUploadId,
                         AlbumName = album.AlbumName,
-                        VirtualPath = albumupload.VirtualPath,
                         AlbumId = albumupload.AlbumId,
                         CreatedBy = $"{user.FirstName}{user.LastName}",
                         CreatedOn = albumupload.CreatedOn,
-                        FileName = albumupload.FileName
+                        ThumbnailPath = album.ThumbnailPath,
+                        ThumbnailFileName = album.ThumbnailFileName,
+                        ThumbnailFileExtension = album.ThumbnailFileExtension
                     }).FirstOrDefault();
 
                 return queryable;

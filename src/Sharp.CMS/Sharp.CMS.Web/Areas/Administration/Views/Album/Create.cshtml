@@ -335,22 +335,28 @@
             }
             else {
 
+                var formData = new FormData();
+                formData.append("AlbumName", $("#AlbumName").val());
+                formData.append("AlbumNameLL", $("#AlbumNameLL").val());
+                formData.append("IsActive", $("input:checkbox:checked").val());
+                formData.append("Album", $("#Album").val());
+                formData.append("MediaTypeId", $("#MediaTypeId").val());
 
-                var jsonObject =
-                {
-                    AlbumName: $("#AlbumName").val(),
-                    AlbumNameLL: $("#AlbumNameLL").val(),
-                    IsActive: $("input:checkbox:checked").val(),
-                    Album: $("#Album").val(),
-                    MediaTypeId: $("#MediaTypeId").val()
-                };
+                var files = $("#Thumbnail").get(0).files;
+
+                for (var i = 0; i < files.length; i++) {
+                    formData.append("Files", files[i]);
+                }
+
 
                 $("#loader").show();
 
                 $.ajax({
                     type: "POST",
                     url: "/Administration/Album/Create",
-                    data: jsonObject,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
 
                     success: function (data, textStatus, xhr)
                     {

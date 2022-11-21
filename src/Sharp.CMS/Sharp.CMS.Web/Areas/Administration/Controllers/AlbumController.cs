@@ -46,7 +46,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(AlbumViewModel albumView)
+        public async Task<IActionResult> Create(AlbumViewModel albumView)
         {
 
             if (ModelState.IsValid)
@@ -74,7 +74,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     }
                 }
 
-
+                var albumname = albumView.Album.Replace(' ', '_');
 
                 var album = _mapper.Map<AlbumModel>(albumView);
                 album.AlbumId = 0;
@@ -84,26 +84,26 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 var directoryname = "";
                 if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Audio)
                 {
-                    album.AlbumImagePath = $"/Album/Audio/{albumView.AlbumName}";
-                    album.ThumbnailPath = $"/Album/Audio/Thumbnail/{fileName}";
+                    album.AlbumImagePath = $"/Album/Audio/{albumname}";
+                    album.ThumbnailPath = $"/Album/Audio/{albumname}/Thumbnail/{fileName}";
                     directoryname = "Audio";
                 }
                 else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Photo)
                 {
-                    album.AlbumImagePath = $"/Album/Photo/{albumView.AlbumName}";
-                    album.ThumbnailPath = $"/Album/Photo/Thumbnail/{fileName}";
+                    album.AlbumImagePath = $"/Album/Photo/{albumname}";
+                    album.ThumbnailPath = $"/Album/Photo/{albumname}/Thumbnail/{fileName}";
                     directoryname = "Photo";
                 }
                 else if (Convert.ToInt32(albumView.MediaTypeId) == (int)MediaType.Video)
                 {
-                    album.AlbumImagePath = $"/Album/Video/{albumView.AlbumName}";
-                    album.ThumbnailPath = $"/Album/Video/Thumbnail/{fileName}";
+                    album.AlbumImagePath = $"/Album/Video/{albumname}";
+                    album.ThumbnailPath = $"/Album/Video/{albumname}/Thumbnail/{fileName}";
                     directoryname = "Video";
                 }
 
 
                 album.MediaTypeId = Convert.ToInt32(albumView.MediaTypeId);
-                album.Album = albumView.Album;
+                album.Album = albumname;
                 album.ThumbnailFileName = fileName;
                 album.ThumbnailFileExtension = fileExtension;
 
@@ -113,20 +113,24 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 if (data)
                 {
 
-                    var physicalPath = $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\{albumView.Album}";
+                    var physicalPath = $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\{albumname}";
 
                     if (!Directory.Exists(physicalPath))
                     {
                         Directory.CreateDirectory(physicalPath);
                     }
 
-                    var thumbnailphysicalPath = $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\Thumbnail\\{fileName}";
+                    var thumbnailphysicalPath = $"{new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")).Root}Album\\{directoryname}\\{albumname}\\Thumbnail";
 
                     if (!Directory.Exists(thumbnailphysicalPath))
                     {
                         Directory.CreateDirectory(thumbnailphysicalPath);
                     }
 
+
+                    await using FileStream fs = System.IO.File.Create($"{thumbnailphysicalPath}\\{fileName}");
+                    await files[0].CopyToAsync(fs);
+                    fs.Flush();
 
 
                     return Json(new { Result = "success" });

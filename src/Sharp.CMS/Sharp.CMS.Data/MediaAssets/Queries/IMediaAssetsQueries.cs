@@ -15,6 +15,6 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
         IQueryable<GridViewAlbumUploadViewModel> ShowAllAlbums(string sortColumn, string sortColumnDir, string search,
             int? albumId);
 
-        GridViewAlbumUploadViewModel GetAlbumDetailsByAlbumId(int? albumId);
+        ShowAlbumViewModel GetAlbumDetailsByAlbumId(int? albumId);
     }
 }
