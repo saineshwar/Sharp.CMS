@@ -92,6 +92,7 @@ namespace Sharp.CMS.Web.Controllers
                     return RedirectToAction("Index", "PageNotFound");
                 }
 
+
                 RenderMainPageDetails renderdata;
                 var pageisCahed = _iRenderingPageQueries.GetIsPageCached(pageName);
                 if (pageisCahed == false)

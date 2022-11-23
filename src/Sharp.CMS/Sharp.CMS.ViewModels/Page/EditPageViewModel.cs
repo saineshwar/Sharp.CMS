@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.ViewModels.Attachments;
@@ -92,6 +93,9 @@ namespace Sharp.CMS.ViewModels.Page
         public bool IsHomePage { get; set; }
         public bool IsSubChildPage { get; set; }
         public bool IsCached { get; set; }
-        
+        public bool IsPublished { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+
     }
 }

@@ -6,6 +6,7 @@ using System.Linq.Dynamic.Core;
 using Dapper;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using Sharp.CMS.Data.Data;
@@ -29,7 +30,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
         {
             try
             {
-                var queryable = (from page in _sharpContext.PageModel
+                var queryable = (from page in _sharpContext.PageModel.AsNoTracking()
 
                                  orderby page.PageId descending
                                  select new NewPageGrid()
@@ -81,14 +82,14 @@ namespace Sharp.CMS.Data.NewPage.Queries
                 bool queryable;
                 if (pageid == null)
                 {
-                    queryable = (from page in _sharpContext.PageModel
+                    queryable = (from page in _sharpContext.PageModel.AsNoTracking()
                                  where page.PageName == pagename
                                  select page).Any();
                 }
                 else
                 {
 
-                    queryable = (from page in _sharpContext.PageModel
+                    queryable = (from page in _sharpContext.PageModel.AsNoTracking()
                                  where page.PageName == pagename && page.PageId == pageid
                                  select page).Any();
                 }
@@ -122,7 +123,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
         {
             try
             {
-                var queryable = (from page in _sharpContext.PageModel
+                var queryable = (from page in _sharpContext.PageModel.AsNoTracking()
 
                                  select new SelectListItem
                                  {
@@ -148,7 +149,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
         {
             try
             {
-                var queryable = (from page in _sharpContext.PageModel
+                var queryable = (from page in _sharpContext.PageModel.AsNoTracking()
                                  where page.IsChildPage == true && page.ParentPageId == parentId
                                  select new SelectListItem
                                  {
@@ -172,7 +173,7 @@ namespace Sharp.CMS.Data.NewPage.Queries
 
         public PageModel GetPagebyPageId(int pageId)
         {
-            var queryable = (from page in _sharpContext.PageModel
+            var queryable = (from page in _sharpContext.PageModel.AsNoTracking()
                              where page.PageId == pageId && page.IsChildPage == false
                              select page
                 ).FirstOrDefault();

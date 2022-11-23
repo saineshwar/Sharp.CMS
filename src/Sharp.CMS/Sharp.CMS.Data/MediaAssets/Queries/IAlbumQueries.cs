@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.Models.Medias;
+using Sharp.CMS.ViewModels.Album;
 using Sharp.CMS.ViewModels.MediaAssets;
 
 namespace Sharp.CMS.Data.MediaAssets.Queries
@@ -14,5 +15,8 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
         AlbumModel GetAlbum(int AlbumId);
         List<SelectListItem>  GetAllAlbum();
         List<AlbumModel> GetAllActiveAlbum();
+        IQueryable<PhotoListGrid> GetAllAlbumPhotos(int page, int pagesize, int albumId);
+        int GetAllAlbumPhotosCount(int page, int pagesize, int albumId);
+        int GetAlbumIdbyAlbumName(string albumname);
     }
 }

@@ -1,0 +1,92 @@
+﻿@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Web.Common
+@using System.Drawing
+@model Sharp.CMS.ViewModels.Album.PhotoListViewModel
+@{
+    ViewBag.PageName = "Photos";
+    Layout = "_Layout";
+}
+
+<style>
+    .boxspace{
+        margin: 5px 20px 20px 20px;
+    }
+</style>
+<link href="~/js/lightbox/css/lightbox.css" rel="stylesheet" />
+
+@section Scripts
+{
+    
+    <script src="~/js/lightbox/js/lightbox.js"></script>
+ 
+    <script>
+        lightbox.option({
+            'resizeDuration': 50,
+            'wrapAround': false
+        })
+    </script>
+}
+
+
+<div class="col-md-12">
+    <form autocomplete="off" asp-controller="Gallery" id="frmSearch" enctype="multipart/form-data" asp-action="Photos" method="get">
+
+
+        @if (Model.PhotoListGrid.Any())
+        {
+            <div class="form-row">
+
+                @foreach (var photo in Model.PhotoListGrid)
+                {
+
+
+
+                    <div class="boxspace col-md-3">
+
+                        <div class="col-md-12">
+
+                        
+                        <a href="@photo.VirtualPath" data-lightbox="image-1" width="200" height="200" data-title="@photo.Album">  
+                        
+                        
+                            <img src="@photo.VirtualPath" alt="@photo.FileName" width="200" height="200">
+                            </a>
+
+                    </div>
+                    </div>
+
+                }
+            </div>
+            <div class="form-row">
+                <div class="col-md-12">
+                    @Html.PagedListPager((IPagedList)Model.PhotoListGrid,
+                        page => Url.Action("Photos", new
+                        {
+                            page = page,
+                            album = Model.Album
+                        })
+                        , new PagedListRenderOptions()
+                        {
+                            LiElementClasses = new string[] { "page-item" },
+                            PageClasses = new string[] { "page-link" },
+                            Display = PagedListDisplayMode.Always
+
+                        })
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="form-row">
+                <div class="col-md-12">
+                    <i class="far fa-smile"></i>  No photo to Display.
+                </div>
+            </div>
+        }
+
+    </form>
+</div>
+
+

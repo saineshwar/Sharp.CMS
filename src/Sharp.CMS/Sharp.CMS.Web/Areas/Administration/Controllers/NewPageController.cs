@@ -222,8 +222,9 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                pageViewModel.ListofStatus = _commonMastersQueries.GetStatusList();
                 var editmodel = _iNewPageQueries.GetPageDetailsbyPageId(pageViewModel.PageId);
+                var pagemodel = _iNewPageQueries.GetPagebyPageId(pageViewModel.PageId);
 
                 if (pageViewModel.PageName == editmodel.PageName)
                 {
@@ -236,6 +237,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                     pageModel.Status = pageViewModel.StatusId;
                     pageModel.IsHomePage =editmodel.IsHomePage;
                     pageModel.IsCached = false;
+                    pageModel.IsPublished = pageViewModel.StatusId == 2;
+                    pageModel.CreatedOn = pagemodel.CreatedOn;
+                    pageModel.CreatedBy = pagemodel.CreatedBy;
+
                     pageModel.PageDetails = new PageDetailsModel()
                     {
                         MetaDescription_EN = pageViewModel.MetaDescriptionEN,
@@ -330,6 +335,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         pageModel.ModifiedBy = user;
                         pageModel.Status = pageViewModel.StatusId;
                         pageModel.IsHomePage = editmodel.IsHomePage;
+                        pageModel.IsPublished = pageViewModel.StatusId == 2;
+                        pageModel.CreatedOn = editmodel.CreatedOn;
+                        pageModel.CreatedBy = editmodel.CreatedBy;
+
                         pageModel.PageDetails = new PageDetailsModel()
                         {
                             MetaDescription_EN = pageViewModel.MetaDescriptionEN,

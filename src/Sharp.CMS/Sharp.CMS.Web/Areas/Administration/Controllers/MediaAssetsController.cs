@@ -162,17 +162,17 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                         var directoryname = "";
                         if (Convert.ToInt32(albumdetails.MediaTypeId) == (int)MediaType.Audio)
                         {
-                            albumUpload.VirtualPath = $"~/Album/Audio/{albumdetails.AlbumName}/{fileName}";
+                            albumUpload.VirtualPath = $"/Album/Audio/{albumdetails.AlbumName}/{fileName}";
                             directoryname = "Audio";
                         }
                         else if (Convert.ToInt32(albumdetails.MediaTypeId) == (int)MediaType.Photo)
                         {
-                            albumUpload.VirtualPath = $"~/Album/Photo/{albumdetails.AlbumName}/{fileName}";
+                            albumUpload.VirtualPath = $"/Album/Photo/{albumdetails.AlbumName}/{fileName}";
                             directoryname = "Photo";
                         }
                         else if (Convert.ToInt32(albumdetails.MediaTypeId) == (int)MediaType.Video)
                         {
-                            albumUpload.VirtualPath = $"~/Album/Video/{albumdetails.AlbumName}/{fileName}";
+                            albumUpload.VirtualPath = $"/Album/Video/{albumdetails.AlbumName}/{fileName}";
                             directoryname = "Video";
                         }
 

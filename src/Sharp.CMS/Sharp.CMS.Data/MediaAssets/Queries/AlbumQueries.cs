@@ -5,6 +5,7 @@ using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Sharp.CMS.Data.Data;
 using Sharp.CMS.Models.Medias;
+using Sharp.CMS.ViewModels.Album;
 using Sharp.CMS.ViewModels.MediaAssets;
 
 namespace Sharp.CMS.Data.MediaAssets.Queries
@@ -154,6 +155,82 @@ namespace Sharp.CMS.Data.MediaAssets.Queries
             }
         }
 
+
+        public IQueryable<PhotoListGrid> GetAllAlbumPhotos(int page, int pagesize, int albumId)
+        {
+            try
+            {
+                var queryable = (from albumUpload in _sharpContext.AlbumUploadModel
+                                 join album in _sharpContext.AlbumModel on albumUpload.AlbumId equals album.AlbumId
+                                 orderby albumUpload.CreatedOn descending
+                                 select new PhotoListGrid()
+                                 {
+                                     Album = album.AlbumName,
+                                     AlbumId = album.AlbumId,
+                                     VirtualPath = albumUpload.VirtualPath,
+                                     FileName = albumUpload.FileName,
+                                     AlbumUploadId = albumUpload.AlbumUploadId,
+                                     AlbumNameLL = album.AlbumNameLL
+                                 }
+                    );
+
+
+                queryable = queryable.OrderByDescending(x => x.AlbumId);
+
+
+
+                queryable = queryable.Where(m => m.AlbumId == albumId);
+
+                return queryable.Skip(page).Take(pagesize);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int GetAllAlbumPhotosCount(int page, int pagesize, int albumId)
+        {
+            try
+            {
+                var queryable = (from albumUpload in _sharpContext.AlbumUploadModel
+                                 join album in _sharpContext.AlbumModel on albumUpload.AlbumId equals album.AlbumId
+                                 orderby albumUpload.CreatedOn descending
+                                 select new PhotoListGrid()
+                                 {
+                                     Album = album.AlbumName,
+                                     AlbumId = album.AlbumId,
+                                     VirtualPath = albumUpload.VirtualPath,
+                                     FileName = albumUpload.FileName,
+                                     AlbumUploadId = albumUpload.AlbumUploadId,
+                                     AlbumNameLL = album.AlbumNameLL
+                                 }
+                    );
+
+
+                queryable = queryable.OrderByDescending(x => x.AlbumId);
+                queryable = queryable.Where(m => m.AlbumId == albumId);
+
+
+                return queryable.Count();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public int GetAlbumIdbyAlbumName(string albumname)
+        {
+            var queryable = (from album in _sharpContext.AlbumModel
+                             where album.Album == albumname
+                             orderby album.AlbumId descending
+                             select album.AlbumId).FirstOrDefault();
+
+            return queryable;
+        }
 
     }
 }
