@@ -97,5 +97,14 @@ namespace Sharp.CMS.ViewModels.Page
         public int CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
 
+        [Display(Name = "IsPhysicalPage")]
+        public bool IsPhysicalPage { get; set; }
+
+        [Display(Name = "Physical Page Action Name")]
+        public string PhysicalPageAction { get; set; }
+
+        [Display(Name = "Physical Page Controller")]
+        public string PhysicalPageController { get; set; }
+
     }
 }

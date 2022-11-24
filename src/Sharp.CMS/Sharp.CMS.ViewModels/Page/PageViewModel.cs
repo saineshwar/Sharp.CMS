@@ -76,7 +76,14 @@ namespace Sharp.CMS.ViewModels.Page
         [Display(Name = "Child Page")]
         public string ChildPageName { get; set; }
         public string HiddenChildPageId { get; set; }
-        
 
+        [Display(Name = "IsPhysicalPage")]
+        public bool IsPhysicalPage { get; set; }
+
+        [Display(Name = "Physical Page Action Name")]
+        public string PhysicalPageAction { get; set; }
+
+        [Display(Name = "Physical Page Controller")]
+        public string PhysicalPageController { get; set; }
     }
 }  

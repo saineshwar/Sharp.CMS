@@ -26,6 +26,13 @@
                                     <a @data href="@menuparent.Permalink">@menuparent.MenuNameEN</a>
                                 </li>
                             }
+                            else if (menuparent.IsPhysicalPage)
+                            {
+
+                                <li class="nav-item">
+                                    <a @data href="/@menuparent.PhysicalPageController/@menuparent.PhysicalPageAction">@menuparent.MenuNameEN</a>
+                                </li>
+                            }
                             else
                             {
                                 <li>

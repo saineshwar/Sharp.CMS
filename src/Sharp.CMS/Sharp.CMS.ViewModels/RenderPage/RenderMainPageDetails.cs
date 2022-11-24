@@ -20,5 +20,8 @@ namespace Sharp.CMS.ViewModels.RenderPage
         public bool IsChildPage { get; set; }
         public bool IsSubChildPage { get; set; }
         public bool IsHomePage { get; set; }
+        public bool IsPhysicalPage { get; set; }
+        public string PhysicalPageAction { get; set; }
+        public string PhysicalPageController { get; set; }
     }
 }

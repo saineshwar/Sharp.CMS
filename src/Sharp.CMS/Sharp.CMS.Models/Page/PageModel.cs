@@ -34,6 +34,8 @@ namespace Sharp.CMS.Models.Page
         public bool IsSubChildPage { get; set; }
         public int? ChildPageId { get; set; }
         public bool IsCached { get; set; }
-        
+        public bool IsPhysicalPage { get; set; }
+        public string PhysicalPageAction { get; set; }
+        public string PhysicalPageController { get; set; }
     }
 }

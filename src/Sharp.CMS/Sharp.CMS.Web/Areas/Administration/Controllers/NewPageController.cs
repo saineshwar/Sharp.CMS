@@ -82,6 +82,10 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.IsCached = false;
                 pageModel.IsPublished = pageViewModel.StatusId == 2;
 
+                pageModel.IsPhysicalPage = pageViewModel.IsPhysicalPage;
+                pageModel.PhysicalPageAction = pageViewModel.PhysicalPageAction;
+                pageModel.PhysicalPageController = pageViewModel.PhysicalPageController;
+
 
                 if (!string.IsNullOrEmpty(pageViewModel.HiddenParentPageId))
                 {
@@ -105,6 +109,7 @@ namespace Sharp.CMS.Web.Areas.Administration.Controllers
                 pageModel.PageDetails.PageHeading_EN = pageViewModel.PageHeading;
                 pageModel.PageDetails.PageHeading_LL = pageViewModel.PageHeadingLl;
 
+      
 
                 if (!string.IsNullOrEmpty(pageViewModel.Permalink))
                 {

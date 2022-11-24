@@ -184,6 +184,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\FontEnd\assets\img\app-store-badge.svg" />
+    <None Include="wwwroot\FontEnd\assets\img\google-play-badge.svg" />
+    <None Include="wwwroot\FontEnd\assets\img\tnw-logo.svg" />
+    <None Include="wwwroot\FontEnd\js\scripts.js" />
     <None Include="wwwroot\js\lightbox\js\lightbox.js" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />

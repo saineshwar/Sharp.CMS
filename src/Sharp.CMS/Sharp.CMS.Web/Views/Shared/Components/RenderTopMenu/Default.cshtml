@@ -19,10 +19,17 @@
                 if (!string.IsNullOrEmpty(menuparent.Permalink))
                 {
 
-                    
+
 
                     <li class="nav-item">
                         <a class="nav-link text-dark" @data href="@menuparent.Permalink">@menuparent.MenuNameEN</a>
+                    </li>
+                }
+                else if (menuparent.IsPhysicalPage)
+                {
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" @data href="/@menuparent.PhysicalPageController/@menuparent.PhysicalPageAction">@menuparent.MenuNameEN</a>
                     </li>
                 }
                 else
@@ -69,7 +76,7 @@
                                 }
                                 else
                                 {
-                                    
+
                                     <li>
                                         <a class="nav-link text-dark" @childdata href="/@menuchild.PageName">@menuchild.MenuNameEN</a>
                                     </li>
@@ -105,7 +112,7 @@
 
                                             <a class="dropdown-item dropdown-toggle" href="#">@menuchild.MenuNameEN</a>
 
-                                        
+
 
                                             <ul class="dropdown-menu">
                                                 @foreach (var menusubchild in IRenderingMenus.GetSubChildMenus(menuchild.PageId))
@@ -131,7 +138,7 @@
                                                         </li>
 
                                                     }
-                                             
+
 
 
                                                 }
